@@ -1,2 +1,8 @@
-# cs207-FinalProject
-CS207 Final Project
+# CS207 Final Project
+Group #30
+
+Members:
+- Christopher Siviy
+- Ruochen Zhao
+- Allison Kao
+- Martin Jin
