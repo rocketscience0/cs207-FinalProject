@@ -11,3 +11,4 @@ Members:
 
 
 [![Build Status](https://travis-ci.org/rocketscience0/cs207-FinalProject.svg?branch=master)](https://travis-ci.org/rocketscience0/cs207-FinalProject)
+[![codecov](https://codecov.io/gh/rocketscience0/cs207-FinalProject/branch/master/graph/badge.svg)](https://codecov.io/gh/rocketscience0/cs207-FinalProject)
