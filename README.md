@@ -3,6 +3,6 @@ Group #30
 
 Members:
 - Christopher Siviy
-- Ruochen Zhao,
+- Ruochen Zhao
 - Allison Kao
 - Martin Jin
