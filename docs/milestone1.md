@@ -137,7 +137,7 @@ Our custom data types `autodiff.Int()` and `autodiff.Float()` work will most com
 - `np.sin`
 - `np.cos`
 
-You can also define custom elementary operations using the `elementar` decorator.
+You can also define custom elementary operations using the `elementary` decorator.
 
 #### Core data structures
 The core data structure is a `Number`, which stores a value and a derivative:
@@ -145,7 +145,9 @@ The core data structure is a `Number`, which stores a value and a derivative:
 ```python
 x = autodiff.Number(3)
 y = x**2
+```
 
+```python
 >>> print(y.value)
 9
 >>> print(y.deriv)
@@ -158,7 +160,7 @@ Defining a new type of number is easy
 ```python
 class NewInt(Number):
     def __init__(self, a, b):
-        super(self).__init(a, b)
+        super(self).__init__(a, b)
         self.value = int(a)
         self.deriv = b
 
