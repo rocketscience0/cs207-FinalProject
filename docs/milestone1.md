@@ -38,7 +38,7 @@ import autodiff as ad
 from autodiff.elementary_functions import elementary
 import numpy as np
 
-x = ad.Int(2)
+x = ad.Number(2)
 
 # A sample function
 def testfunc(x):
@@ -56,18 +56,6 @@ x = ad.array([1, 2, 3, 4])
 
 def testfunc(x):
     return x.T @ x
-```
-
-Defining custom elementary functions
-```python
-def my_pow_deriv(a, b):
-    """ Returns the derivative of my_pow at a and b
-    """
-    return b * a ** (b - 1)
-
-@elementary(my_pow_deriv)
-def my_pow(a, b):
-    return pow(a, b)
 ```
 
 - Additional ideas:
@@ -126,17 +114,6 @@ python setup.py
 
 ## Implementation
 
-Our custom data types `autodiff.Int()` and `autodiff.Float()` work will most common elementary functions:
-
-- `+`
-- `-`
-- `*`
-- `/`
-- `**`
-- `@`
-- `np.sin`
-- `np.cos`
-
 You can also define custom elementary operations using the `elementary` decorator.
 
 #### Core data structures
@@ -150,12 +127,12 @@ y = x**2
 ```python
 >>> print(y.value)
 9
->>> print(y.deriv)
+>>> print(y.deriv[y])
 6
 ```
 
 
-Defining a new type of number is easy
+Defining a new type of number is easy:
 
 ```python
 class NewInt(Number):
@@ -163,9 +140,109 @@ class NewInt(Number):
         super(self).__init__(a, b)
         self.value = int(a)
         self.deriv = b
+```
 
+The `autodiff` package also works for functions with multiple inputs:
+```python
+x = autodiff.Number(2)
+y = autodiff.Number(3)
+
+def f(x, y, a=3):
+    return a * x * y
+
+q = f(x, y, a=3)
+```
+```python
+>>> q.deriv[x]
+9
+>>> q.deriv[y]
+6
+>>> q.deriv
+{x: 9, y: 6}
+```
+Because `a` does not have a `deriv`, there is no `q.grad[a]`.
+
+It is also possible to return the gradient as an array if the user specifies an order of inputs:
+```python
+>>> q.deriv.asarray((x, y))
+array([9, 6])
+```
+
+If a function returns an array:
+```python
+x = autodiff.Number(np.pi / 2)
+y = autodiff.Number(3 * np.pi / 2)
+
+def f(x, y):
+    return autodiff.array((
+        y * autodiff.sin(x),
+        x * autodiff.sin(y)
+    ))
+q = f(x,y)
+>>>q.deriv[x]
+autodiff.array([0, 1])
+>>>q.deriv[y]
+autodiff.array([1, 0])
+```
+
+Again, it is possible to get the entire jacobian if the user specifies an order:
+```python
+>>>q.jacobian((x, y))
+autodiff.array([[0, 1],
+                [1, 0]])
+```
+
+
+
+#### Methods and name attributes
+The number class overloads the following common elementary operations:
+
+- `+`
+- `-`
+- `*`
+- `/`
+- `**`
+- `@`
+
+We have also included the following elementary operations
+
+- `autodiff.sin()`
+- `autodiff.cos()`
+- `autodiff.tan()`
+- `autodiff.asin()`
+- `autodiff.acos()`
+- `autodiff.atan()`
+- `autodiff.log()`
+- `autodiff.exp()`
+
+Defining custom elementary functions is straightforward, using the `elementary` decorator (this is the same method we use internally).
+```python
+def my_pow_deriv(a, b):
+    """ Returns the derivative of my_pow at a and b
+    """
+    return b * a ** (b - 1)
+
+@elementary(my_pow_deriv)
+def my_pow(a, b):
+    return pow(a, b)
+```
+
+```python
+def sin_deriv(a):
+    """ Returns the derivative of the sin() elemental operation"""
+    try:
+        return a.deriv * np.cos(a)
+    except AttributError
+        return np.cos(a)
+    
+@elementary(sin_deriv)
+def sin(a):
+    return np.sin(a)
 ```
 
 #### Classes
 
-#### 
+`autodiff.array` inherits from `numpy.array`, but also stores the jacobian.
+`autodiff.Number` is the base class for a numeric type.
+
+Many elementary operations rely on their `numpy` counterparts, but also include their derivative.
