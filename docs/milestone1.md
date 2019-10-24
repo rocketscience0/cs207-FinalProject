@@ -232,7 +232,7 @@ def sin_deriv(a):
     """ Returns the derivative of the sin() elemental operation"""
     try:
         return a.deriv * np.cos(a)
-    except AttributError
+    except AttributeError
         return np.cos(a)
     
 @elementary(sin_deriv)
