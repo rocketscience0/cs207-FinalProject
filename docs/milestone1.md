@@ -123,16 +123,6 @@ def testfunc(x):
 #### Installation and packaging
 **Subject to change in final package**
 
-1. Clone from github
-```bash
-git clone https://github.com/rocketscience0/cs207-FinalProject.git
-```
-
-1. Install
-```bash
-python setup.py
-```
-NEW VERSION:
 1. Ensure setuptools, pip are up to date
 ```bash
 python -m pip install --upgrade pip setuptools
