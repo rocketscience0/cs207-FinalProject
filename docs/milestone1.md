@@ -65,8 +65,7 @@ x = ad.Number(2)
 
 # A sample function
 def testfunc(x):
-    # return x**2
-    return NewElementary(a)
+    return x**2
 
 # A function to return a derivative
 deriv = ad.diff(testfunc)
@@ -150,7 +149,7 @@ y = x**2
 ```python
 >>> print(y.value)
 9
->>> print(y.deriv[y])
+>>> print(y.deriv[x])
 6
 ```
 
@@ -168,6 +167,7 @@ class NewInt(Number):
 The `autodiff` package also works for functions with multiple inputs:
 ```python
 x = autodiff.Number(2)
+
 y = autodiff.Number(3)
 
 def f(x, y, a=3):
@@ -175,6 +175,14 @@ def f(x, y, a=3):
 
 q = f(x, y, a=3)
 ```
+
+```python
+>>> x.value
+2
+>>> x.deriv[x]
+1
+```
+
 ```python
 >>> q.deriv[x]
 9
@@ -183,7 +191,7 @@ q = f(x, y, a=3)
 >>> q.deriv
 {x: 9, y: 6}
 ```
-Because `a` does not have a `deriv`, there is no `q.grad[a]`.
+Because `a` does not have a `deriv`, there is no `q.deriv[a]`.
 
 It is also possible to return the gradient as an array if the user specifies an order of inputs:
 ```python
@@ -215,6 +223,38 @@ autodiff.array([[0, 1],
                 [1, 0]])
 ```
 
+```python
+x = autodiff.array((1, 2, 3))
+
+def f(x):
+    return x.T @ x
+
+q = f(x)
+
+>>>q.deriv[x]
+autodiff.array([2, 4, 6])
+
+>>>q.value
+13
+```
+
+```python
+x = autodiff.array((1, 2, 3))
+
+def f(x):
+    return 2 * x
+
+q = f(x)
+
+>>>q.deriv[x]
+autodiff.array((2, 2, 2))
+
+>>>q.value
+autodiff.array((2, 4, 6))
+
+>>>q.jacobian(x)
+?
+```
 
 
 #### Methods and name attributes
@@ -237,6 +277,7 @@ We have also included the following elementary operations
 - `autodiff.atan()`
 - `autodiff.log()`
 - `autodiff.exp()`
+- `autodiff.sqrt()`
 
 Defining custom elementary functions is straightforward, using the `elementary` decorator (this is the same method we use internally).
 ```python
@@ -262,6 +303,77 @@ def sin_deriv(a):
 def sin(a):
     return np.sin(a)
 ```
+
+When any elementary operation takes in two `Number()` objects (objects that have `deriv` attributes), that elementary operation will return a `Number()` with a partial derivative with respect to every key of both `Number()` objects:
+```python
+>>>x = autodiff.array((1, 2))
+>>>y = autodiff.array((3, 4))
+>>>x.deriv
+{
+    x[0]: 1,
+    x[1]: 1,
+}
+
+>>>y.deriv
+{
+    y[0]: 1,
+    y[1]: 1,
+}
+
+>>>q = x.T @ y
+>>>q.deriv
+{
+    x[0]: 3,
+    x[1]: 4,
+    y[0]: 1,
+    y[1]: 2,
+}
+>>>q.jacobian((*x, *y))
+autodiff.array([3, 4, 1, 2])
+>>>q.jacobian((*x, *y)).shape
+(4,)
+```
+
+```python
+>>>z = autodiff.array((5, 6))
+w = q @ z
+>>>w.deriv
+{
+    x[0]: array([15, 18]),
+    x[1]: array([20, 24]),
+    y[0]: array([5, 6]),
+    y[1]: array([10, 12]),
+    z[0]: array([11, 0]),
+    z[1]: array([0, 11]),
+}
+>>>w.jacobian((*x, *y, *z)).shape
+(2, 6)
+```
+
+`Number()` overloads `__mul__` and `__rmul__`:
+```python
+x = Number(2)
+y = Number(3)
+
+class Number():
+    ...
+
+    def _mult_deriv(self, other):
+        try:
+            self.deriv[self] * other.value
+
+        except ...
+
+    def __mul__(self, other):
+        
+        try:
+            out = Number(self.value, other.value)
+            out.deriv = _mult_deriv(self, other)
+
+        except ...
+
+```
+
 
 #### Classes
 
