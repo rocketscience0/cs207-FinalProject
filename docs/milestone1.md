@@ -2,44 +2,29 @@
 
 ## Introduction
 
-The software deploys the Forward Mode of Automatic Differentiation (Forward AD) to evaluate the derivatives of functions. Specifically, the software efficiently evaluates at machine precision the Jacobian matrix (a $m\times n$ matrix) of any function $f: R^n \rightarrow R^m$.
-
-**Importance of the Jacobian Matrix**
-
-Evaluating the Jacobian matrix is significant. The Jacobian matrix provides information of (partial) derivatives of the function, which can be used in many different ways. For example, it can be used to linearly approximate the function about the differentiation point, and it can be used to find the function’s extrema and roots. Moreover, Jacobian matrix is critical in a lot of optimization problems across different scientific fields.  
-
-One example of the utilization of Jacobian matrix is the famous Newton’s Method for root finding. The core of the method is that it utilizes evaluation of the Jacobian matrix in each step of its iterations to linearly approximate the given function.
-
-**Importance of High Accuracy and Efficiency**
-
-It is important to evaluate the Jacobian matrix with high accuracy, as small errors could accumulate in higher dimensions and over iterations. It is also important to evaluate the Jacobian matrix efficiently, considering the time cost of the calculation as the complexity and dimension of the function go up.
-
-**Problems with Classical Methods**
-
-Both Symbolic Differentiation and Finite Difference Method face issues of increasing errors and increasing time cost in evaluating the derivatives as dimensions and complexities of the function go up.
-
-**Advantages of the Software (Forward AD)**
-
-Our software, by using Forward AD, can evaluate the Jacobian Matrix of any function $f: R^n \rightarrow R^m$ up to machine precision efficiently. Every function, regardless of its complexity, executes a sequence of elementary arithmetic operations (addition, subtraction, multiplication and division) and elementary functions (sin, cos, log, etc). Using this fact, AD applies chain rule repeatedly on these operations, and can therefore compute derivatives of any order up to machine precision of the given function. As the order increases, the complexity of AD calculation is not worse than the original function, therefore achieving efficiency. 
-
-- This software aims to numerically evaluate the deivative of any function with high precision utilizing automatic differentiation.
+This software aims to numerically evaluate the deivative of any function with high precision utilizing automatic differentiation (AD). Specifically, the Jacobian matrix of dimension $ n\times m $ of any function $func: R^m \rightarrow R^n$ will be computed. Automatic differentiation is different from numerical differentiation and symbolic differentiation, which are introduced in the following:
 
 - Finite differencing equation:
 $$
 f'(x) = \lim_{h \rightarrow 0} \frac{f(x+h)-f(x)}{h}
 $$
 
-- Automatic differentiation (AD) can compute derivatives to machine precision without using numerical differentiation or symbolic differentiation.
+- Numerical differentiation, i.e., differentiation with the method of finite difference, can become unstable depending on step size and the particular function we're trying to differentiate. The accuracy of finite differencing also depends on choice of step size $h$.
 
-    - Numerical differentiation, i.e., differentiation with the method of finite difference, can become unstable depending on step size and the particular function we're trying to differentiate. The accuracy of finite differencing also depends on choice of step size $h$.
+- Symbolic differentiation difficult case:
+$$
+ f(x,y,z) = \frac{\cos(\exp(\frac{-5x^2}{y}))}{\frac{\sin(x)}{x**3}-erf(z)}
+$$
 
-    - While symbolic math packages (such as `sympy`) can do the same, symbolic math becomes complex with arbitrary functions, and requires that every function have an analytical representation.
-    - **_NOTE_**: Include example of function you can't differentiate symbolically
+- Symbolic differentiation (such as `sympy`) performs well for simple math forms, but symbolic math becomes complex with arbitrary functions, and requires that every function have an analytical representation. This is very computationally expensive and almost never implemented in application.
 
-- *Why is this important?*
-    - Derivatives are one of the most common steps in science and engineering.
-        - Are necessary in many optimization algorithms, which are extremely useful in machine learning and engineering.
-        - Simulations
+*Why is AD important?*
+
+- AD disect each function and its derivatives to a sequence of elementary arithmetic operations (addition, multiplication, subtraction and division) and elementary functions (exp, sin, cos, ln, etc). Chain rule is applied repeatedly on these elementary terms. Because of the simplicity of the derivatizing the elementary terms, minial error is propagated over the process. Efficiency is also maintained because increasing order does not increase computation difficulty.
+- AD computes partial derivatives, or the Jacobian matrices, which are one of the most common steps in science and engineering. One important application is optimization, which is extremely useful and implemented in every field such as machine learning.
+- AD gives high accuracy, which is an essential requirement to computation because small errors could accumulate in higher dimensions and over iterations and result in catastrophe. 
+- AD computes efficiently. Efficiency is very important because the time and energy are usually limited for a particular project. 
+
 
 
 ## Background
