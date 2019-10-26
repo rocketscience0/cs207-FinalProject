@@ -95,7 +95,7 @@ def testfunc(x):
 
 - `autodiff`
     - Main package
-    - **_NOTE_**: Expand more
+    - Implements the forward mode of automatic differentiation
 - `test_autodiff`
     - Run tests for this package
 
@@ -108,16 +108,29 @@ def testfunc(x):
 #### Installation and packaging
 **Subject to change in final package**
 
-1. Clone from github
+1. Ensure setuptools, pip are up to date
 ```bash
-git clone https://github.com/rocketscience0/cs207-FinalProject.git
+python -m pip install --upgrade pip setuptools
 ```
 
-1. Install
+2. Install package from github
+```bash
+pip install git+https://github.com/rocketscience0/cs207-FinalProject.git
+```
+
+3. 
 ```bash
 python setup.py
 ```
-**_NOTE_**: Add content about `DistUtils` and why. Do we want to use `PyPI`?
+
+
+Our workflow is based off of this (guide)[https://packaging.python.org/tutorials/installing-packages/].
+
+`setup.py` will specify required pieces of metadata, such as the version and dependencies. We will use `setuptools` as a distribution build tool. Why `setuptools` as opposed to `distutils`? As noted by the (Python Packaging User Guide)[https://packaging.python.org/guides/tool-recommendations/], `setuptools` is outside the standard library, allowing for consistency across different Python versions. 
+
+In class, we discussed also using the tool `pipenv`, a further abstraction that creates a virtual environment under the hood. Because we do not plan on having a complicated set of dependencies at the moment (nor implementations that rely on specific versions), it is unlikely that we will need a virtul environment. If this becomes an issue, we can manually create a virtual environment or switch over to `pipenv` as needed.
+
+Later on, we may publish a final version of our package (currently a Github repo) as an open-source Python package on PyPI. Using pip will allow users to easily install via `pip install autodiff`.
 
 
 ## Implementation
