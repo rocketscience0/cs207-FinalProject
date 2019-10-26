@@ -29,10 +29,21 @@ $$
 
 ## Background
 
-- Chain rule
-- Graph structure
-    - Elementary functions
-- Example calculation
+*The Chain Rule*
+
+The chain rule is applied when the derivatives of nested functions are computed. A simple case is $n(x) = g(f(x))$. $n'(x) = g'(f(x))*f'(x)$
+
+*The Graph structure*
+
+We can visualize each evaluation step in an AD process with a computation graph. For example, we have a simple function $f(x) = a*x^2 + 5$. The computation graph is the following:
+
+![](image/milestone1_computation_graph.png)
+
+*The Evaluation Table*
+
+We can also demonstrate each evaluation using an evaluation table. Using the same example at $x = 2$:
+![](image/milestone1_evaluation_table.png)
+
 
 
 
