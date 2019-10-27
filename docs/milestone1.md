@@ -47,9 +47,8 @@ We can visualize each evaluation step in an AD process with a computation graph.
 *The Evaluation Table*
 
 We can also demonstrate each evaluation using an evaluation table. Using the same example at $x = 2$:
+
 ![](image/milestone1_evaluation_table.png)
-
-
 
 
 ## How to use `autodiff`
