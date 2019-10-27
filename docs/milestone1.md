@@ -1,8 +1,12 @@
+# To do:
+- Convert intro to prose
+- Capitalize "Jacobian"
+
 # Milestone 1 Document
 
 ## Introduction
 
-This software aims to numerically evaluate the deivative of any function with high precision utilizing automatic differentiation (AD). Specifically, the Jacobian matrix of dimension $ n\times m $ of any function $func: R^m \rightarrow R^n$ will be computed. Automatic differentiation is different from numerical differentiation and symbolic differentiation, which are introduced in the following:
+This software aims to numerically evaluate the derivative of any function with high precision utilizing automatic differentiation (AD). Specifically, the Jacobian matrix of dimension $ n\times m $ of any function $func: R^m \rightarrow R^n$ will be computed. Automatic differentiation is different from numerical differentiation and symbolic differentiation, which are introduced in the following:
 
 - Finite differencing equation:
 $$
@@ -13,14 +17,14 @@ $$
 
 - Symbolic differentiation difficult case:
 $$
- f(x,y,z) = \frac{\cos(\exp(\frac{-5x^2}{y}))}{\frac{\sin(x)}{x**3}-erf(z)}
+ f(x,y,z) = \frac{\cos(\exp(\frac{-5x^2}{y}))}{\frac{\sin(x)}{x^3}-erf(z)}
 $$
 
 - Symbolic differentiation (such as `sympy`) performs well for simple math forms, but symbolic math becomes complex with arbitrary functions, and requires that every function have an analytical representation. This is very computationally expensive and almost never implemented in application.
 
 *Why is AD important?*
 
-- AD disect each function and its derivatives to a sequence of elementary arithmetic operations (addition, multiplication, subtraction and division) and elementary functions (exp, sin, cos, ln, etc). Chain rule is applied repeatedly on these elementary terms. Because of the simplicity of the derivatizing the elementary terms, minial error is propagated over the process. Efficiency is also maintained because increasing order does not increase computation difficulty.
+- AD dissects each function and its derivatives to a sequence of elementary arithmetic operations (addition, multiplication, subtraction and division) and elementary functions (exp, sin, cos, ln, etc). The chain rule is applied repeatedly on these elementary terms. Because differentiating elementary operations is simple, minimal error is propagated over the process. Efficiency is also maintained because increasing order does not increase computation difficulty.
 - AD computes partial derivatives, or the Jacobian matrices, which are one of the most common steps in science and engineering. One important application is optimization, which is extremely useful and implemented in every field such as machine learning.
 - AD gives high accuracy, which is an essential requirement to computation because small errors could accumulate in higher dimensions and over iterations and result in catastrophe. 
 - AD computes efficiently. Efficiency is very important because the time and energy are usually limited for a particular project. 
@@ -31,7 +35,7 @@ $$
 
 *The Chain Rule*
 
-The chain rule is applied when the derivatives of nested functions are computed. A simple case is $n(x) = g(f(x))$. $n'(x) = g'(f(x))*f'(x)$
+The chain rule is applied when the derivatives of nested functions are computed. A simple case is $n(x) = g(f(x))$, with the derivative $n'(x) = g'(f(x)) \cdot f'(x)$
 
 *The Graph structure*
 
@@ -165,12 +169,14 @@ Note that `autodiff.Number.jacobian()` does require the user to specify an order
 ```
 .
 ├── README.md
+├── .travis.yml
 ├── setup.py
 └── docs
-    └── milestone1.md
+    ├── milestone1.md
+    └── image
 └── demos
-    └── simple_demo.py
-    └── ...
+    ├── simple_demo.py
+    ├── ...
     └── complex_demo.py
 └── autodiff
     └── __init__.py
@@ -196,26 +202,29 @@ Note that `autodiff.Number.jacobian()` does require the user to specify an order
 **Subject to change in final package**
 
 1. Ensure setuptools, pip are up to date
-```bash
-python -m pip install --upgrade pip setuptools
-```
 
-2. Install package from github
-```bash
-pip install git+https://github.com/rocketscience0/cs207-FinalProject.git
-```
+    ```bash
+    python -m pip install --upgrade pip setuptools
+    ```
 
-3. 
-```bash
-python setup.py
-```
+1. Install package from github
+
+    ```bash
+    pip install git+https://github.com/rocketscience0/cs207-FinalProject.git
+    ```
+
+3. Set up.
+
+    ```bash
+    python setup.py
+    ```
 
 
-Our workflow is based off of this (guide)[https://packaging.python.org/tutorials/installing-packages/].
+Our workflow is based off of this [guide](https://packaging.python.org/tutorials/installing-packages/).
 
-`setup.py` will specify required pieces of metadata, such as the version and dependencies. We will use `setuptools` as a distribution build tool. Why `setuptools` as opposed to `distutils`? As noted by the (Python Packaging User Guide)[https://packaging.python.org/guides/tool-recommendations/], `setuptools` is outside the standard library, allowing for consistency across different Python versions. 
+`setup.py` will specify required pieces of metadata, such as the version and dependencies. We will use `setuptools` as a distribution build tool. Why `setuptools` as opposed to `distutils`? As noted by the [Python Packaging User Guide](https://packaging.python.org/guides/tool-recommendations/), `setuptools` is outside the standard library, allowing for consistency across different Python versions. 
 
-In class, we discussed also using the tool `pipenv`, a further abstraction that creates a virtual environment under the hood. Because we do not plan on having a complicated set of dependencies at the moment (nor implementations that rely on specific versions), it is unlikely that we will need a virtul environment. If this becomes an issue, we can manually create a virtual environment or switch over to `pipenv` as needed.
+<!-- In class, we discussed also using the tool `pipenv`, a further abstraction that creates a virtual environment under the hood. Because we do not plan on having a complicated set of dependencies at the moment (nor implementations that rely on specific versions), it is unlikely that we will need a virtul environment. If this becomes an issue, we can manually create a virtual environment or switch over to `pipenv` as needed. -->
 
 Later on, we may publish a final version of our package (currently a Github repo) as an open-source Python package on PyPI. Using pip will allow users to easily install via `pip install autodiff`.
 
