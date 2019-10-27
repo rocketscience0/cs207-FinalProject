@@ -53,36 +53,113 @@ $$
 
 ## How to use `autodiff`
 
-High-level interaction with `autodiff` is simple:
+High-level interaction with `autodiff` is simple. The core data structure is a `Number`, which stores both a value and a derivative. After instantiation, a number's derivative is `1`:
 
-Using common elementary functions
+Using elementary operations will update derivatives according to the chain rule:
 ```python
-import autodiff as ad
-from autodiff.elementary_functions import elementary
-import numpy as np
-
-x = ad.Number(2)
-
-# A sample function
-def testfunc(x):
-    return x**2
-
-# A function to return a derivative
-deriv = ad.diff(testfunc)
-deriv_at_x = deriv(x)
+>>> import autodiff
+>>> x = autodiff.Number(3)
+>>> x.value
+3
+>>> x.deriv[x]
+1
+>>> y = x**2
+>>> y.value
+9
+>>> y.deriv[x]
+6
 ```
 
-It is also possible to define vector functions
-```python
-x = ad.array([1, 2, 3, 4])
+Note that the `deriv` attribute is a dict storing partial derivatives with respect to each `Number` object involved in preceding elementary operations. 
 
-def testfunc(x):
-    return x.T @ x
+When any elementary operation takes in two `Number()` objects, that elementary operation will return a `Number()` with a partial derivative with respect to every key of both `Number()` objects:
+
+```python
+>>> x = autodiff.Number(2)
+>>> y = autodiff.Number(3)
+>>> def f(x, y, a=3):
+>>>     return a * x * y
+>>> q = f(x, y, a=3)
+>>> q.deriv[x]
+9
+>>> q.deriv[y]
+6
+>>> q.deriv
+{Number(value=2): 9, Number(value=3): 6}
 ```
 
-- Additional ideas:
-    - Finding optima?
-    - Generating computational graph?
+Similarly, `autodiff` can work with vector functions of scalars:
+```python
+x = autodiff.Number(np.pi / 2)
+y = autodiff.Number(3 * np.pi / 2)
+
+def f(x, y):
+    return autodiff.array((
+        y * autodiff.sin(x),
+        x * autodiff.sin(y)
+    ))
+q = f(x,y)
+```
+```python
+>>>q.deriv[x]
+autodiff.array([0, 1])
+>>>q.deriv[y]
+autodiff.array([1, 0])
+```
+
+The `autodiff` package also works for scalar functions of vectors and vector functions of scalars.
+
+Of course, most users will like to work with jacobians and gradients rather than a dict of partial derivatives. Doing so is simple through the `jacobian` method:
+
+<!-- # >>> x.deriv
+# {
+#     x[0]: 1,
+#     x[1]: 1,
+# }
+
+# >>> y.deriv
+# {
+#     y[0]: 1,
+#     y[1]: 1,
+# }
+
+# >>> q = x.T @ y
+# >>> q.deriv
+# {
+#     x[0]: 3,
+#     x[1]: 4,
+#     y[0]: 1,
+#     y[1]: 2,
+# } -->
+
+```python
+>>> x = autodiff.array((1, 2))
+>>> y = autodiff.array((3, 4))
+
+>>> q.jacobian((*x, *y))
+autodiff.array([3, 4, 1, 2])
+>>> q.jacobian((*x, *y)).shape
+(4,)
+```
+
+Or with a vector function:
+```python
+>>> x = autodiff.Number(np.pi / 2)
+>>> y = autodiff.Number(3 * np.pi / 2)
+
+>>> def f(x, y):
+        return autodiff.array((
+            y * autodiff.sin(x),
+            x * autodiff.sin(y)
+        ))
+
+>>> q = f(x,y)
+>>> q.jacobian((x, y))
+autodiff.array([[0, 1],
+                [1, 0]])
+```
+
+Note that `autodiff.Number.jacobian()` does require the user to specify an order of input `Number` objects to ensure consistency within the user's own code. Otherwise, `autodiff` would have to infer which element belongs to which function input. As the user strings together multiple elementary operations, it is likely that `autodiff`'s understanding would differ from the user's.
 
 ## Software Organization
 
@@ -136,25 +213,9 @@ python setup.py
 
 ## Implementation
 
-You can also define custom elementary operations using the `elementary` decorator.
+### Core data structures and classes
 
-#### Core data structures
-The core data structure is a `Number`, which stores a value and a derivative:
-
-```python
-x = autodiff.Number(3)
-y = x**2
-```
-
-```python
->>> print(y.value)
-9
->>> print(y.deriv[x])
-6
-```
-
-
-Defining a new type of number is easy:
+The `autodiff` package has two core data structures, the `Number` (a scalar that stores a value and a derivative) and the `array`, which subclasses the `numpy.ndarray`. If the user wishes, defining a new type of number is easy:
 
 ```python
 class NewInt(Number):
@@ -164,79 +225,38 @@ class NewInt(Number):
         self.deriv = b
 ```
 
-The `autodiff` package also works for functions with multiple inputs:
-```python
-x = autodiff.Number(2)
+<!-- The `autodiff` package also works for functions with multiple scalar inputs:
 
-y = autodiff.Number(3)
+Note that because `a` is an `int` and does not have a `deriv` attribute , there is no `q.deriv[a]`.
 
-def f(x, y, a=3):
-    return a * x * y
 
-q = f(x, y, a=3)
-```
 
-```python
->>> x.value
-2
->>> x.deriv[x]
-1
-```
 
-```python
->>> q.deriv[x]
-9
->>> q.deriv[y]
-6
->>> q.deriv
-{x: 9, y: 6}
-```
-Because `a` does not have a `deriv`, there is no `q.deriv[a]`.
 
-It is also possible to return the gradient as an array if the user specifies an order of inputs:
-```python
->>> q.deriv.asarray((x, y))
-array([9, 6])
-```
+It is possible to get the entire jacobian if the user specifies an order for input `Number`s. 
 
-If a function returns an array:
-```python
-x = autodiff.Number(np.pi / 2)
-y = autodiff.Number(3 * np.pi / 2)
 
-def f(x, y):
-    return autodiff.array((
-        y * autodiff.sin(x),
-        x * autodiff.sin(y)
-    ))
-q = f(x,y)
->>>q.deriv[x]
-autodiff.array([0, 1])
->>>q.deriv[y]
-autodiff.array([1, 0])
-```
 
-Again, it is possible to get the entire jacobian if the user specifies an order:
-```python
->>>q.jacobian((x, y))
-autodiff.array([[0, 1],
-                [1, 0]])
-```
 
-```python
+The `autodiff` package also works for scalar functions with vector inputs: -->
+
+<!-- ```python
 x = autodiff.array((1, 2, 3))
 
 def f(x):
     return x.T @ x
 
 q = f(x)
-
+```
+```python
 >>>q.deriv[x]
 autodiff.array([2, 4, 6])
 
 >>>q.value
 13
 ```
+
+and vector-valued functions with vector inputs:
 
 ```python
 x = autodiff.array((1, 2, 3))
@@ -254,11 +274,10 @@ autodiff.array((2, 4, 6))
 
 >>>q.jacobian(x)
 ?
-```
+``` -->
 
-
-#### Methods and name attributes
-The number class overloads the following common elementary operations:
+### Methods and name attributes
+The `Number` class overloads the following common elementary operations:
 
 - `+`
 - `-`
@@ -267,7 +286,7 @@ The number class overloads the following common elementary operations:
 - `**`
 - `@`
 
-We have also included the following elementary operations
+We have also included the following elementary operations, all of which use their `numpy` counterparts.
 
 - `autodiff.sin()`
 - `autodiff.cos()`
@@ -279,7 +298,8 @@ We have also included the following elementary operations
 - `autodiff.exp()`
 - `autodiff.sqrt()`
 
-Defining custom elementary functions is straightforward, using the `elementary` decorator (this is the same method we use internally).
+Defining custom elementary functions is straightforward, using the `elementary` decorator (this is the same method we use internally). The decorator takes one input, a function with the same arguments as the elementary operation, but calculates the derivative of the operation rather than the value. We call this derivative function internally.
+
 ```python
 def my_pow_deriv(a, b):
     """ Returns the derivative of my_pow at a and b
@@ -295,46 +315,19 @@ def my_pow(a, b):
 def sin_deriv(a):
     """ Returns the derivative of the sin() elemental operation"""
     try:
-        return a.deriv * np.cos(a)
+        return a.deriv * np.cos(a.value)
     except AttributeError
         return np.cos(a)
     
 @elementary(sin_deriv)
 def sin(a):
+    try ...
     return np.sin(a)
 ```
 
-When any elementary operation takes in two `Number()` objects (objects that have `deriv` attributes), that elementary operation will return a `Number()` with a partial derivative with respect to every key of both `Number()` objects:
-```python
->>>x = autodiff.array((1, 2))
->>>y = autodiff.array((3, 4))
->>>x.deriv
-{
-    x[0]: 1,
-    x[1]: 1,
-}
 
->>>y.deriv
-{
-    y[0]: 1,
-    y[1]: 1,
-}
 
->>>q = x.T @ y
->>>q.deriv
-{
-    x[0]: 3,
-    x[1]: 4,
-    y[0]: 1,
-    y[1]: 2,
-}
->>>q.jacobian((*x, *y))
-autodiff.array([3, 4, 1, 2])
->>>q.jacobian((*x, *y)).shape
-(4,)
-```
-
-```python
+<!-- ```python
 >>>z = autodiff.array((5, 6))
 w = q @ z
 >>>w.deriv
@@ -348,7 +341,7 @@ w = q @ z
 }
 >>>w.jacobian((*x, *y, *z)).shape
 (2, 6)
-```
+``` -->
 
 `Number()` overloads `__mul__` and `__rmul__`:
 ```python
@@ -375,9 +368,9 @@ class Number():
 ```
 
 
-#### Classes
+<!-- ### Classes
 
 `autodiff.array` inherits from `numpy.array`, but also stores the jacobian.
 `autodiff.Number` is the base class for a numeric type.
 
-Many elementary operations rely on their `numpy` counterparts, but also include their derivative.
+Many elementary operations rely on their `numpy` counterparts, but also include their derivative. -->
