@@ -10,3 +10,6 @@ pandoc \
     --include-in-header=default-header.tex \
     $1 \
     --filter=pandoc-minted.py \
+
+lualatex -shell-escape $FILENAME
+lualatex -shell-escape $FILENAME
