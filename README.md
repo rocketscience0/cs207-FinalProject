@@ -1,6 +1,6 @@
-![](https://travis-ci.org/rocketscience0/cs207-FinalProject.svg?   branch=master)
+![Build Status](https://travis-ci.org/rocketscience0/cs207-FinalProject.svg?branch=master)
 
-![](https://codecov.io/gh/rocketscience0/cs207-FinalProject/branch/     master/graph/badge.svg)
+[![codecov](https://codecov.io/gh/rocketscience0/cs207-FinalProject/branch/master/graph/badge.svg)](https://codecov.io/gh/rocketscience0/cs207-FinalProject)
 
 
 # CS207 Final Project
