@@ -7,15 +7,15 @@
 
 ## Introduction
 
-This software aims to numerically evaluate the derivative of any function with high precision utilizing automatic differentiation (AD). Specifically, the Jacobian matrix of dimension <img src="https://rawgit.com/rocketscience0/cs207-FinalProject/readable-doc/svgs/cb5599c2690799fe1062e1a8acf35443.svg?invert_in_darkmode" align=middle width=44.39116769999999pt height=19.1781018pt/> of any function <img src="https://rawgit.com/rocketscience0/cs207-FinalProject/readable-doc/svgs/6165841a75bae481b0e46a02c8b4b566.svg?invert_in_darkmode" align=middle width=121.30711559999999pt height=22.831056599999986pt/> will be computed. Automatic differentiation is different from numerical differentiation and symbolic differentiation, which are introduced in the following:
+This software aims to numerically evaluate the derivative of any function with high precision utilizing automatic differentiation (AD). Specifically, the Jacobian matrix of dimension <img src="svgs/cb5599c2690799fe1062e1a8acf35443.svg?invert_in_darkmode" align=middle width=44.39116769999999pt height=19.1781018pt/> of any function <img src="svgs/6165841a75bae481b0e46a02c8b4b566.svg?invert_in_darkmode" align=middle width=121.30711559999999pt height=22.831056599999986pt/> will be computed. Automatic differentiation is different from numerical differentiation and symbolic differentiation, which are introduced in the following:
 
 - Finite differencing equation:
-<p align="center"><img src="https://rawgit.com/rocketscience0/cs207-FinalProject/readable-doc/svgs/1c01011e2095630645174b4152c8dfaa.svg?invert_in_darkmode" align=middle width=204.24238724999998pt height=34.7253258pt/></p>
+<p align="center"><img src="svgs/1c01011e2095630645174b4152c8dfaa.svg?invert_in_darkmode" align=middle width=204.24238724999998pt height=34.7253258pt/></p>
 
-- Numerical differentiation, i.e., differentiation with the method of finite difference, can become unstable depending on step size and the particular function we're trying to differentiate. The accuracy of finite differencing also depends on choice of step size <img src="https://rawgit.com/rocketscience0/cs207-FinalProject/readable-doc/svgs/2ad9d098b937e46f9f58968551adac57.svg?invert_in_darkmode" align=middle width=9.47111549999999pt height=22.831056599999986pt/>.
+- Numerical differentiation, i.e., differentiation with the method of finite difference, can become unstable depending on step size and the particular function we're trying to differentiate. The accuracy of finite differencing also depends on choice of step size <img src="svgs/2ad9d098b937e46f9f58968551adac57.svg?invert_in_darkmode" align=middle width=9.47111549999999pt height=22.831056599999986pt/>.
 
 - Symbolic differentiation difficult case:
-<p align="center"><img src="https://rawgit.com/rocketscience0/cs207-FinalProject/readable-doc/svgs/b57e538b939776f57143ae4ee127c6a8.svg?invert_in_darkmode" align=middle width=194.85259034999999pt height=51.5096967pt/></p>
+<p align="center"><img src="svgs/b57e538b939776f57143ae4ee127c6a8.svg?invert_in_darkmode" align=middle width=194.85259034999999pt height=51.5096967pt/></p>
 
 - Symbolic differentiation (such as `sympy`) performs well for simple math forms, but symbolic math becomes complex with arbitrary functions, and requires that every function have an analytical representation. This is very computationally expensive and almost never implemented in application.
 
@@ -32,17 +32,17 @@ This software aims to numerically evaluate the derivative of any function with h
 
 *The Chain Rule*
 
-The chain rule is applied when the derivatives of nested functions are computed. A simple case is <img src="https://rawgit.com/rocketscience0/cs207-FinalProject/readable-doc/svgs/31ff3ede092b6beedde100913cb2ae67.svg?invert_in_darkmode" align=middle width=107.17855335pt height=24.65753399999998pt/>, with the derivative <img src="https://rawgit.com/rocketscience0/cs207-FinalProject/readable-doc/svgs/f2b5bf4837c80314921d7c7010f6f73e.svg?invert_in_darkmode" align=middle width=164.8839951pt height=24.7161288pt/>
+The chain rule is applied when the derivatives of nested functions are computed. A simple case is <img src="svgs/31ff3ede092b6beedde100913cb2ae67.svg?invert_in_darkmode" align=middle width=107.17855335pt height=24.65753399999998pt/>, with the derivative <img src="svgs/f2b5bf4837c80314921d7c7010f6f73e.svg?invert_in_darkmode" align=middle width=164.8839951pt height=24.7161288pt/>
 
 *The Graph structure*
 
-We can visualize each evaluation step in an AD process with a computation graph. For example, we have a simple function <img src="https://rawgit.com/rocketscience0/cs207-FinalProject/readable-doc/svgs/bb43d19a98f405fd04e3f7d0b0bca0ac.svg?invert_in_darkmode" align=middle width=123.20943524999998pt height=26.76175259999998pt/>. The computation graph is the following:
+We can visualize each evaluation step in an AD process with a computation graph. For example, we have a simple function <img src="svgs/bb43d19a98f405fd04e3f7d0b0bca0ac.svg?invert_in_darkmode" align=middle width=123.20943524999998pt height=26.76175259999998pt/>. The computation graph is the following:
 
 ![](image/milestone1_computation_graph.png)
 
 *The Evaluation Table*
 
-We can also demonstrate each evaluation using an evaluation table. Using the same example at <img src="https://rawgit.com/rocketscience0/cs207-FinalProject/readable-doc/svgs/ed9cfbac1ead3f54087d281a89148010.svg?invert_in_darkmode" align=middle width=39.53182859999999pt height=21.18721440000001pt/>:
+We can also demonstrate each evaluation using an evaluation table. Using the same example at <img src="svgs/ed9cfbac1ead3f54087d281a89148010.svg?invert_in_darkmode" align=middle width=39.53182859999999pt height=21.18721440000001pt/>:
 ![](image/milestone1_evaluation_table.png)
 
 
