@@ -10,10 +10,3 @@ pandoc \
     --include-in-header=default-header.tex \
     $1 \
     --filter=pandoc-minted.py \
-    # --pdf-engine=/usr/local/texlive/2018/bin/x86_64-darwin/lualatex
-    # --filter="pandoc-crossref" \
-    # --filter="pandoc-citeproc" \
-    # --reference-doc="$EXAMPLE_FILE" \
-    # --metadata link-citations=true \
-    # --number-sections \
-    # --toc
