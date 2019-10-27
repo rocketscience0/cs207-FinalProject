@@ -1,6 +1,7 @@
 # To do:
 - Convert intro to prose
 - Capitalize "Jacobian"
+- New title
 
 # Milestone 1 Document
 
@@ -111,27 +112,6 @@ The `autodiff` package also works for scalar functions of vectors and vector fun
 
 Of course, most users will like to work with jacobians and gradients rather than a dict of partial derivatives. Doing so is simple through the `jacobian` method:
 
-<!-- # >>> x.deriv
-# {
-#     x[0]: 1,
-#     x[1]: 1,
-# }
-
-# >>> y.deriv
-# {
-#     y[0]: 1,
-#     y[1]: 1,
-# }
-
-# >>> q = x.T @ y
-# >>> q.deriv
-# {
-#     x[0]: 3,
-#     x[1]: 4,
-#     y[0]: 1,
-#     y[1]: 2,
-# } -->
-
 ```python
 >>> x = autodiff.array((1, 2))
 >>> y = autodiff.array((3, 4))
@@ -224,7 +204,6 @@ Our workflow is based off of this [guide](https://packaging.python.org/tutorials
 
 `setup.py` will specify required pieces of metadata, such as the version and dependencies. We will use `setuptools` as a distribution build tool. Why `setuptools` as opposed to `distutils`? As noted by the [Python Packaging User Guide](https://packaging.python.org/guides/tool-recommendations/), `setuptools` is outside the standard library, allowing for consistency across different Python versions. 
 
-<!-- In class, we discussed also using the tool `pipenv`, a further abstraction that creates a virtual environment under the hood. Because we do not plan on having a complicated set of dependencies at the moment (nor implementations that rely on specific versions), it is unlikely that we will need a virtul environment. If this becomes an issue, we can manually create a virtual environment or switch over to `pipenv` as needed. -->
 
 Later on, we may publish a final version of our package (currently a Github repo) as an open-source Python package on PyPI. Using pip will allow users to easily install via `pip install autodiff`.
 
@@ -243,56 +222,6 @@ class NewInt(Number):
         self.deriv = b
 ```
 
-<!-- The `autodiff` package also works for functions with multiple scalar inputs:
-
-Note that because `a` is an `int` and does not have a `deriv` attribute , there is no `q.deriv[a]`.
-
-
-
-
-
-It is possible to get the entire jacobian if the user specifies an order for input `Number`s. 
-
-
-
-
-The `autodiff` package also works for scalar functions with vector inputs: -->
-
-<!-- ```python
-x = autodiff.array((1, 2, 3))
-
-def f(x):
-    return x.T @ x
-
-q = f(x)
-```
-```python
->>>q.deriv[x]
-autodiff.array([2, 4, 6])
-
->>>q.value
-13
-```
-
-and vector-valued functions with vector inputs:
-
-```python
-x = autodiff.array((1, 2, 3))
-
-def f(x):
-    return 2 * x
-
-q = f(x)
-
->>>q.deriv[x]
-autodiff.array((2, 2, 2))
-
->>>q.value
-autodiff.array((2, 4, 6))
-
->>>q.jacobian(x)
-?
-``` -->
 
 ### Methods and name attributes
 The `Number` class overloads the following common elementary operations:
@@ -343,24 +272,6 @@ def sin(a):
     return np.sin(a)
 ```
 
-
-
-<!-- ```python
->>>z = autodiff.array((5, 6))
-w = q @ z
->>>w.deriv
-{
-    x[0]: array([15, 18]),
-    x[1]: array([20, 24]),
-    y[0]: array([5, 6]),
-    y[1]: array([10, 12]),
-    z[0]: array([11, 0]),
-    z[1]: array([0, 11]),
-}
->>>w.jacobian((*x, *y, *z)).shape
-(2, 6)
-``` -->
-
 `Number()` overloads `__mul__` and `__rmul__`:
 ```python
 x = Number(2)
@@ -384,11 +295,3 @@ class Number():
         except ...
 
 ```
-
-
-<!-- ### Classes
-
-`autodiff.array` inherits from `numpy.array`, but also stores the jacobian.
-`autodiff.Number` is the base class for a numeric type.
-
-Many elementary operations rely on their `numpy` counterparts, but also include their derivative. -->
