@@ -6,7 +6,7 @@ This software aims to numerically evaluate the derivative of any function with h
 
 - Numerical differentiation (finite differencing)
 ```math
-f'(x) = \lim_{h \rightarrow 0} \frac{f(x+h)-f(x)}{h}
+``$f'(x) = \lim_{h \rightarrow 0} \frac{f(x+h)-f(x)}{h}$``
 ```
 
 - Numerical differentiation, i.e., differentiation with the method of finite difference, can become unstable depending on step size and the particular function we're trying to differentiate.
@@ -14,7 +14,7 @@ f'(x) = \lim_{h \rightarrow 0} \frac{f(x+h)-f(x)}{h}
 - Symbolic differentiation:
 A difficult example:
 ```math
- f(x,y,z) = \frac{\cos(\exp(\frac{-5x^2}{y}))}{\frac{\sin(x)}{x^3}-erf(z)}
+``$ f(x,y,z) = \frac{\cos(\exp(\frac{-5x^2}{y}))}{\frac{\sin(x)}{x^3}-erf(z)}$``
 ```
 
 - Symbolic differentiation (such as `sympy`) performs well for simple math forms, but becomes complex with arbitrary functions, and requires that every function have an analytical representation. This is very computationally expensive and almost never implemented in application.
@@ -38,7 +38,7 @@ The chain rule is applied when the derivatives of nested functions are computed.
 
 We can visualize each evaluation step in an AD process with a computation graph. For example, we have a simple function 
 ```math
-f(x) = a*x^2 + 5
+``$ f(x) = a*x^2 + 5 $``
 ```
 The computation graph is the following:
 
@@ -48,7 +48,7 @@ The computation graph is the following:
 
 We can also demonstrate each evaluation using an evaluation table. Using the same example at 
 ```math
-x = 2
+``$ x = 2 $``
 ```
 ![](image/milestone1_evaluation_table.png)
 
