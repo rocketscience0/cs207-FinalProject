@@ -5,11 +5,14 @@
 This software aims to numerically evaluate the derivative of any function with high precision utilizing automatic differentiation (AD). Specifically, the Jacobian matrix of dimension (n,m) of any function from R^m to R^n will be computed. Automatic differentiation is different from finite numerical differentiation and symbolic differentiation, which are introduced in the following:
 
 - Numerical differentiation (finite differencing)
+
 ![](image/equation1.svg)
+
 - Numerical differentiation, i.e., differentiation with the method of finite difference, can become unstable depending on step size and the particular function we're trying to differentiate.
 
 - Symbolic differentiation:
 A difficult example:
+
 ![](image/equation2.svg)
 
 - Symbolic differentiation (such as `sympy`) performs well for simple math forms, but becomes complex with arbitrary functions, and requires that every function have an analytical representation. This is very computationally expensive and almost never implemented in application.
@@ -27,12 +30,22 @@ A difficult example:
 
 *The Chain Rule*
 
-The chain rule is applied when the derivatives of nested functions are computed. A simple case is n(x) = g(f(x)), with the derivative n'(x) = g'(f(x))\*f'(x)
+The chain rule is applied when the derivatives of nested functions are computed. A simple case is
+```math
+n(x) = g(f(x))
+```
+
+with the derivative 
+```math
+n'(x) = g'(f(x))*f'(x)
+```
 
 *The Graph Structure*
 
 We can visualize each evaluation step in an AD process with a computation graph. For example, we have a simple function 
+
 ![](image/equation3.svg)
+
 The computation graph is the following:
 
 ![](image/milestone1_computation_graph.png)
@@ -44,6 +57,7 @@ We can also demonstrate each evaluation using an evaluation table. Using the sam
 ```math
 x = 2
 ```
+
 ![](image/milestone1_evaluation_table.png)
 
 
