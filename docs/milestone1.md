@@ -1,3 +1,5 @@
+**_NOTE to TF_**: *The `.pdf`, `.ipynb`, and `.md` versions of this document are identical. Math doesn't render correctly in markdown on github, and we didn't know if you'd prefer a notebook or a pdf file.*
+
 # AutoDiff Package - Group 30
 
 ## Introduction
@@ -302,6 +304,7 @@ class Number():
 
         except ...
 
+    @elementary(self._mult_deriv)
     def __mul__(self, other):
         
         try:
