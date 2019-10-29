@@ -1,37 +1,25 @@
----
-title: Milestone 1 document
----
-
-# To do:
-- Convert intro to prose
-- Capitalize "Jacobian"
-- New title
-
-# Milestone 1 Document
+# AutoDiff Package - Group 30
 
 ## Introduction
 
 This software aims to numerically evaluate the derivative of any function with high precision utilizing automatic differentiation (AD). Specifically, the Jacobian matrix of dimension $n \times m$ of any function $func: \mathbb{R}^m \mapsto \mathbb{R}^n$ will be computed. Automatic differentiation is different from numerical differentiation and symbolic differentiation, which are introduced in the following:
 
-- Finite differencing equation:
-$$
-f'(x) = \lim_{h \rightarrow 0} \frac{f(x+h)-f(x)}{h}
-$$
+- Numerical differentiation, i.e., differentiation with the method of finite difference, can become unstable depending on step size and the particular function we're trying to differentiate.
 
-- Numerical differentiation, i.e., differentiation with the method of finite difference, can become unstable depending on step size and the particular function we're trying to differentiate. The accuracy of finite differencing also depends on choice of step size $h$.
+- Symbolic differentiation:
+A difficult example:
 
-- Symbolic differentiation difficult case:
 $$
  f(x,y,z) = \frac{\cos(\exp(\frac{-5x^2}{y}))}{\frac{\sin(x)}{x^3}-\mathrm{erf}(z)}
 $$
 
-- Symbolic differentiation (such as `sympy`) performs well for simple math forms, but symbolic math becomes complex with arbitrary functions, and requires that every function have an analytical representation. This is very computationally expensive and almost never implemented in application.
+- Symbolic differentiation (such as `sympy`) performs well for simple math forms, but becomes complex with arbitrary functions, and requires that every function have an analytical representation. This is very computationally expensive and almost never implemented in application.
 
 *Why is AD important?*
 
-- AD dissects each function and its derivatives to a sequence of elementary arithmetic operations (addition, multiplication, subtraction and division) and elementary functions (exp, sin, cos, ln, etc). The chain rule is applied repeatedly on these elementary terms. Because differentiating elementary operations is simple, minimal error is propagated over the process. Efficiency is also maintained because increasing order does not increase computation difficulty.
+- AD dissects each function and its derivatives to a sequence of elementary functions. The chain rule is applied repeatedly on these elementary terms. Accuracy is maintained because differentiating elementary operations is simple and minimal error is propagated over the process. Efficiency is also maintained because increasing order does not increase computation difficulty.
 - AD computes partial derivatives, or the Jacobian matrices, which are one of the most common steps in science and engineering. One important application is optimization, which is extremely useful and implemented in every field such as machine learning.
-- AD gives high accuracy, which is an essential requirement to computation because small errors could accumulate in higher dimensions and over iterations and result in catastrophe. 
+- AD gives high accuracy, which is an essential requirement to computation because small errors could accumulate in higher dimensions and over iterations and result in a catastrophe. 
 - AD computes efficiently. Efficiency is very important because the time and energy are usually limited for a particular project. 
 
 
@@ -40,11 +28,23 @@ $$
 
 *The Chain Rule*
 
-The chain rule is applied when the derivatives of nested functions are computed. A simple case is $n(x) = g(f(x))$, with the derivative $n'(x) = g'(f(x)) \cdot f'(x)$
+The chain rule is applied when the derivatives of nested functions are computed. A simple case is
+```math
+n(x) = g(f(x))
+```
 
-*The Graph structure*
+with the derivative 
+```math
+n'(x) = g'(f(x))*f'(x)
+```
 
-We can visualize each evaluation step in an AD process with a computation graph. For example, we have a simple function $f(x) = a*x^2 + 5$. The computation graph is the following:
+*The Graph Structure*
+
+We can visualize each evaluation step in an AD process with a computation graph. For example, we have a simple function 
+
+![](image/equation3.svg)
+
+The computation graph is the following:
 
 ![](image/milestone1_computation_graph.png)
 
@@ -120,9 +120,9 @@ Of course, most users will like to work with Jacobians and gradients rather than
 >>> x = autodiff.array((1, 2))
 >>> y = autodiff.array((3, 4))
 
->>> q.jacobian((*x, *y))
+>>> q.Jacobian((*x, *y))
 autodiff.array([3, 4, 1, 2])
->>> q.jacobian((*x, *y)).shape
+>>> q.Jacobian((*x, *y)).shape
 (4,)
 ```
 
@@ -138,13 +138,12 @@ Or with a vector function:
         ))
 
 >>> q = f(x,y)
->>> q.jacobian((x, y))
+>>> q.Jacobian((x, y))
 autodiff.array([[0, 1],
                 [1, 0]])
 >>> q.jacobian((x, y)).shape
 (2, 2)
 ```
-
 Note that `autodiff.Number.jacobian()` does require the user to specify an order of input `Number` objects to ensure consistency within the user's own code. Otherwise, `autodiff` would have to infer which element belongs to which function input. As the user strings together multiple elementary operations, it is likely that `autodiff`'s understanding would differ from the user's. An example of the suggested usage is:
 
 ```python
@@ -170,6 +169,7 @@ f2 = f1 * x * y
 >>> f2.jacobian((order))
 autodiff.array([240, 32, 66.542])
 ```
+
 
 ## Software Organization
 
