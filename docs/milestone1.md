@@ -28,21 +28,15 @@ $$
 
 *The Chain Rule*
 
-The chain rule is applied when the derivatives of nested functions are computed. A simple case is
-```math
-n(x) = g(f(x))
-```
-
-with the derivative 
-```math
-n'(x) = g'(f(x))*f'(x)
-```
+The chain rule is applied when the derivatives of nested functions are computed. A simple case is $n(x) = g(f(x))$, with the derivative $n'(x) = g'(f(x)) \cdot f'(x)$
 
 *The Graph Structure*
 
 We can visualize each evaluation step in an AD process with a computation graph. For example, we have a simple function 
 
-![](image/equation3.svg)
+$$
+f\left(x\right) = a x^2 + 5
+$$
 
 The computation graph is the following:
 
