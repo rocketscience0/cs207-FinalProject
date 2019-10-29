@@ -46,7 +46,12 @@ The computation graph is the following:
 
 We can also demonstrate each evaluation using an evaluation table. Using the same example at $x = 2$:
 
-![](image/milestone1_evaluation_table.png)
+| Step | Elementary Operations | Numerical Value | df/dx   | Numerical Value df/dx |
+|------|-----------------------|-----------------|---------|-----------------------|
+| x1   | x                     | 2               | ẋ1      | 1                     |
+| x2   | x12                   | 4               | 2*ẋ1*x1 | 4                     |
+| x3   | a*x2                  | a*4             | a*ẋ2    | a*4                   |
+| x4   | x3+5                  | a*4+5           | ẋ3      | a*4                   |
 
 
 ## How to use `autodiff`
