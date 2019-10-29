@@ -11,7 +11,7 @@ title: Milestone 1 document
 
 ## Introduction
 
-This software aims to numerically evaluate the derivative of any function with high precision utilizing automatic differentiation (AD). Specifically, the Jacobian matrix of dimension $n \times m$ of any function $func: R^m \rightarrow R^n$ will be computed. Automatic differentiation is different from numerical differentiation and symbolic differentiation, which are introduced in the following:
+This software aims to numerically evaluate the derivative of any function with high precision utilizing automatic differentiation (AD). Specifically, the Jacobian matrix of dimension $n \times m$ of any function $func: \mathbb{R}^m \mapsto \mathbb{R}^n$ will be computed. Automatic differentiation is different from numerical differentiation and symbolic differentiation, which are introduced in the following:
 
 - Finite differencing equation:
 $$
@@ -22,7 +22,7 @@ $$
 
 - Symbolic differentiation difficult case:
 $$
- f(x,y,z) = \frac{\cos(\exp(\frac{-5x^2}{y}))}{\frac{\sin(x)}{x^3}-erf(z)}
+ f(x,y,z) = \frac{\cos(\exp(\frac{-5x^2}{y}))}{\frac{\sin(x)}{x^3}-\mathrm{erf}(z)}
 $$
 
 - Symbolic differentiation (such as `sympy`) performs well for simple math forms, but symbolic math becomes complex with arbitrary functions, and requires that every function have an analytical representation. This is very computationally expensive and almost never implemented in application.
@@ -302,7 +302,7 @@ def sin(a):
     return np.sin(a)
 ```
 
-`Number()` overloads `__mul__` and `__rmul__`:
+The `Number()` class overloads `__mul__` and `__rmul__`, along with other elementary operations as follows. The `autodiff.array` class overloads vector operations similarly.
 ```python
 x = Number(2)
 y = Number(3)
