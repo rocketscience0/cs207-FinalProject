@@ -376,3 +376,8 @@ TSWLatexianTemp*
 
 # Makeindex log files
 *.lpz
+
+########################
+# MILESTONE .TEX FILES #
+########################
+**/milestone*.tex
