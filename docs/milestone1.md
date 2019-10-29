@@ -46,12 +46,12 @@ The computation graph is the following:
 
 We can also demonstrate each evaluation using an evaluation table. Using the same example at $x = 2$:
 
-| Step | Elementary Operations | Numerical Value | df/dx   | Numerical Value df/dx |
-|------|-----------------------|-----------------|---------|-----------------------|
-| x1   | x                     | 2               | ẋ1      | 1                     |
-| x2   | x12                   | 4               | 2*ẋ1*x1 | 4                     |
-| x3   | a*x2                  | a*4             | a*ẋ2    | a*4                   |
-| x4   | x3+5                  | a*4+5           | ẋ3      | a*4                   |
+| Step  | Elementary Operations | Numerical Value | $\frac{\mathrm{d}f}{\mathrm{d}x}$ | $\frac{\mathrm{d}f}{\mathrm{d}x}$ Value |
+|:-----:|:---------------------:|:---------------:|:---------------------------------:|:---------------------------------------:|
+| $x_1$ |          $x$          |       $2$       |            $\dot{x}_1$            |                   $1$                   |
+| $x_2$ |        $x_1^2$        |       $4$       |          $2x_1\dot{x}_1$          |                   $4$                   |
+| $x_3$ |        $a x_2$        |      $4a$       |           $a\dot{x}_2$            |                  $4a$                   |
+| $x_4$ |        $x_3+5$        |     $4a+5$      |            $\dot{x}_3$            |                  $4a$                   |
 
 
 ## How to use `autodiff`
