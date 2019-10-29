@@ -2,18 +2,16 @@
 
 ## Introduction
 
-This software aims to numerically evaluate the derivative of any function with high precision utilizing automatic differentiation (AD). Specifically, the Jacobian matrix of dimension (n,m) of any function from R^m to R^n will be computed. Automatic differentiation is different from finite numerical differentiation and symbolic differentiation, which are introduced in the following:
-
-- Numerical differentiation (finite differencing)
-
-![](image/equation1.svg)
+This software aims to numerically evaluate the derivative of any function with high precision utilizing automatic differentiation (AD). Specifically, the Jacobian matrix of dimension $n \times m$ of any function $func: \mathbb{R}^m \mapsto \mathbb{R}^n$ will be computed. Automatic differentiation is different from numerical differentiation and symbolic differentiation, which are introduced in the following:
 
 - Numerical differentiation, i.e., differentiation with the method of finite difference, can become unstable depending on step size and the particular function we're trying to differentiate.
 
 - Symbolic differentiation:
 A difficult example:
 
-![](image/equation2.svg)
+$$
+ f(x,y,z) = \frac{\cos(\exp(\frac{-5x^2}{y}))}{\frac{\sin(x)}{x^3}-\mathrm{erf}(z)}
+$$
 
 - Symbolic differentiation (such as `sympy`) performs well for simple math forms, but becomes complex with arbitrary functions, and requires that every function have an analytical representation. This is very computationally expensive and almost never implemented in application.
 
@@ -52,15 +50,9 @@ The computation graph is the following:
 
 *The Evaluation Table*
 
-We can also demonstrate each evaluation using an evaluation table. Using the same example at
-
-```math
-x = 2
-```
+We can also demonstrate each evaluation using an evaluation table. Using the same example at $x = 2$:
 
 ![](image/milestone1_evaluation_table.png)
-
-
 
 
 ## How to use `autodiff`
@@ -100,7 +92,8 @@ When any elementary operation takes in two `Number()` objects, that elementary o
 {Number(value=2): 9, Number(value=3): 6}
 ```
 
-Similarly, `autodiff` can work with vector functions of scalars:
+Similarly, `autodiff` can work with vector functions of scalars. In these cases, each value in `deriv` is an array with the same shape as the output vector:
+
 ```python
 x = autodiff.Number(np.pi / 2)
 y = autodiff.Number(3 * np.pi / 2)
@@ -113,15 +106,15 @@ def f(x, y):
 q = f(x,y)
 ```
 ```python
->>>q.deriv[x]
+>>> q.deriv[x]
 autodiff.array([0, 1])
->>>q.deriv[y]
+>>> q.deriv[y]
 autodiff.array([1, 0])
 ```
 
-The `autodiff` package also works for scalar functions of vectors and vector functions of scalars.
+The `autodiff` package also works for scalar functions of vectors and vector functions of vectors, which behave the same.
 
-Of course, most users will like to work with Jacobians and gradients rather than a dict of partial derivatives. Doing so is simple through the `Jacobian` method:
+Of course, most users will like to work with Jacobians and gradients rather than a `dict` of partial derivatives. Doing so is simple through the `jacobian` method. When an expression returns a scalar, `jacobian` will return that expression's gradient. When an expression returns a vector, `jacobian` will return that expression's Jacobian as a two-dimensional array.
 
 ```python
 >>> x = autodiff.array((1, 2))
@@ -148,9 +141,35 @@ Or with a vector function:
 >>> q.Jacobian((x, y))
 autodiff.array([[0, 1],
                 [1, 0]])
+>>> q.jacobian((x, y)).shape
+(2, 2)
+```
+Note that `autodiff.Number.jacobian()` does require the user to specify an order of input `Number` objects to ensure consistency within the user's own code. Otherwise, `autodiff` would have to infer which element belongs to which function input. As the user strings together multiple elementary operations, it is likely that `autodiff`'s understanding would differ from the user's. An example of the suggested usage is:
+
+```python
+x = autodiff.Number(2)
+y = autodiff.Number(3)
+z = autodiff.Number(4)
+
+order = (x, y, z)
+
+# The gradient of f1 and f2 do not have an inherent order.
+# If we displayed Numbers in the order they were used, the implied order would be
+# (grad_x, grad_z, grad_y)---likely not what the user desires.
+f1 = x**z
+f2 = f1 * x * y
+```
+```python
+>>> f2.deriv[x]
+240
+>>> f2.deriv[y]
+32
+>>> f2.deriv[z]
+66.542
+>>> f2.jacobian((order))
+autodiff.array([240, 32, 66.542])
 ```
 
-Note that `autodiff.Number.Jacobian()` does require the user to specify an order of input `Number` objects to ensure consistency within the user's own code. Otherwise, `autodiff` would have to infer which element belongs to which function input. As the user strings together multiple elementary operations, it is likely that `autodiff`'s understanding would differ from the user's.
 
 ## Software Organization
 
@@ -283,7 +302,7 @@ def sin(a):
     return np.sin(a)
 ```
 
-`Number()` overloads `__mul__` and `__rmul__`:
+The `Number()` class overloads `__mul__` and `__rmul__`, along with other elementary operations as follows. The `autodiff.array` class overloads vector operations similarly.
 ```python
 x = Number(2)
 y = Number(3)

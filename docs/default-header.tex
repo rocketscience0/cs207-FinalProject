@@ -1,0 +1,57 @@
+\usepackage[margin=1in]{geometry}
+
+\usepackage{fontspec}
+% \setmainfont{Source Sans Pro}
+% \setmonofont[Scale=0.8]{Consolas}
+\setmonofont[Scale=0.8]{Source Code Pro}
+\setsansfont{Source Sans Pro}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{minted}
+\usepackage[breakable,most]{tcolorbox}
+\definecolor{code_background}{RGB}{237,240,240}
+
+\tcbuselibrary{minted, skins}
+
+%% fix the minted@colorbg environment
+\makeatletter
+\renewenvironment{minted@colorbg}[1]
+{\def\minted@bgcol{#1}%
+\noindent
+\begin{lrbox}{\minted@bgbox}
+\begin{minipage}{\linewidth-2\fboxsep}}
+{\end{minipage}%
+\end{lrbox}%
+\setlength{\topsep}{\bigskipamount}% set the vertical space
+\trivlist\item\relax % ensure going to a new line
+\colorbox{\minted@bgcol}{\usebox{\minted@bgbox}}%
+\endtrivlist % close the trivlist
+}
+\makeatother
+
+
+\DeclareTCBListing{code}{O{}}{%
+    colback=code_background,
+    listing only,
+    minted options={
+        linenos=false,
+        texcl=false,
+        breaklines,
+        % fontsize=\footnotesize,
+        numbersep=5pt,
+        style=tango,
+    },
+    arc=0.5pt,
+    listing engine=minted,
+    listing only,
+    enhanced,
+    left=0pt,
+    boxrule=0pt,
+    top=0pt,
+    bottom=0pt,
+    colframe=code_background,
+    #1
+}
+
+\setmintedinline{bgcolor=code_background}
+\usepackage{unicode-math}
