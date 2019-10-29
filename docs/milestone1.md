@@ -190,17 +190,10 @@ autodiff.array([240, 32, 66.542])
 
 #### Modules
 
-- `autodiff`
-    - Main package
-    - Implements the forward mode of automatic differentiation
-- `test_autodiff`
-    - Run tests for this package
-
-- The directory `demos` contains a series of demos and examples for using our package, ranging from simple to complex.
+The`autodiff` package is the main package that implements the forward mode of automatic differentiation. The `test_autodiff` package runs tests. The directory `demos` contains a series of demos and examples for using our package, ranging from simple to complex.
 
 #### Testing
-- All tests live in `tests/test_autodiff.py`
-- We will use both `TravisCI` and `CodeCov` to distribute reports.
+All tests live in `tests/test_autodiff.py`. We will use both `TravisCI` and `CodeCov` to distribute reports.
 
 #### Installation and packaging
 **Subject to change in final package**
@@ -211,7 +204,7 @@ autodiff.array([240, 32, 66.542])
     python -m pip install --upgrade pip setuptools
     ```
 
-1. Install package from github
+2. Install package from github
 
     ```bash
     pip install git+https://github.com/rocketscience0/cs207-FinalProject.git
@@ -223,11 +216,9 @@ autodiff.array([240, 32, 66.542])
     python setup.py
     ```
 
-
 Our workflow is based off of this [guide](https://packaging.python.org/tutorials/installing-packages/).
 
 `setup.py` will specify required pieces of metadata, such as the version and dependencies. We will use `setuptools` as a distribution build tool. Why `setuptools` as opposed to `distutils`? As noted by the [Python Packaging User Guide](https://packaging.python.org/guides/tool-recommendations/), `setuptools` is outside the standard library, allowing for consistency across different Python versions. 
-
 
 Later on, we may publish a final version of our package (currently a Github repo) as an open-source Python package on PyPI. Using pip will allow users to easily install via `pip install autodiff`.
 
