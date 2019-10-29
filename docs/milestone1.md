@@ -182,7 +182,9 @@ autodiff.array([240, 32, 66.542])
 ├── setup.py
 └── docs
     ├── milestone1.md
-    └── image
+    ├── image
+    ├── toipynb.sh
+    └── topdf.sh
 └── demos
     ├── simple_demo.py
     ├── ...
@@ -213,12 +215,6 @@ All tests live in `tests/test_autodiff.py`. We will use both `TravisCI` and `Cod
 
     ```bash
     pip install git+https://github.com/rocketscience0/cs207-FinalProject.git
-    ```
-
-3. Set up.
-
-    ```bash
-    python setup.py
     ```
 
 Our workflow is based off of this [guide](https://packaging.python.org/tutorials/installing-packages/).
