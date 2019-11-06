@@ -381,3 +381,6 @@ TSWLatexianTemp*
 # MILESTONE .TEX FILES #
 ########################
 **/milestone*.tex
+
+# Sphinx stuff
+./docs/build/**
