@@ -1,7 +1,7 @@
 """Collection of tools to make new elementary operations
 """
 
-from structures import Number
+from .structures import Number
 import numpy as np
 
 
