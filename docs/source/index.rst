@@ -9,10 +9,11 @@ Welcome to CS207 final project's documentation!
 This is the base documentation for the ``autodiff`` package.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :maxdepth: 2
+    :caption: Contents:
 
-   test-page/test.md
+    introduction.md
+    test-page/test.md
 
 
 
