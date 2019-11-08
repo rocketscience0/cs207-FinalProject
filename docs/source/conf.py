@@ -12,7 +12,11 @@
 #
 import os
 import sys
+# from pathlib import
 sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('../..'))
+# sys.path.append('../../..')
+[print(p) for p in sys.path]
 import recommonmark
 from recommonmark.parser import CommonMarkParser
 from recommonmark.transform import AutoStructify
@@ -35,15 +39,14 @@ release = '0.0'
 # ones.
 extensions = [
     'recommonmark',
-    # 'sphinx.ext.autodoc',
-    # 'sphinx.ext.todo',
+    'sphinx.ext.autodoc',
+    'sphinx.ext.todo',
     # 'sphinx.ext.coverage',
     # 'sphinx.ext.ifconfig',
     # 'sphinx.ext.viewcode',
     # 'sphinx.ext.githubpages',
-    # 'sphinx.ext.napoleon',
+    'sphinx.ext.napoleon',
     'sphinx.ext.mathjax',
-    # 'sphinx.ext.jsmath',
 ]
 
 # Add any paths that contain templates here, relative to this directory.

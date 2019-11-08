@@ -14,6 +14,7 @@ This is the base documentation for the ``autodiff`` package.
 
     introduction.md
     test-page/test.md
+    api-doc/modules.rst
 
 
 
