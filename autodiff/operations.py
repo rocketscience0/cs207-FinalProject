@@ -68,11 +68,3 @@ def sin(x):
         float: Sin(x.val)
     """
     return np.sin(x.val)
-
-
-if __name__ == '__main__':
-    a = Number(np.pi / 2)
-
-    sina = sin(a)
-    print(sina)
-    print(sina.deriv)
