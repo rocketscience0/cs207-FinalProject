@@ -1,6 +1,7 @@
 """Collection of tools to make new elementary operations
 """
 
+from functools import wraps
 from .structures import Number
 import numpy as np
 
@@ -33,9 +34,11 @@ def elementary(deriv_func):
     Returns:
         function: Decorated function
     """
+
     def inner(func):
-        print('Inside wrap()')
+        @wraps(func)
         def inner_func(*args):
+            
             value = func(*args)
             deriv = deriv_func(*args)
             return Number(value, deriv)
