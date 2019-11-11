@@ -26,7 +26,15 @@ Another advantage of AD is efficiently. Efficiency is very important because the
 
 ### The Chain Rule
 
-The chain rule is applied when the derivatives of nested functions are computed. A simple case is `$n(x) = g(f(x))$`, with the derivative `$n'(x) = g'(f(x)) \cdot f'(x)$`
+The chain rule is used to differentiate composite functions. It is applied when the derivatives of nested functions are computed. A simple case is `$n(x) = g(f(x))$`, with the derivative `$n'(x) = g'(f(x)) \cdot f'(x)$`
+
+### Elementary Functions and Computation Accuracy 
+
+An elementary function is a single-variable function such as constant, sum, product, sin, cos, exp and etc. The derivative of each elementary function is known or very simple. High accuracy is maintained when AD is applied because differentiating elementary operations is simple and minimal error is propagated over the process when chain rule is applied.
+
+### The Forward Mode
+
+In forward mode, the Jacobian vector matrix of the composite function is calculated through sequential evaluting each sub-function's value and the derivative value, and chain rule takes such values to the next function, whose value and derivative value are evaluated. The process goes on until all sub-functions in the composite function are evaluated. The value of the first function, usually a vector of constants, is set by a seed vector, which in turn decides the value of the first set of derivatives. This process is highly efficient even at high order because the complexity of AD does not scale with the dimension of the functions. 
 
 ### The Graph Structure
 
