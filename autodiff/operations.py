@@ -301,6 +301,33 @@ def cos(x):
     """
     return np.cos(x.val)
 
+def tan_deriv(x):
+    """Derivative of tan(x)
+
+    Args: 
+        x (structures.Numbers()): Number to take the tan of. Must have a ``deriv`` attribute
+    
+    Returns:
+        dict: dictionary of partial derivatives
+    """
+    d={}
+    for key in x.deriv.keys():
+        d[key] = (np.tan(x.val)**2 + 1) * x.deriv[key]
+    d[x] = (np.tan(x.val)**2 + 1) * x.deriv[x]
+    return d
+
+@elementary(tan_deriv)
+def tan(x):
+    """Take the tan(x)
+
+    Args:
+        x (Number): Number to take the tan of
+
+    Returns:
+        float: tan(x.val)
+    """
+    return np.tan(x.val)
+
 def exp_deriv(x):
     """Derivative of exp(x)
     
