@@ -411,7 +411,7 @@ def log(x):
     """Take the ln(x)
     
     Args:
-        x (Number): Number to take the exp of
+        x (Number): Number to take the natural log of
     
     Returns:
         float: ln(x.val)
