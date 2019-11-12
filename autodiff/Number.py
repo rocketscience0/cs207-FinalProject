@@ -287,8 +287,8 @@ def pow_deriv(x,a):
     """
     d={}
     for key in x.deriv.keys():
-        d[key] = a*x.deriv[key]**(a-1)
-    d[x] = a*x.val**(a-1)
+        d[key] = a * x.val**(a-1) * x.deriv[key]
+    d[x] = a * x.val**(a-1) * x.deriv[x]
     return d
 
 @elementary(pow_deriv)
