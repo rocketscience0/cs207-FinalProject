@@ -62,6 +62,12 @@ class Number():
     def tan(self):
         return sin(self)/cos(self)
 
+    def exp(self):
+        return exp(self)
+
+    def log(self):
+        return log(self)
+
 def elementary(deriv_func):
     """Decorator to create an elementary operation
 
@@ -327,7 +333,7 @@ def sin(x):
         x (Number): Number to take the sin of
     
     Returns:
-        float: Sin(x.val)
+        float: sin(x.val)
     """
     return np.sin(x.val)
 
@@ -357,3 +363,57 @@ def cos(x):
         float: cos(x.val)
     """
     return np.cos(x.val)
+
+def exp_deriv(x):
+    """Derivative of exp(x)
+    
+    Args:
+        x (structures.Number()): Number to take the exp of. Must have a ``deriv`` attribute
+    
+    Returns:
+        dict: dictionary of partial derivatives
+    """
+    d={}
+    for key in x.deriv.keys():
+        d[key] = np.exp(x.val) * x.deriv[key]
+    d[x] = np.exp(x.val) * x.deriv[x]
+    return d
+
+@elementary(exp_deriv)
+def exp(x):
+    """Take the exp(x)
+    
+    Args:
+        x (Number): Number to take the exp of
+    
+    Returns:
+        float: exp(x.val)
+    """
+    return np.exp(x.val)
+
+def log_deriv(x):
+    """Derivative of ln(x)
+    
+    Args:
+        x (structures.Number()): Number to take the natural log of. Must have a ``deriv`` attribute
+    
+    Returns:
+        dict: dictionary of partial derivatives
+    """
+    d={}
+    for key in x.deriv.keys():
+        d[key] = 1 / np.log(x.val) * x.deriv[key]
+    d[x] = 1 / np.log(x.val) * x.deriv[x]
+    return d
+
+@elementary(exp_deriv)
+def log(x):
+    """Take the ln(x)
+    
+    Args:
+        x (Number): Number to take the exp of
+    
+    Returns:
+        float: ln(x.val)
+    """
+    return np.log(x.val)
