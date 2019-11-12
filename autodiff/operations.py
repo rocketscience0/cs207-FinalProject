@@ -46,6 +46,209 @@ def elementary(deriv_func):
         return inner_func
     return inner
 
+def add_deriv(x,y):
+    """Derivative of additions, one of x and y has to be a Number object
+    
+    Args:
+        x: a Number
+        y: a Number object or an int/float to be added
+    
+    Returns:
+        The derivative of the sum of x and y
+    """
+    try:
+        d={}
+        for key in x.deriv.keys():
+            if key in y.deriv.keys():
+                d[key] = x.deriv[key] + y.deriv[key]
+            else:
+                d[key] = x.deriv[key]
+        for key in y.deriv.keys():
+            if not key in x.deriv.keys():
+                d[key] = y.deriv[key]
+    except:
+        d = x.deriv
+        d[y] = 1
+    return d
+
+@elementary(add_deriv)
+def add(x,y):
+    """add two numbers together, one of x and y has to be a Number object
+    
+    Args:
+        x: a Number object or an int/float
+        y: a Number object or an int/float to be added
+    
+    Returns:
+        value of the sum
+    """
+    try:
+        s = x.val + y.val
+    except:
+        s = x.val + y
+    return s
+
+def subtract_deriv(x,y):
+    """Derivative of subtractions, one of x and y has to be a Number object
+    
+    Args:
+        x: a Number
+        y: a Number object or an int/float to be subtracted
+    
+    Returns:
+        The derivative of the difference of x and y
+    """
+    try:
+        d={}
+        for key in x.deriv.keys():
+            if key in y.deriv.keys():
+                d[key] = x.deriv[key] - y.deriv[key]
+            else:
+                d[key] = x.deriv[key]
+        for key in y.deriv.keys():
+            if not key in x.deriv.keys():
+                d[key] = y.deriv[key]
+    except:
+        d = x.deriv
+        d[y] = 1
+    return d
+
+@elementary(subtract_deriv)
+def subtract(x,y):
+    """Subtract one number from another, one of x and y has to be a Number object
+    
+    Args:
+        x: a Number object
+        y: a Number object or an int/float to be subtracted
+    
+    Returns:
+        value of the difference
+    """
+    try:
+        s = x.val - y.val
+    except:
+        s = x.val - y
+    return s
+
+def mul_deriv(x,y):
+    """Derivative of multiplication, one of x and y has to be a Number object
+    
+    Args:
+        x: a Number
+        y: a Number object or an int/float to be multiplied
+    
+    Returns:
+        The derivative of the product of x and y
+    """
+    try:
+        d={}
+        for key in x.deriv.keys():
+            if key in y.deriv.keys():
+                #product rule
+                d[key] = x.deriv[key] * y.val + y.deriv[key] * x.val
+            else:
+                d[key] = x.deriv[key] * y.val
+        for key in y.deriv.keys():
+            if not key in x.deriv.keys():
+                d[key] = y.deriv[key] * x.val
+    except:
+        d = {}
+        for key in x.deriv.keys():
+            d[key] = x.deriv[key]*y
+    return d
+
+@elementary(mul_deriv)
+def mul(x,y):
+    """Subtract one number from another, one of x and y has to be a Number object
+    
+    Args:
+        x: a Number object
+        y: a Number object or an int/float to be subtracted
+    
+    Returns:
+        value of the difference
+    """
+    try:
+        s = x.val * y.val
+    except:
+        s = x.val * y
+    return s
+
+def div_deriv(x,y):
+    """Derivative of division, one of x and y has to be a Number object
+    
+    Args:
+        x: a Number
+        y: a Number object or an int/float to be divided
+    
+    Returns:
+        The derivative of the quotient of x and y
+    """
+    try:
+        d={}
+        for key in x.deriv.keys():
+            if key in y.deriv.keys():
+                #quotient rule
+                d[key] = (y.deriv[key] * x.val - x.deriv[key] * y.val)/(y.val**2)
+            else:
+                d[key] = x.deriv[key] / y.val
+        for key in y.deriv.keys():
+            if not key in x.deriv.keys():
+                # d[key] = x.val / y.deriv[key]
+                d[key] = -x.val / (y.val ** 2) * y.deriv[key]
+    except:
+        d = {}
+        for key in x.deriv.keys():
+            d[key] = x.deriv[key] / y
+    return d
+
+@elementary(div_deriv)
+def div(x,y):
+    """Subtract one number from another, one of x and y has to be a Number object
+    
+    Args:
+        x: a Number object
+        y: a Number object or an int/float to be subtracted
+    
+    Returns:
+        value of the difference
+    """
+    try:
+        s = x.val / y.val
+    except:
+        s = x.val / y
+    return s
+
+
+def pow_deriv(x,a):
+    """Derivative of power of a Number
+    
+    Args:
+        x: a Number
+        a: an integer/float of the degree
+    
+    Returns:
+        The derivative of the power
+    """
+    d={}
+    for key in x.deriv.keys():
+        d[key] = a * x.val**(a-1) * x.deriv[key]
+    d[x] = a * x.val**(a-1) * x.deriv[x]
+    return d
+
+@elementary(pow_deriv)
+def power(x,y):
+    """Subtract one number from another, one of x and y has to be a Number object
+    
+    Args:
+        x: a Number object
+        y: a Number object or an int/float to be subtracted
+    
+    Returns:
+        value of the difference
+    """
+    return x.val**y
+
 def sin_deriv(x):
     """Derivative of sin(x)
     
@@ -53,9 +256,13 @@ def sin_deriv(x):
         x (structures.Number()): Number to take the sin of. Must have a ``deriv`` attribute
     
     Returns:
-        dict: dictionary of partial derivatives (in this case with just one key)
+        dict: dictionary of partial derivatives
     """
-    return {x: np.cos(x.val) * x.deriv[x]}
+    d={}
+    for key in x.deriv.keys():
+        d[key] = np.cos(x.val) * x.deriv[key]
+    d[x] = np.cos(x.val) * x.deriv[x]
+    return d
 
 @elementary(sin_deriv)
 def sin(x):
@@ -65,6 +272,95 @@ def sin(x):
         x (Number): Number to take the sin of
     
     Returns:
-        float: Sin(x.val)
+        float: sin(x.val)
     """
     return np.sin(x.val)
+
+def cos_deriv(x):
+    """Derivative of cos(x)
+    
+    Args:
+        x (structures.Number()): Number to take the cos of. Must have a ``deriv`` attribute
+    
+    Returns:
+        dict: dictionary of partial derivatives
+    """
+    d={}
+    for key in x.deriv.keys():
+        d[key] = -np.sin(x.val) * x.deriv[key]
+    d[x] = -np.sin(x.val) * x.deriv[x]
+    return d
+
+@elementary(cos_deriv)
+def cos(x):
+    """Take the cos(x)
+    
+    Args:
+        x (Number): Number to take the cos of
+    
+    Returns:
+        float: cos(x.val)
+    """
+    return np.cos(x.val)
+
+def exp_deriv(x):
+    """Derivative of exp(x)
+    
+    Args:
+        x (structures.Number()): Number to take the exp of. Must have a ``deriv`` attribute
+    
+    Returns:
+        dict: dictionary of partial derivatives
+    """
+    d={}
+    for key in x.deriv.keys():
+        d[key] = np.exp(x.val) * x.deriv[key]
+    d[x] = np.exp(x.val) * x.deriv[x]
+    return d
+
+@elementary(exp_deriv)
+def exp(x):
+    """Take the exp(x)
+    
+    Args:
+        x (Number): Number to take the exp of
+    
+    Returns:
+        float: exp(x.val)
+    """
+    return np.exp(x.val)
+
+def log_deriv(x):
+    """Derivative of ln(x)
+    
+    Args:
+        x (structures.Number()): Number to take the natural log of. Must have a ``deriv`` attribute
+    
+    Returns:
+        dict: dictionary of partial derivatives
+    """
+    d={}
+    for key, partial in x.deriv.items():
+        d[key] = 1 / x.val * partial
+    d[x] = 1 / x.val * x.deriv[x]
+
+    return d
+
+@elementary(log_deriv)
+def log(x):
+    """Take the ln(x)
+    
+    Args:
+        x (Number): Number to take the natural log of
+    
+    Returns:
+        float: ln(x.val)
+    """
+    return np.log(x.val)
+
+def negate_deriv(x):
+    return {key: -deriv for key, deriv in x.deriv.items()}
+
+@elementary(negate_deriv)
+def negate(x):
+    return - x.val
