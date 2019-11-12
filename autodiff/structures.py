@@ -1,6 +1,6 @@
 """Data structures for autodiff
 """
-import operations
+from autodiff import operations
 
 class Number():
 

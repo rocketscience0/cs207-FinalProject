@@ -2,7 +2,7 @@
 """
 
 from functools import wraps
-from .structures import Number
+from autodiff.structures import Number
 import numpy as np
 
 
@@ -168,7 +168,7 @@ def mul(x,y):
     """
     try:
         s = x.val * y.val
-    except:
+    except AttributeError:
         s = x.val * y
     return s
 
@@ -218,20 +218,49 @@ def div(x,y):
     return s
 
 
-def pow_deriv(x,a):
+def pow_deriv(x, a):
     """Derivative of power of a Number
     
     Args:
         x: a Number
-        a: an integer/float of the degree
+        a: a Number
     
     Returns:
         The derivative of the power
     """
-    d={}
-    for key in x.deriv.keys():
-        d[key] = a * x.val**(a-1) * x.deriv[key]
-    d[x] = a * x.val**(a-1) * x.deriv[x]
+    d = {}
+
+    # All the derivates w.r.t x
+    try:
+        for key in x.deriv.keys():
+            d[key] = a.val * x.val ** (a.val - 1) * x.deriv[key]
+    except AttributeError:
+        try:
+            for key in x.deriv.keys():
+                d[key] = a * x.val ** (a - 1) * x.deriv[key]
+        except AttributeError:
+            try:
+                d[key] = a.val * x ** (a.val - 1)
+            except AttributeError:
+                # x isn't a Number(). Just go through
+                pass
+
+    # All the derivatives w.r.t a
+    try:
+        for key in a.deriv.keys():
+            d[key] = x.val ** a.val * np.log(x.val) * a.deriv[key]
+    except AttributeError:
+        try:
+            for key in a.deriv.keys():
+                d[key] = x ** a.val * np.log(x) * a.deriv[key]
+        except AttributeError:
+            try:
+                for key in a.deriv.keys():
+                    d[key] = x.val ** a * np.log(x.val)
+            except AttributeError:
+                # a isn't a Number(). Just go through
+                pass
+
     return d
 
 @elementary(pow_deriv)
@@ -245,7 +274,17 @@ def power(x,y):
     Returns:
         value of the difference
     """
-    return x.val**y
+    # return x.val**y
+    try:
+        return x.val ** y.val
+    except AttributeError:
+        try:
+            return x ** y.val
+        except AttributeError:
+            try:
+                return x.val ** y
+            except AttributeError:
+                return x ** y
 
 def sin_deriv(x):
     """Derivative of sin(x)
