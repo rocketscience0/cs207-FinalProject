@@ -66,9 +66,8 @@ def add_deriv(x,y):
         for key in y.deriv.keys():
             if not key in x.deriv.keys():
                 d[key] = y.deriv[key]
-    except:
+    except AttributeError:
         d = x.deriv
-        d[y] = 1
     return d
 
 @elementary(add_deriv)
@@ -108,9 +107,8 @@ def subtract_deriv(x,y):
         for key in y.deriv.keys():
             if not key in x.deriv.keys():
                 d[key] = y.deriv[key]
-    except:
+    except AttributeError:
         d = x.deriv
-        d[y] = 1
     return d
 
 @elementary(subtract_deriv)
@@ -151,7 +149,7 @@ def mul_deriv(x,y):
         for key in y.deriv.keys():
             if not key in x.deriv.keys():
                 d[key] = y.deriv[key] * x.val
-    except:
+    except AttributeError:
         d = {}
         for key in x.deriv.keys():
             d[key] = x.deriv[key]*y
@@ -196,7 +194,7 @@ def div_deriv(x,y):
             if not key in x.deriv.keys():
                 # d[key] = x.val / y.deriv[key]
                 d[key] = -x.val / (y.val ** 2) * y.deriv[key]
-    except:
+    except AttributeError:
         d = {}
         for key in x.deriv.keys():
             d[key] = x.deriv[key] / y
@@ -215,7 +213,7 @@ def div(x,y):
     """
     try:
         s = x.val / y.val
-    except:
+    except AttributeError:
         s = x.val / y
     return s
 
