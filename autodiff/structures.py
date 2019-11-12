@@ -1,7 +1,7 @@
 """Data structures for autodiff
 """
 
-from autodiff import operations
+#from autodiff import operations
 
 class Number():
 
@@ -75,5 +75,9 @@ class Number():
     def log(self):
         return operations.log(self)
 
-    def jacobian(self, order):
-        return self.derive
+    def jacobian(self, order=1):
+        #order is useless in the scaler case
+
+        deriv1,deriv2 = self.deriv
+
+        return self.deriv[deriv1]
