@@ -116,10 +116,10 @@ def test_mixed_rmul_deriv_number_only():
         (3 * num2).deriv[3]
 
 def test_mul_deriv_first():
-    assert (num2 * num3).deriv[num2] == num3
+    assert (num2 * num3).deriv[num2] == 3
 
 def test_mul_deriv_second():
-    assert (num2 * num3).deriv[num3] == num2
+    assert (num2 * num3).deriv[num3] == 2
 
 def test_mixed_mul_deriv():
     assert (3 * num2).deriv[num2] == 3
