@@ -2,8 +2,6 @@ import sys
 import pytest
 sys.path.append('..')
 
-# from autodiff import operations
-# from autodiff.structures import Number
 import autodiff.Number as number
 from autodiff.Number import Number
 import numpy as np
