@@ -2,7 +2,7 @@
 """
 
 from functools import wraps
-from .structures import Number
+from autodiff.structures import Number
 import numpy as np
 
 
