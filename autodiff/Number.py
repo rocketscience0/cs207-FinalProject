@@ -2,7 +2,7 @@
 """
 
 from functools import wraps
-#from structures import Number
+# from autodiff.structures import Number
 import numpy as np
 
 class Number():
@@ -27,7 +27,7 @@ class Number():
         return f'Number(val={self.val})'
     
     def __add__(self, other):
-        return add(self, other)
+        return operations.add(self, other)
     
     def __radd__(self, other):
         return add(self, other)
@@ -36,22 +36,28 @@ class Number():
         return subtract(self, other)
     
     def __rsub__(self, other):
-        return subtract(self, other)
-    
+        return -subtract(self, other)
+
     def __mul__(self, other):
          return mul(self, other)
     
     def __rmul__(self, other):
         return mul(self, other)
     
-    def __div__(self, other):
+    def __truediv__(self, other):
         return div(self, other)
+
+    def __rtruediv__(self, other):
+        return div(self, other) ** -1
     
     def __rdiv__(self, other):
         return div(self, other)
     
     def __pow__(self, other):
         return power(self, other)
+
+    def __neg__(self):
+        return negate(self)
     
     def sin(self):
         return sin(self)
@@ -60,13 +66,17 @@ class Number():
         return cos(self)
     
     def tan(self):
-        return sin(self)/cos(self)
+        return tan(self)
 
     def exp(self):
         return exp(self)
 
     def log(self):
         return log(self)
+
+    def jacobian(self, order):
+        # TODO: DO THIS
+        pass
 
 def elementary(deriv_func):
     """Decorator to create an elementary operation
@@ -256,7 +266,8 @@ def div_deriv(x,y):
                 d[key] = x.deriv[key] / y.val
         for key in y.deriv.keys():
             if not key in x.deriv.keys():
-                d[key] = x.val / y.deriv[key]
+                # d[key] = x.val / y.deriv[key]
+                d[key] = -x.val / (y.val ** 2) * y.deriv[key]
     except:
         d = {}
         for key in x.deriv.keys():
@@ -401,12 +412,13 @@ def log_deriv(x):
         dict: dictionary of partial derivatives
     """
     d={}
-    for key in x.deriv.keys():
-        d[key] = 1 / np.log(x.val) * x.deriv[key]
-    d[x] = 1 / np.log(x.val) * x.deriv[x]
+    for key, partial in x.deriv.items():
+        d[key] = 1 / x.val * partial
+    d[x] = 1 / x.val * x.deriv[x]
+
     return d
 
-@elementary(exp_deriv)
+@elementary(log_deriv)
 def log(x):
     """Take the ln(x)
     
@@ -417,3 +429,10 @@ def log(x):
         float: ln(x.val)
     """
     return np.log(x.val)
+
+def negate_deriv(x):
+    return {key: -deriv for key, deriv in x.deriv.items()}
+
+@elementary(negate_deriv)
+def negate(x):
+    return - x.val
