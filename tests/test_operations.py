@@ -2,16 +2,16 @@ import sys
 import pytest
 sys.path.append('..')
 
-import autodiff.Number as number
-from autodiff.Number import Number
+import autodiff.operations as operations
+from autodiff.structures import Number
 import numpy as np
 
 # Useful numbers for tests
 a = Number(np.pi / 2)
 num_log_1 = Number(np.log(1))
 num_e = Number(np.exp(1))
-sina = number.sin(a)
-cosa = number.cos(a)
+sina = operations.sin(a)
+cosa = operations.cos(a)
 
 # Some integers
 # Test values for overloaded operations
@@ -21,7 +21,7 @@ num4 = Number(4)
 
 def test_returns_number():
     a = Number(np.pi / 2)
-    sina = number.sin(a)
+    sina = operations.sin(a)
     assert isinstance(sina, Number)
 
 def test_repr():
@@ -166,16 +166,16 @@ def test_mixed_rpow_deriv_number_only():
         (4 ** num2).deriv[4]
 
 def test_exp():
-    assert number.exp(num_log_1).val == 1
+    assert operations.exp(num_log_1).val == 1
 
 def test_exp_deriv():
-    assert number.exp(num_log_1).deriv[num_log_1] == 1
+    assert operations.exp(num_log_1).deriv[num_log_1] == 1
 
 def test_log():
-    assert number.log(num_e).val == 1
+    assert operations.log(num_e).val == 1
 
 def test_log_deriv():
-    assert number.log(num_e).deriv[num_e] == np.exp(-1)
+    assert operations.log(num_e).deriv[num_e] == np.exp(-1)
 
 def test_negate():
     a = Number(1)
@@ -208,4 +208,5 @@ def test_duplicate_value():
         out.deriv[new_3]
 
 if __name__ == '__main__':
-    print(num2 ** num4)
+    # print(num2 ** num4)
+    print(num2 * num4)
