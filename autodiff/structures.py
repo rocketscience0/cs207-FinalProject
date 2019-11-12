@@ -54,6 +54,9 @@ class Number():
     def __pow__(self, other):
         return operations.power(self, other)
 
+    def __rpow__(self, other):
+        return operations.power(self, other)
+
     def __neg__(self):
         return operations.negate(self)
     
