@@ -73,4 +73,4 @@ class Number():
         return operations.log(self)
 
     def jacobian(self, order):
-        return self.derive
+        return self.deriv
