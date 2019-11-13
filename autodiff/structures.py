@@ -69,8 +69,8 @@ class Number():
     def exp(self):
         return operations.exp(self)
 
-    def log(self):
-        return operations.log(self)
+    def ln(self):
+        return operations.ln(self)
 
     def jacobian(self, order):
         return self.deriv

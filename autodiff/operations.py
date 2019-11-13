@@ -355,7 +355,7 @@ def exp(x):
     """
     return np.exp(x.val)
 
-def log_deriv(x):
+def ln_deriv(x):
     """Derivative of ln(x)
     
     Args:
@@ -371,8 +371,8 @@ def log_deriv(x):
 
     return d
 
-@elementary(log_deriv)
-def log(x):
+@elementary(ln_deriv)
+def ln(x):
     """Take the ln(x)
     
     Args:
@@ -382,6 +382,40 @@ def log(x):
         float: ln(x.val)
     """
     return np.log(x.val)
+
+def log_deriv(x, y):
+    """Derivative of log(x) at base y
+    
+    Args:
+        x (structures.Number()): Number to take the log of. Must have a ``deriv`` attribute
+        y (a Number object or an int/float): Base of the logarithm.
+    
+    Returns:
+        dict: dictionary of partial derivatives
+    """
+    d={}
+    for key in x.deriv.keys():
+        d[key] = 1 / (x.val * np.log(x.deriv[key]))
+    d[x] = 1 / (x.val * np.log(x.deriv[x]))
+
+    return d
+
+@elementary(log_deriv)
+def log(x, y):
+    """Take the log(x) at base y
+    
+    Args:
+        x (Number): Number to take the log of
+        y (a Number object or an int/float): Base of the logarithm.
+    
+    Returns:
+        float: log(x.val)
+    """
+    try:
+        s = np.log(x.val) / np.log(y.val)
+    except:
+        s = np.log(x.val) / np.log(y)
+    return s
 
 def negate_deriv(x):
     return {key: -deriv for key, deriv in x.deriv.items()}
