@@ -71,5 +71,8 @@ class Number():
     def log(self):
         return operations.log(self)
 
-    def jacobian(self, order):
-        return list(self.deriv.keys())[1].val
+    def jacobian(self):
+        
+        for key in self.deriv:
+            
+            return self.deriv[key]
