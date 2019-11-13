@@ -1,6 +1,5 @@
 """Data structures for autodiff
 """
-
 from autodiff import operations
 
 class Number():
@@ -72,5 +71,8 @@ class Number():
     def ln(self):
         return operations.ln(self)
 
-    def jacobian(self, order):
-        return self.deriv
+    def jacobian(self):
+        
+        for key in self.deriv:
+            
+            return self.deriv[key]

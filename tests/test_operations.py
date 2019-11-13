@@ -206,7 +206,3 @@ def test_duplicate_value():
     new_3 = Number(3)
     with pytest.raises(KeyError):
         out.deriv[new_3]
-
-if __name__ == '__main__':
-    # print(num2 ** num4)
-    print(num2 * num4)
