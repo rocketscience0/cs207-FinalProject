@@ -422,7 +422,7 @@ def ln(x):
     """
     return np.log(x.val)
 
-def log_deriv(x, y):
+def log_deriv(x, y=np.exp(1)):
     """Derivative of log(x) at base y
     
     Args:
@@ -432,15 +432,21 @@ def log_deriv(x, y):
     Returns:
         dict: dictionary of partial derivatives
     """
-    d={}
+    d = {}
+    # Use the chain rule to find partials w.r.t everything x depends on
     for key in x.deriv.keys():
-        d[key] = 1 / (x.val * np.log(x.deriv[key]))
-    d[x] = 1 / (x.val * np.log(x.deriv[x]))
+        # d[key] = 1 / (x.val * np.log(y.deriv[key]))
+        d[key] = 1 / (x.val) * x.deriv[key]
+
+    try:
+        d[x] = 1 / (x.val * np.log(y.val))
+    except AttributeError:
+        d[x] = 1 / (x.val * np.log(y))
 
     return d
 
 @elementary(log_deriv)
-def log(x, y):
+def log(x, y=np.exp(1)):
     """Take the log(x) at base y
     
     Args:
