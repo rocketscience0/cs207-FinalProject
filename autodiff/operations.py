@@ -233,7 +233,11 @@ def pow_deriv(x, a):
     # All the derivates w.r.t x
     try:
         for key in x.deriv.keys():
-            d[key] = a.val * x.val ** (a.val - 1) * x.deriv[key]
+            if key in a.deriv.keys():
+                # Using the chain rule for powers
+                d[key] = (((a.val * x.deriv[key]) / x.val) + (a.deriv[key] * np.log(x.val))) * (x.val ** a.val)
+            else:
+                d[key] = a.val * x.val ** (a.val - 1) * x.deriv[key]
     except AttributeError:
         try:
             for key in x.deriv.keys():
@@ -245,7 +249,8 @@ def pow_deriv(x, a):
     # All the derivatives w.r.t a
     try:
         for key in a.deriv.keys():
-            d[key] = x.val ** a.val * np.log(x.val) * a.deriv[key]
+            if key not in x.deriv.keys():
+                d[key] = x.val ** a.val * np.log(x.val) * a.deriv[key]
     except AttributeError:
         try:
             for key in a.deriv.keys():
