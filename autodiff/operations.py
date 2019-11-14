@@ -187,7 +187,7 @@ def div_deriv(x,y):
         for key in x.deriv.keys():
             if key in y.deriv.keys():
                 #quotient rule
-                d[key] = (y.deriv[key] * x.val - x.deriv[key] * y.val)/(y.val**2)
+                d[key] = (-y.deriv[key] * x.val + x.deriv[key] * y.val)/(y.val**2)
             else:
                 d[key] = x.deriv[key] / y.val
         for key in y.deriv.keys():
@@ -239,12 +239,8 @@ def pow_deriv(x, a):
             for key in x.deriv.keys():
                 d[key] = a * x.val ** (a - 1) * x.deriv[key]
         except AttributeError:
-            try:
-                for key in x.deriv.keys():
-                    d[key] = a.val * x ** (a.val - 1)
-            except AttributeError:
-                # x isn't a Number(). Just go through
-                pass
+            # x isn't a Number(). Just go through
+            pass
 
     # All the derivatives w.r.t a
     try:
@@ -255,12 +251,8 @@ def pow_deriv(x, a):
             for key in a.deriv.keys():
                 d[key] = x ** a.val * np.log(x) * a.deriv[key]
         except AttributeError:
-            try:
-                for key in a.deriv.keys():
-                    d[key] = x.val ** a * np.log(x.val)
-            except AttributeError:
-                # a isn't a Number(). Just go through
-                pass
+            # a isn't a Number(). Just go through
+            pass
 
     return d
 
@@ -282,10 +274,9 @@ def power(x,y):
         try:
             return x ** y.val
         except AttributeError:
-            try:
-                return x.val ** y
-            except AttributeError:
-                return x ** y
+            return x.val ** y
+            # except AttributeError:
+            #     return x ** y
 
 def sin_deriv(x):
     """Derivative of sin(x)
@@ -395,34 +386,6 @@ def exp(x):
     """
     return np.exp(x.val)
 
-def ln_deriv(x):
-    """Derivative of ln(x)
-    
-    Args:
-        x (structures.Number()): Number to take the natural log of. Must have a ``deriv`` attribute
-    
-    Returns:
-        dict: dictionary of partial derivatives
-    """
-    d={}
-    for key, partial in x.deriv.items():
-        d[key] = 1 / x.val * partial
-    d[x] = 1 / x.val * x.deriv[x]
-
-    return d
-
-@elementary(ln_deriv)
-def ln(x):
-    """Take the ln(x)
-    
-    Args:
-        x (Number): Number to take the natural log of
-    
-    Returns:
-        float: ln(x.val)
-    """
-    return np.log(x.val)
-
 def log_deriv(x, y=np.exp(1)):
     """Derivative of log(x) at base y
     
@@ -459,7 +422,7 @@ def log(x, y=np.exp(1)):
     """
     try:
         s = np.log(x.val) / np.log(y.val)
-    except:
+    except AttributeError:
         s = np.log(x.val) / np.log(y)
     return s
 

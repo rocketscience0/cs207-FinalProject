@@ -47,9 +47,6 @@ class Number():
     def __rtruediv__(self, other):
         return operations.div(self, other) ** -1
     
-    def __rdiv__(self, other):
-        return operations.div(self, other)
-    
     def __pow__(self, other):
         return operations.power(self, other)
 
@@ -70,9 +67,6 @@ class Number():
 
     def exp(self):
         return operations.exp(self)
-
-    def ln(self):
-        return operations.ln(self)
 
     def jacobian(self):
         
