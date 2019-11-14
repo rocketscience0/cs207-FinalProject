@@ -53,6 +53,18 @@ def cos_deriv():
 def test_add():
     assert (num2 + num3).val == 5
 
+def test_add_shared_partial():
+    """Test the case where both numbers in an __add__ share a partial derivative
+    """
+    t = Number(10)
+    a = Number(2, deriv={t: 2})
+    b = Number(3, deriv={t: 4})
+    aplusb = a + b
+    assert aplusb.deriv[t] == 6
+    assert aplusb.val == 5
+    assert aplusb.deriv[a] == 1
+    assert aplusb.deriv[b] == 1
+
 def test_add_first_deriv():
     assert (num2 + num3).deriv[num2] == 1
 
@@ -95,6 +107,18 @@ def test_mixed_sub():
 def test_mixed_rsub():
     assert (3 - num2).val == 1
 
+def test_sub_shared_partial():
+    """Test the case where both numbers in an __sub__ share a partial derivative
+    """
+    t = Number(10)
+    a = Number(2, deriv={t: 2})
+    b = Number(3, deriv={t: 4})
+    aminusb = a - b
+    assert aminusb.deriv[t] == -2
+    assert aminusb.val == -1
+    assert aminusb.deriv[a] == 1
+    assert aminusb.deriv[b] == -1
+
 def test_mixed_subtract_deriv_number_only():
     with pytest.raises(KeyError):
         (num3 - 2).deriv[2]
@@ -104,6 +128,19 @@ def test_mul():
 
 def test_mul_returns_number():
     assert isinstance(num3 * num2, Number)
+
+def test_mul_shared_partial():
+    """Test the case where both numbers in an __mul__ share a partial derivative
+    """
+    t = Number(10)
+    a = Number(2, deriv={t: 2})
+    b = Number(3, deriv={t: 4})
+
+    atimesb = a * b
+    assert atimesb.deriv[t] == 14
+    assert atimesb.val == 6
+    assert atimesb.deriv[a] == 3
+    assert atimesb.deriv[b] == 2
 
 def test_mixed_mul():
     assert (num2 * 3).val == 6
@@ -132,6 +169,19 @@ def test_div_deriv_first():
 
 def test_div_deriv_second():
     assert (num4 / num2).deriv[num2] == -1
+
+def test_div_shared_partial():
+    """Test the case where both numbers in an __div__ share a partial derivative
+    """
+    t = Number(10)
+    a = Number(4, deriv={t: 2})
+    b = Number(2, deriv={t: 4})
+
+    atimesb = a / b
+    assert atimesb.deriv[t] == -3
+    assert atimesb.val == 2
+    assert atimesb.deriv[a] == pytest.approx(1 / 2)
+    assert atimesb.deriv[b] == -1
 
 def test_mixed_div():
     assert (num4 / 2).val == 2
@@ -207,6 +257,6 @@ def test_duplicate_value():
     with pytest.raises(KeyError):
         out.deriv[new_3]
 
-if __name__ == '__main__':
-    # (num4 ** num2)
-    4 ** num2
+# if __name__ == '__main__':
+#     # (num4 ** num2)
+#     4 ** num2
