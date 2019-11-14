@@ -106,7 +106,7 @@ def subtract_deriv(x,y):
                 d[key] = x.deriv[key]
         for key in y.deriv.keys():
             if not key in x.deriv.keys():
-                d[key] = y.deriv[key]
+                d[key] = -y.deriv[key]
     except AttributeError:
         d = x.deriv
     return d
