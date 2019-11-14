@@ -83,6 +83,9 @@ def test_add_shared_partial():
     assert aplusb.deriv[a] == 1
     assert aplusb.deriv[b] == 1
 
+def test_add_same_number():
+    assert (num2 + num2).deriv[num2] == 2
+
 def test_add_first_deriv():
     assert (num2 + num3).deriv[num2] == 1
 
@@ -137,6 +140,9 @@ def test_sub_shared_partial():
     assert aminusb.deriv[a] == 1
     assert aminusb.deriv[b] == -1
 
+def test_sub_same_number():
+    assert (num2 - num2).deriv[num2] == 0
+
 def test_mixed_subtract_deriv_number_only():
     with pytest.raises(KeyError):
         (num3 - 2).deriv[2]
@@ -160,6 +166,13 @@ def test_mul_shared_partial():
     assert atimesb.deriv[a] == 3
     assert atimesb.deriv[b] == 2
 
+def test_mul_same_number():
+    """Test a case where we multiply
+    """
+    result = num2 * num2
+    assert num2.val == 4
+    assert num2.deriv[num2] == 4
+
 def test_mixed_mul():
     assert (num2 * 3).val == 6
 
@@ -181,6 +194,9 @@ def test_mixed_mul_deriv():
 
 def test_div():
     assert (num4 / num2).val == 2
+
+def test_div_same_number():
+    assert (num2 / num2).deriv[num2] == 0
 
 def test_div_deriv_first():
     assert (num4 / num2).deriv[num4] == pytest.approx(1 / 2)
@@ -216,7 +232,24 @@ def test_mixed_rdiv_deriv():
 
 def test_pow():
     assert (num4 ** num2).val == 16
-    
+
+def test_pow_shared_partial():
+    """Test the case where both numbers in an __div__ share a partial derivative
+    """
+    t = Number(10)
+    a = Number(4, deriv={t: 2})
+    b = Number(2, deriv={t: 4})
+
+    atotheb = a ** b
+    assert atotheb.deriv[t] == pytest.approx(16 + 64 * np.log(4))
+    assert atotheb.val == 16
+    assert atotheb.deriv[a] == pytest.approx(8)
+    assert atotheb.deriv[b] == pytest.approx(16 * np.log(4))
+
+def test_pow_same_number():
+    result = num2 ** num2
+    assert result.deriv[num2] == pytest.approx(4 * np.log(2) + 4)
+
 def test_pow_deriv_first():
     assert (num4 ** num2).deriv[num4] == 8
 
@@ -277,3 +310,10 @@ def test_duplicate_value():
     new_3 = Number(3)
     with pytest.raises(KeyError):
         out.deriv[new_3]
+
+if __name__ == '__main__':
+    t = Number(10)
+    a = Number(4, deriv={t: 2})
+    b = Number(2, deriv={t: 4})
+
+    atotheb = a ** b
