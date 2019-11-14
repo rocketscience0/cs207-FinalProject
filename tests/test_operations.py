@@ -311,9 +311,40 @@ def test_duplicate_value():
     with pytest.raises(KeyError):
         out.deriv[new_3]
 
-if __name__ == '__main__':
-    t = Number(10)
-    a = Number(4, deriv={t: 2})
-    b = Number(2, deriv={t: 4})
+def test_function_composition():
+    step1 = operations.sin(a)
+    step2 = operations.cos(step1)
+    assert step2.deriv[a] == pytest.approx(0)
+    assert step2.val == pytest.approx(np.cos(1))
 
-    atotheb = a ** b
+def test_sin_with_constant():
+    result = operations.sin(2 * a)
+    assert result.deriv[a] == pytest.approx(-2)
+    assert result.val == pytest.approx(0)
+
+def test_longer_composition():
+    num4 = Number(4)
+    step1 = num2 + num3
+    step2 = num3 + num4
+    step3 = step1 * step2
+
+    assert step3.deriv[num2] == 7
+    assert step3.deriv[num3] == 12
+    assert step3.deriv[num4] == 5
+
+# if __name__ == '__main__':
+#     # t = Number(10)
+#     # a = Number(4, deriv={t: 2})
+#     # b = Number(2, deriv={t: 4})
+
+#     # atotheb = a ** b
+#     # a = Number(np.pi / 2)
+#     # b = Number(3 * np.pi / 2)
+    
+
+#     # step1 = operations.sin(a)
+#     # step2 = operations.sin(b)
+#     # step3 = operations.sin(a + b)
+    
+    
+#     print(step3.deriv)
