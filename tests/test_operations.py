@@ -170,8 +170,8 @@ def test_mul_same_number():
     """Test a case where we multiply
     """
     result = num2 * num2
-    assert num2.val == 4
-    assert num2.deriv[num2] == 4
+    assert result.val == 4
+    assert result.deriv[num2] == 4
 
 def test_mixed_mul():
     assert (num2 * 3).val == 6
@@ -348,3 +348,5 @@ def test_longer_composition():
     
     
 #     print(step3.deriv)
+if __name__ == '__main__':
+    print((num2 * num2).val)
