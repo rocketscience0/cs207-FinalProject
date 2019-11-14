@@ -150,7 +150,7 @@ def test_pow():
     assert (num4 ** num2).val == 16
     
 def test_pow_deriv_first():
-    assert (num4 ** num2).deriv[num2] == 8
+    assert (num4 ** num2).deriv[num4] == 8
 
 def test_pow_deriv_second():
     assert (num4 ** num2).deriv[num2] == pytest.approx(4 ** 2 * np.log(4))
@@ -206,3 +206,7 @@ def test_duplicate_value():
     new_3 = Number(3)
     with pytest.raises(KeyError):
         out.deriv[new_3]
+
+if __name__ == '__main__':
+    # (num4 ** num2)
+    4 ** num2

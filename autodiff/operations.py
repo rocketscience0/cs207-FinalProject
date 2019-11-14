@@ -240,7 +240,8 @@ def pow_deriv(x, a):
                 d[key] = a * x.val ** (a - 1) * x.deriv[key]
         except AttributeError:
             try:
-                d[key] = a.val * x ** (a.val - 1)
+                for key in x.deriv.keys():
+                    d[key] = a.val * x ** (a.val - 1)
             except AttributeError:
                 # x isn't a Number(). Just go through
                 pass
