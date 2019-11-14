@@ -138,6 +138,8 @@ def mul_deriv(x,y):
     Returns:
         The derivative of the product of x and y
     """
+    if (x==y):
+        return pow_deriv(x,2)
     try:
         d={}
         for key in x.deriv.keys():
