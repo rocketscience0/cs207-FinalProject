@@ -36,10 +36,11 @@ def test_provided_deriv():
     a = Number(3, 4)
     assert a.deriv[a] == 4
 
-
-
 def test_sin():
     assert sina.val == pytest.approx(1)
+
+def test_sin_method():
+    assert a.sin().val == pytest.approx(1)
 
 def test_sin_deriv():
     assert sina.deriv[a] == pytest.approx(0)
@@ -47,8 +48,25 @@ def test_sin_deriv():
 def test_cos():    
     assert cosa.val == pytest.approx(0)
 
-def cos_deriv():
+def test_cos_method():
+    assert a.cos().val == pytest.approx(0)
+
+def test_cos_deriv():
     assert cosa.deriv[a] == pytest.approx(-1)
+
+def test_tan():
+    a = Number(np.pi / 4)
+    tana = operations.tan(a)
+    assert tana.val == pytest.approx(1)
+
+def test_tan_method():
+    a = Number(np.pi / 4)
+    assert a.tan().val == pytest.approx(1)
+
+def test_tan_deriv():
+    a = Number(np.pi / 4)
+    tana = operations.tan(a)
+    assert tana.deriv[a] == pytest.approx(2)
 
 def test_add():
     assert (num2 + num3).val == 5
@@ -218,6 +236,9 @@ def test_mixed_rpow_deriv_number_only():
 def test_exp():
     assert operations.exp(num_log_1).val == 1
 
+def test_exp_method():
+    assert num_log_1.exp().val == 1
+
 def test_exp_deriv():
     assert operations.exp(num_log_1).deriv[num_log_1] == 1
 
@@ -256,7 +277,3 @@ def test_duplicate_value():
     new_3 = Number(3)
     with pytest.raises(KeyError):
         out.deriv[new_3]
-
-# if __name__ == '__main__':
-#     # (num4 ** num2)
-#     4 ** num2
