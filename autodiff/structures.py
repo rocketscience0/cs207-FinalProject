@@ -68,11 +68,20 @@ class Number():
     def exp(self):
         return operations.exp(self)
 
-    def jacobian(self,order = None):
+    def jacobian(self, order=None):
         
         if order == None:
             raise ValueError("Please enter the order of the variables")
 
-        for key in self.deriv:
+        jacobian = []
+        try:
+            for key in order:
+                jacobian.append(self.deriv[key])
+        except TypeError:
+            jacobian = self.deriv[order]
+        
+        return jacobian
+
+        # for key in self.deriv:
             
-            return self.deriv[key]
+        #     return self.deriv[key]
