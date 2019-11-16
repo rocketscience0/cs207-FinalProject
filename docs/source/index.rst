@@ -8,11 +8,14 @@ Welcome to CS207 final project's documentation!
 
 This is the base documentation for the ``autodiff`` package.
 
+:mod:`autodiff.operations`
+
 .. toctree::
     :maxdepth: 2
     :caption: Contents:
 
     introduction.md
+    test-page/how-to-edit-documentation.md
     test-page/test.md
     api-doc/modules.rst
 
