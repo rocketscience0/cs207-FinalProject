@@ -68,20 +68,22 @@ class Number():
     def exp(self):
         return operations.exp(self)
 
-    def jacobian(self, order=None):
-        
-        if order == None:
-            raise ValueError("Please enter the order of the variables")
+    def jacobian(self, order):
+
+        def _partial(deriv, key):
+            try:
+                return deriv[key]
+            except KeyError:
+                raise ValueError(
+                    f'No derivative with respect to {repr(order)}'
+                )
 
         jacobian = []
         try:
             for key in order:
-                jacobian.append(self.deriv[key])
+                jacobian.append(_partial(self.deriv, key))
         except TypeError:
-            jacobian = self.deriv[order]
-        
-        return jacobian
+            # The user specified a scalar order
+            jacobian = _partial(self.deriv, order)
 
-        # for key in self.deriv:
-            
-        #     return self.deriv[key]
+        return jacobian
