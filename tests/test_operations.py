@@ -116,10 +116,10 @@ def test_mixed_add_deriv_number_only():
 def test_sub():
     assert (num3 - num2).val == 1
 
-def test_sub_deriv():
+def test_sub_deriv_first():
     assert (num3 - num2).deriv[num3] == 1
 
-def test_sub_deriv():
+def test_sub_deriv_second():
     assert (num3 - num2).deriv[num2] == -1
 
 def test_mixed_sub():
