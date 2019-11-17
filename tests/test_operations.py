@@ -332,6 +332,22 @@ def test_longer_composition():
     assert step3.deriv[num3] == 12
     assert step3.deriv[num4] == 5
 
+def test_jacobian():
+    assert sina.jacobian(a) == pytest.approx(0)
+
+def test_jacobian_no_partial():
+    """Test for if the user tries to create a jacobian for a partial derivative they haven't used
+    """
+    with pytest.raises(ValueError):
+        sina.jacobian(Number(100))
+
+def test_jacobian_requires_order():
+    with pytest.raises(TypeError):
+        sina.jacobian()
+
+def test_jacobian_multi_input():
+    result = num3 * num4
+    assert result.jacobian((num3, num4)) == [4, 3]
 # if __name__ == '__main__':
 #     # t = Number(10)
 #     # a = Number(4, deriv={t: 2})
@@ -348,5 +364,5 @@ def test_longer_composition():
     
     
 #     print(step3.deriv)
-if __name__ == '__main__':
-    print((num2 * num2).val)
+# if __name__ == '__main__':
+#     print((num2 * num2).val)
