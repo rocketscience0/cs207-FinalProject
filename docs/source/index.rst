@@ -15,6 +15,7 @@ This is the base documentation for the ``autodiff`` package.
     :caption: Contents:
 
     introduction.md
+    How_to_use.md
     test-page/how-to-edit-documentation.md
     test-page/test.md
     api-doc/modules.rst
