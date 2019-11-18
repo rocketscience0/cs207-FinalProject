@@ -23,7 +23,7 @@ How does this implementation work?
 
 3. The function and its derivative is again evaluated at the new `$x_0$`. Derivative is stored in the `jacobians` list. This process is repeated until the threshold is met.
 
-4. the `Newton()` method returns the root and the `jacobians` list. User may access each step's derivative from this list.
+4. The `Newton()` method returns the root and the `jacobians` list. User may access each step's derivative from this list.
 
 ```python
 def newtons_method(func, initial_guess):
