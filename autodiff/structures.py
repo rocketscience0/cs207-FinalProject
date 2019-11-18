@@ -9,8 +9,8 @@ class Number():
     is automatically instantiated to 1.
     
     Args:
-        val, value of the Number
-        deriv, a dictionary of partial derivatives. It is automatically instantiated to
+        val: value of the Number
+        deriv: a dictionary of partial derivatives. It is automatically instantiated to
             {self: 1} unless otherwise specified.
     
     Returns:
@@ -60,7 +60,7 @@ class Number():
         Overloads the add method to add a number object to another Number object or an integer/float.
         
         Args:
-            other, a Number object or an integer or float to be added.
+            other: a Number object or an integer or float to be added.
         
         Returns:
             another Number object, which is the sum.
@@ -72,7 +72,7 @@ class Number():
         Overloads the right add method to add a number object to another Number object or an integer/float.
         
         Args:
-            other, a Number object or an integer or float to be added.
+            other: a Number object or an integer or float to be added.
         
         Returns:
             another Number object, which is the sum.
@@ -84,7 +84,7 @@ class Number():
         Overloads the subtract method to subtract from a number object by another Number object or an integer/float.
         
         Args:
-            other, a Number object or an integer or float to be subtracted
+            other: a Number object or an integer or float to be subtracted
         
         Returns:
             another Number object, which is the difference
@@ -96,7 +96,7 @@ class Number():
         Overloads the right subtract method to subtract from a number object by another Number object or an integer/float.
         
         Args:
-            other, a Number object or an integer or float to be subtracted
+            other: a Number object or an integer or float to be subtracted
         
         Returns:
             another Number object, which is the difference
@@ -108,7 +108,7 @@ class Number():
         Overloads the multiply method to multiply a number object by another Number object or an integer/float.
         
         Args:
-            other, a Number object or an integer or float to be multiplied
+            other: a Number object or an integer or float to be multiplied
         
         Returns:
             another Number object, which is the product
@@ -120,7 +120,7 @@ class Number():
         Overloads the right multiply method to multiply a number object by another Number object or an integer/float.
         
         Args:
-            other, a Number object or an integer or float to be multiplied
+            other: a Number object or an integer or float to be multiplied
         
         Returns:
             another Number object, which is the product
@@ -132,7 +132,7 @@ class Number():
         Overloads the division method to divide a number object by another Number object or an integer/float.
         
         Args:
-            other, a Number object or an integer or float to be divided
+            other: a Number object or an integer or float to be divided
         
         Returns:
             another Number object, which is the quotient
@@ -144,7 +144,7 @@ class Number():
         Overloads the right division method to divide a number object by another Number object or an integer/float.
         
         Args:
-            other, a Number object or an integer or float to be divided
+            other: a Number object or an integer or float to be divided
         
         Returns:
             another Number object, which is the quotient
@@ -156,7 +156,7 @@ class Number():
         Overloads the power method to power a number object by another Number object or an integer/float.
         
         Args:
-            other, a Number object or an integer or float to be the power
+            other: a Number object or an integer or float to be the power
         
         Returns:
             another Number object, which is the original number ** other
@@ -168,7 +168,7 @@ class Number():
         Overloads the right power method to power a number object by another Number object or an integer/float.
         
         Args:
-            other, a Number object or an integer or float to be the power
+            other: a Number object or an integer or float to be the power
         
         Returns:
             another Number object, which is the original number ** other
@@ -225,7 +225,7 @@ class Number():
         Returns the jacobian matrix by the order specified.
         
         Args:
-            order, the order to return the jacobian matrix in. Has to be not null
+            order: the order to return the jacobian matrix in. Has to be not null
         
         Returns:
             a list of partial derivatives specified by the order.
