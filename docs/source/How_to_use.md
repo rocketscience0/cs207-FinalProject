@@ -74,9 +74,9 @@ Of course, most users will like to work with Jacobians and gradients rather than
 ```python
 >>> x = autodiff.array((1, 2))
 >>> y = autodiff.array((3, 4))
->>> q.Jacobian((*x, *y))
+>>> q.jacobian((*x, *y))
 autodiff.array([3, 4, 1, 2])
->>> q.Jacobian((*x, *y)).shape
+>>> q.jacobian((*x, *y)).shape
 (4,)
 ```
 
@@ -92,7 +92,7 @@ Or with a vector function:
         ))
 
 >>> q = f(x,y)
->>> q.Jacobian((x, y))
+>>> q.jacobian((x, y))
 autodiff.array([[0, 1],
                 [1, 0]])
 >>> q.jacobian((x, y)).shape
