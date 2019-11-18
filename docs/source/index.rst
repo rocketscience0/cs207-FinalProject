@@ -19,6 +19,7 @@ This is the base documentation for the ``autodiff`` package.
     How_to_use.md
     software_organization.md
     root_finding_test.md
+    implementation.md
     test-page/how-to-edit-documentation.md
     test-page/test.md
     api-doc/modules.rst
