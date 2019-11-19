@@ -52,8 +52,7 @@ The computation graph is the following:
 
 ### The Evaluation Table
 
-We can also demonstrate each evaluation using an evaluation table. Using the same example at `$x = 2$`:
-
+We can also demonstrate each evaluation using an evaluation table. Using the same example at `$x = 2$` (seed vector):
 ```eval_rst
 +-------------+-----------------------+-----------------+-----------------------------------------+-----------------------------------------------+
 | Step        | Elementary Operations | Numerical Value | :math:`\frac{\mathrm{d}f}{\mathrm{d}x}` | :math:`\frac{\mathrm{d}f}{\mathrm{d}x}` Value |
