@@ -26,7 +26,9 @@ Another advantage of AD is efficiently. Efficiency is very important because the
 
 ### The Chain Rule
 
-The chain rule is used to differentiate composite functions. It is applied when the derivatives of nested functions are computed. A simple case is `$n(x) = g(f(x))$`, with the derivative `$n'(x) = g'(f(x)) \cdot f'(x)$`
+The chain rule is used to differentiate composite functions. It is applied when the derivatives of nested functions are computed. A simple case is the following function: `$g(f(x))$`. The derivative of `$g$` with respect to `$x$` is `$\frac{\delta g}{\delta x} = \frac{\delta g}{\delta f} \cdot \frac{\delta f}{\delta x}$`. This derivative can also be written in prime notation as `$g'(f(x)) \cdot f'(x)$`. 
+
+We can also consider a slightly more complex case, in which the function takes more than one variable: `$g(f(x), h(x))$`. The derivative of `$g$` with respect to `$x$` will then become: `$\frac{\delta g}{\delta x} = \frac{\delta g}{\delta f} \cdot \frac{\delta f}{\delta x} + \frac{\delta g}{\delta h} \cdot \frac{\delta h}{\delta x}$`. This derivative can also be written in prime notation as `$g'(f(x)) \cdot f'(x) + g'(h(x)) \cdot h'(x)$`. 
 
 ### Elementary Functions and Computation Accuracy 
 
