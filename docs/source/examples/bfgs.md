@@ -1,18 +1,20 @@
-# BFGS optimization
+# An optimization example
 
-The test function is `$y = 5x^2+10x-8$`. BFGS's method is implemented to find the minimum of the test function. The user should be able to find the x and y of the minmium as well as access the jacobian of eaach optimization step.
+The test function is `$y = 5x^2+10x-8$`. BFGS's method is implemented to find the minimum of the test function. The user should be able to find the `$x$` and `$y$` of the minimum as well as access the Jacobian of each optimization step.
 
 First, we instantiate a `Number(5)` as the initial guess (`$x_0$`) of the root to the minimum. The `bfgs()` method takes the test function and the initial guess. 
 
-Second, the function and its derivative are evaluated at `$x_0$`. BFGS requires a speculated Hessian, and the initial guess is usually an identity matrix, or in the scalar case, `1`. The initial guess of hessian is stored in `$b_0$` Then an intermediate `$s_0$` is determined through solving `$b_0s_0=-\nabla func(x_0)$`
+Second, the function and its derivative are evaluated at `$x_0$`. BFGS requires a speculated Hessian, and the initial guess is usually an identity matrix, or in the scalar case, `1`. The initial guess of hessian is stored in `$b_0$` Then an intermediate `$s_0$` is determined through solving `$b_0s_0=-\nabla func(x_0)$`.
 
 Third, `$x_1$`'s value is set to be `$x_0+s_0$`
 
 Fourth, another intermediate `$y_0$`'s value is set to be `$\nabla(x_1)-\nabla(x_0)$`
 
-Fifth, `$b_1$` is updated and its value is equal to`$b_1=b_0+\Delta b_0$`, where $\Delta b_0$ is equivalent to `$\frac{y_0}{s_0}-b0$`
+Fifth, `$b_1$` is updated and its value is equal to `$b_1=b_0+\Delta b_0$`, where `$\Delta b_0$` is equivalent to `$\frac{y_0}{s_0}-b0$`
 
-Sixth, `$b_0$` is set to be 
+Sixth, The values of `$b_0$` and `$x_0$` are updated with `$b_1$` and `$x_1$`, respectively. Such process repeats until the Jacobian turns `0`
+
+Note, in our example, 
 
 
 ```python
@@ -48,7 +50,6 @@ def bfgs(func, initial_guess):
         fxn0 = func(x0)
 
         fpxn0 = fxn0.jacobian(x0)
-        print(fxn0)
 
         s0 = -fpxn0/b0
 
@@ -77,17 +78,15 @@ def bfgs(func, initial_guess):
         
     return x0,func(x0),jacobians
     
-
+x0 = Number(5)
 xstar,minimum,jacobians = bfgs(func,x0)
-jacobians
+
+print("The jacobians at 1st, 2nd and final steps are:",jacobians,'. The jacobian value is 0 in the last step, indicating completion of the optimization process.')
+print()
+print("The x* is", xstar )
 ```
 
-    Number(val=-12.8)
-    Number(val=3.200000000000001)
-    Number(val=-13.0)
+    The jacobians at 1st, 2nd and final steps are: [60, -540.0, 0.0] . The jacobian value is 0 in the last step, indicating completion of the optimization process.
+    
+    The x* is Number(val=-1.0)
 
-
-
-
-
-    [-2.0, 18.0, 0.0]
