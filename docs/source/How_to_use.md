@@ -14,7 +14,8 @@ The core data structure is a `Number`, which stores both a value and a dictionar
 3
 >>> a.deriv[a]
 2
-···
+```
+Also, `import autodiff` will import `numpy` automatically. Therefore, user will also be able to make use of constants such as `np.pi` and vectors using numpy arrays.
 
 Using elementary operations will update derivatives according to the chain rule:
 ```python
@@ -27,6 +28,18 @@ Using elementary operations will update derivatives according to the chain rule:
 6
 >>> y.deriv[y]
 1
+```
+
+
+Right now, 'Number' overloads basic operations, including addition, subtraction, multiplication, division and power.
+
+To call other basic operations such as sin, cos, tan, exponential, log, and negation, simply call the following on Number:
+
+```python
+>>> x = autodiff.Number(np.pi/6)
+>>> y = x.sin()
+>>> y.value
+1/2
 ```
 
 Note that the `deriv` attribute is a dict storing partial derivatives with respect to each `Number` object involved in preceding elementary operations. 
@@ -123,5 +136,3 @@ f2 = f1 * x * y
 >>> f2.jacobian((order))
 autodiff.array([240, 32, 66.542])
 ```
-
-Right now, 'Number' supports basic operations, including addition, subtraction, multiplication, division, power, sin, cos, tan, exponential, log, and negation. 
