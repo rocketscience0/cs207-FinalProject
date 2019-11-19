@@ -21,6 +21,7 @@ This is the base documentation for the ``autodiff`` package.
     examples/index.rst
     test-page/how-to-edit-documentation.md
     api-doc/modules.rst
+    proposed-extension.md
 
 
 
