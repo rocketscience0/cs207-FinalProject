@@ -434,13 +434,37 @@ def log(x, y=np.exp(1)):
     return s
 
 def negate_deriv(x):
+    """Derivative of a negation
+    
+    Args:
+        x (Number): Number to negate
+    
+    Returns:
+        dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
+    """
     return {key: -deriv for key, deriv in x.deriv.items()}
 
 @elementary(negate_deriv)
 def negate(x):
+    """Negate
+    
+    Args:
+        x (Number): Negate a number
+    
+    Returns:
+        Number: -x
+    """
     return - x.val
 
 def asin_deriv(x):
+    """Arcsin derivative
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
+    """
     d = {}
 
     for key in x.deriv.keys():
@@ -451,9 +475,25 @@ def asin_deriv(x):
 
 @elementary(asin_deriv)
 def asin(x):
+    """Arcsin
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        Number: asin(x)
+    """
     return np.arcsin(x.val)
 
 def acos_deriv(x):
+    """Derivative of arccos
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
+    """
     d = {}
     for key in x.deriv.keys():
         d[key] = - 1 / np.sqrt(-x ** 2 + 1) * x.deriv[key]
@@ -462,9 +502,25 @@ def acos_deriv(x):
 
 @elementary(acos_deriv)
 def acos(x):
+    """Arccos
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        Number: acos(x)
+    """
     return np.arccos(x.val)
 
 def atan_deriv(x):
+    """Derivative of atan
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
+    """
     d = {}
     for key in x.deriv.keys():
         d[key] = 1 / (x ** 2 + 1) * x.deriv[key]
@@ -472,9 +528,25 @@ def atan_deriv(x):
 
 @elementary(atan_deriv)
 def atan(x):
+    """Arctan
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        Number: atan(x)
+    """
     return np.arctan(x.val)
 
 def cosh_deriv(x):
+    """Hyperbolic cosine
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
+    """
     d = {}
     for key in x.deriv.keys():
         d[key] = np.sinh(x.val) * x.deriv[key]
@@ -482,9 +554,25 @@ def cosh_deriv(x):
 
 @elementary(cosh_deriv)
 def cosh(x):
+    """Hyperbolic cosine
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        Number: cosh(x)
+    """
     return np.cosh(x.val)
 
 def sinh_deriv(x):
+    """Hyperbolic sin derivative
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
+    """
     d = {}
     for key in x.deriv.keys():
         d[key] = np.cosh(x.val) * x.deriv[key]
@@ -492,9 +580,25 @@ def sinh_deriv(x):
 
 @elementary(sinh_deriv)
 def sinh(x):
+    """Hyperbolic sine
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        Number: sinh(x)
+    """
     return np.sinh(x.val)
 
 def tanh_deriv(x):
+    """Hyperbolic tan derivative
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
+    """
     d = {}
     for key in x.deriv.keys():
         d[key] = -np.tanh(x.val) ** 2 + 1
@@ -502,4 +606,12 @@ def tanh_deriv(x):
 
 @elementary(tanh_deriv)
 def tanh(x):
+    """Hyperbolic tan
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        Number: tanh(x)
+    """
     return np.tanh(x.val)
