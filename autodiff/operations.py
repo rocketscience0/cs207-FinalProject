@@ -434,8 +434,50 @@ def log(x, y=np.exp(1)):
     return s
 
 def negate_deriv(x):
+    '''Derivatives of the elementary negation function
+    
+    Args:
+        x (Number): Number to be negated
+        
+    Returns:
+        dictionary: the partial derivatives of the negated Number
+    '''
     return {key: -deriv for key, deriv in x.deriv.items()}
 
 @elementary(negate_deriv)
 def negate(x):
+    '''Negate a Number object
+    
+    Args:
+        x(Number): the Number to be negated
+    
+    Returns:
+        float: negated original number's value
+    '''
     return - x.val
+
+def sqrt_deriv(x):
+    '''Derivative of the square root function
+    
+    Args:
+        x(Number): Number to take the square root of
+    
+    Returns:
+        dictionary: the partial derivatives of the square root of number
+    '''
+    d = {}
+    for key in x.deriv.keys():
+        d[key] = (1/2)*1/np.sqrt(x.deriv[key])
+    return d
+
+@elementary(sqrt_deriv)
+def sqrt(x):
+    '''Square root of a number
+    
+    Args:
+        x(Number): Number to take the square root of
+        
+    Returns:
+        float: the square root of Number x's value
+    '''
+    return np.sqrt(x.val)
