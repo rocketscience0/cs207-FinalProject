@@ -265,11 +265,11 @@ def pow_deriv(x, a):
 
 @elementary(pow_deriv)
 def power(x,y):
-    """Subtract one number from another, one of x and y has to be a Number object
+    """power of one number by another, one of x and y has to be a Number object
     
     Args:
-        x: a Number object
-        y: a Number object or an int/float to be subtracted
+        x: a Number object or an int/float to be powered
+        y: a Number object or an int/float to be the exponential
     
     Returns:
         value of the difference
@@ -434,14 +434,14 @@ def log(x, y=np.exp(1)):
     return s
 
 def negate_deriv(x):
-    """Derivative of a negation
+    '''Derivatives of the elementary negation function
     
     Args:
-        x (Number): Number to negate
-    
+        x (Number): Number to be negated
+        
     Returns:
-        dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
-    """
+        dictionary: the partial derivatives of the negated Number
+    '''
     return {key: -deriv for key, deriv in x.deriv.items()}
 
 @elementary(negate_deriv)
@@ -615,3 +615,29 @@ def tanh(x):
         Number: tanh(x)
     """
     return np.tanh(x.val)
+
+def sqrt_deriv(x):
+    '''Derivative of the square root function
+    
+    Args:
+        x(Number): Number to take the square root of
+    
+    Returns:
+        dictionary: the partial derivatives of the square root of number
+    '''
+    d = {}
+    for key in x.deriv.keys():
+        d[key] = (1/2)*1/np.sqrt(x.deriv[key])
+    return d
+
+@elementary(sqrt_deriv)
+def sqrt(x):
+    '''Square root of a number
+    
+    Args:
+        x(Number): Number to take the square root of
+        
+    Returns:
+        float: the square root of Number x's value
+    '''
+    return np.sqrt(x.val)
