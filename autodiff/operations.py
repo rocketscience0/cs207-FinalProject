@@ -439,3 +439,67 @@ def negate_deriv(x):
 @elementary(negate_deriv)
 def negate(x):
     return - x.val
+
+def asin_deriv(x):
+    d = {}
+
+    for key in x.deriv.keys():
+        d[key] = 1 / np.sqrt(-x.val ** 2 + 1) * x.deriv[key]
+
+    # return 1 / np.sqrt(-x ** 2 + 1)
+    return d
+
+@elementary(asin_deriv)
+def asin(x):
+    return np.arcsin(x.val)
+
+def acos_deriv(x):
+    d = {}
+    for key in x.deriv.keys():
+        d[key] = - 1 / np.sqrt(-x ** 2 + 1) * x.deriv[key]
+
+    return d
+
+@elementary(acos_deriv)
+def acos(x):
+    return np.arccos(x.val)
+
+def atan_deriv(x):
+    d = {}
+    for key in x.deriv.keys():
+        d[key] = 1 / (x ** 2 + 1) * x.deriv[key]
+    return d
+
+@elementary(atan_deriv)
+def atan(x):
+    return np.arctan(x.val)
+
+def cosh_deriv(x):
+    d = {}
+    for key in x.deriv.keys():
+        d[key] = np.sinh(x.val) * x.deriv[key]
+    return d
+
+@elementary(cosh_deriv)
+def cosh(x):
+    return np.cosh(x.val)
+
+def sinh_deriv(x):
+    d = {}
+    for key in x.deriv.keys():
+        d[key] = np.cosh(x.val) * x.deriv[key]
+    return d
+
+@elementary(sinh_deriv)
+def sinh(x):
+    return np.sinh(x.val)
+
+def tanh_deriv(x):
+    d = {}
+    for key in x.deriv.keys():
+        d[key] = -np.tanh(x.val) ** 2 + 1
+    return d
+
+@elementary(tanh_deriv)
+def tanh(x):
+    return np.tanh(x.val)
