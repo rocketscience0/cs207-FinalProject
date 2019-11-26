@@ -265,11 +265,11 @@ def pow_deriv(x, a):
 
 @elementary(pow_deriv)
 def power(x,y):
-    """Subtract one number from another, one of x and y has to be a Number object
+    """power of one number by another, one of x and y has to be a Number object
     
     Args:
-        x: a Number object
-        y: a Number object or an int/float to be subtracted
+        x: a Number object or an int/float to be powered
+        y: a Number object or an int/float to be the exponential
     
     Returns:
         value of the difference
@@ -434,10 +434,26 @@ def log(x, y=np.exp(1)):
     return s
 
 def negate_deriv(x):
+    '''Derivatives of the elementary negation function
+    
+    Args:
+        x (Number): Number to be negated
+        
+    Returns:
+        dictionary: the partial derivatives of the negated Number
+    '''
     return {key: -deriv for key, deriv in x.deriv.items()}
 
 @elementary(negate_deriv)
 def negate(x):
+    """Negate
+    
+    Args:
+        x (Number): Negate a number
+    
+    Returns:
+        Number: -x
+    """
     return - x.val
 
 def logistic_deriv(x):
@@ -469,3 +485,190 @@ def logistic(x):
         float: logistic(x.val)
     """
     return 1.0/(1.0+np.exp(-x.val))
+
+
+def asin_deriv(x):
+    """Arcsin derivative
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
+    """
+    d = {}
+
+    for key in x.deriv.keys():
+        d[key] = 1 / np.sqrt(-x.val ** 2 + 1) * x.deriv[key]
+
+    # return 1 / np.sqrt(-x ** 2 + 1)
+    return d
+
+@elementary(asin_deriv)
+def asin(x):
+    """Arcsin
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        Number: asin(x)
+    """
+    return np.arcsin(x.val)
+
+def acos_deriv(x):
+    """Derivative of arccos
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
+    """
+    d = {}
+    for key in x.deriv.keys():
+        d[key] = - 1 / np.sqrt(-x ** 2 + 1) * x.deriv[key]
+
+    return d
+
+@elementary(acos_deriv)
+def acos(x):
+    """Arccos
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        Number: acos(x)
+    """
+    return np.arccos(x.val)
+
+def atan_deriv(x):
+    """Derivative of atan
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
+    """
+    d = {}
+    for key in x.deriv.keys():
+        d[key] = 1 / (x ** 2 + 1) * x.deriv[key]
+    return d
+
+@elementary(atan_deriv)
+def atan(x):
+    """Arctan
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        Number: atan(x)
+    """
+    return np.arctan(x.val)
+
+def cosh_deriv(x):
+    """Hyperbolic cosine
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
+    """
+    d = {}
+    for key in x.deriv.keys():
+        d[key] = np.sinh(x.val) * x.deriv[key]
+    return d
+
+@elementary(cosh_deriv)
+def cosh(x):
+    """Hyperbolic cosine
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        Number: cosh(x)
+    """
+    return np.cosh(x.val)
+
+def sinh_deriv(x):
+    """Hyperbolic sin derivative
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
+    """
+    d = {}
+    for key in x.deriv.keys():
+        d[key] = np.cosh(x.val) * x.deriv[key]
+    return d
+
+@elementary(sinh_deriv)
+def sinh(x):
+    """Hyperbolic sine
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        Number: sinh(x)
+    """
+    return np.sinh(x.val)
+
+def tanh_deriv(x):
+    """Hyperbolic tan derivative
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
+    """
+    d = {}
+    for key in x.deriv.keys():
+        d[key] = -np.tanh(x.val) ** 2 + 1
+    return d
+
+@elementary(tanh_deriv)
+def tanh(x):
+    """Hyperbolic tan
+    
+    Args:
+        x (Number): Value
+    
+    Returns:
+        Number: tanh(x)
+    """
+    return np.tanh(x.val)
+
+def sqrt_deriv(x):
+    '''Derivative of the square root function
+    
+    Args:
+        x(Number): Number to take the square root of
+    
+    Returns:
+        dictionary: the partial derivatives of the square root of number
+    '''
+    d = {}
+    for key in x.deriv.keys():
+        d[key] = (1/2)*1/np.sqrt(x.deriv[key])
+    return d
+
+@elementary(sqrt_deriv)
+def sqrt(x):
+    '''Square root of a number
+    
+    Args:
+        x(Number): Number to take the square root of
+        
+    Returns:
+        float: the square root of Number x's value
+    '''
+    return np.sqrt(x.val)
