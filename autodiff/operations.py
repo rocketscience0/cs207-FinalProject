@@ -439,3 +439,33 @@ def negate_deriv(x):
 @elementary(negate_deriv)
 def negate(x):
     return - x.val
+
+def logistic_deriv(x):
+    """Derivative of logistic(x)
+    
+    Args:
+        x (structures.Number()): Number to the natural exponential in the logistic function.
+        Must have a ``deriv`` attribute
+    
+    Returns:
+        dict: dictionary of partial derivatives
+    """
+    d = {}
+    for key in x.deriv.keys():
+        d[key] = -(1+np.exp(-x.val))**-2*(-np.exp(-x.val)) * x.deriv[key]
+    d[x] = -(1+np.exp(-x.val))**-2*(-np.exp(-x.val)) * x.deriv[x]
+
+    return d
+
+
+@elementary(logistic_deriv)
+def logistic(x):
+    """Take the logistic(x) 
+    
+    Args:
+        x (Number): Number to the natural exponential in the logistic
+    
+    Returns:
+        float: logistic(x.val)
+    """
+    return 1.0/(1.0+np.exp(-x.val))

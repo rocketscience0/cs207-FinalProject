@@ -220,6 +220,17 @@ class Number():
         '''
         return operations.exp(self)
 
+    def logistic(self):
+        
+        '''
+        Calculates the logistic of Number object.
+        
+        Returns:
+            another Number object, which is the logistic of the original one.
+        '''
+
+        return operations.logistic(self)
+
     def jacobian(self, order):
         '''
         Returns the jacobian matrix by the order specified.
