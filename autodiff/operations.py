@@ -265,11 +265,11 @@ def pow_deriv(x, a):
 
 @elementary(pow_deriv)
 def power(x,y):
-    """Subtract one number from another, one of x and y has to be a Number object
+    """power of one number by another, one of x and y has to be a Number object
     
     Args:
-        x: a Number object
-        y: a Number object or an int/float to be subtracted
+        x: a Number object or an int/float to be powered
+        y: a Number object or an int/float to be the exponential
     
     Returns:
         value of the difference
