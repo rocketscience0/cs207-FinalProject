@@ -259,3 +259,80 @@ class Number():
             jacobian = _partial(self.deriv, order)
 
         return jacobian
+    
+    def __eq__(self, other):
+        '''
+        Overloads the Comparison Operator to check whether two autodiff.Number 
+        objects are equal to each other
+        
+        Args:
+            other: the other autodiff.Number object to be compared with
+        
+        Returns:
+            True if two Autodiff.Number objects are equal, False otherwise.
+        '''
+        try:
+            if ((self.val == other.val) and (self.deriv == other.deriv)):
+                return True
+            return False
+        except Exception:
+            #if other is not even a autodiff.Number
+            return False
+    
+    def __ne__(self, other):
+        '''
+        Overloads the Comparison Operator to check whether two autodiff.Number 
+        objects are not equal to each other
+        
+        Args:
+            other: the other autodiff.Number object to be compared with
+        
+        Returns:
+            True if two Autodiff.Number objects are not equal, False otherwise.
+        '''
+        if self==other:
+            return False
+        return True
+    
+    def __gt__(self, other):
+        '''
+        Overloads the Comparison Operator to check whether this autodiff.Number 
+        object is greater than the other one
+        
+        Args:
+            other: the other autodiff.Number object to be compared with
+        
+        Returns:
+            True if this autodiff.Number has a greater value, False otherwise.
+            
+        Raises:
+            exception when the other is not an autodiff.Number object
+        '''
+        try:
+            if (self.val > other.val):
+                return True
+            return False
+        except Exception:
+            raise Exception('cannot compare autodiff.Number object with a non-Number object')
+        
+    def __lt__(self, other):
+        '''
+        Overloads the Comparison Operator to check whether this autodiff.Number 
+        object is less than the other one
+        
+        Args:
+            other: the other autodiff.Number object to be compared with
+        
+        Returns:
+            True if this autodiff.Number has a smaller value, False otherwise.
+            
+        Raises:
+            exception when the other is not an autodiff.Number object
+        '''
+        try:
+            if (self.val < other.val):
+                return True
+            return False
+        except Exception:
+            raise Exception('cannot compare autodiff.Number object with a non-Number object')
+    
