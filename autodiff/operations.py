@@ -554,7 +554,7 @@ def atan_deriv(x):
     """
     d = {}
     for key in x.deriv.keys():
-        d[key] = 1 / (x ** 2 + 1) * x.deriv[key]
+        d[key] = 1 / (x.val ** 2 + 1) * x.deriv[key]
     return d
 
 @elementary(atan_deriv)
@@ -658,7 +658,9 @@ def sqrt_deriv(x):
     '''
     d = {}
     for key in x.deriv.keys():
-        d[key] = (1/2)*1/np.sqrt(x.deriv[key])
+        # d[key] = (1 / 2) * 1 / np.sqrt(x.deriv[key])
+        d[key] = 1 / (2 * np.sqrt(x.val)) * x.deriv[key]
+
     return d
 
 @elementary(sqrt_deriv)
