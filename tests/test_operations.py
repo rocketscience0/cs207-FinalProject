@@ -15,6 +15,7 @@ cosa = operations.cos(a)
 
 # Some integers
 # Test values for overloaded operations
+num1 = Number(1)
 num2 = Number(2)
 num3 = Number(3)
 num4 = Number(4)
@@ -348,6 +349,61 @@ def test_jacobian_requires_order():
 def test_jacobian_multi_input():
     result = num3 * num4
     assert result.jacobian((num3, num4)) == [4, 3]
+
+def test_logistic():
+    assert operations.logistic(num_log_1).val == pytest.approx(1 / 2)
+    assert num_log_1.logistic().val == pytest.approx(1 / 2)
+
+def test_logistic_deriv():
+    operations.logistic(num_log_1).deriv[num_log_1] == pytest.approx(1 / 4)
+
+def test_asin():
+    a = Number(1 / np.sqrt(2))
+    assert operations.asin(a).val == pytest.approx(np.pi / 4)
+
+def test_asin_deriv():
+    a = Number(1 / np.sqrt(2))
+    assert operations.asin(a).deriv[a] == pytest.approx(np.sqrt(2))
+
+def test_acos():
+    a = Number(1 / np.sqrt(2))
+    assert operations.acos(a).val == pytest.approx(np.pi / 4)
+
+def test_acos_deriv():
+    a = Number(1 / np.sqrt(2))
+    assert operations.acos(a).deriv[a] == pytest.approx(-np.sqrt(2))
+
+def test_atan():
+    assert operations.atan(num1).val == pytest.approx(np.pi / 4)
+
+def test_atan_deriv():
+    assert operations.atan(num1).deriv[num1] == pytest.approx(1 / 2)
+
+def test_cosh():
+    assert operations.cosh(num_log_1).val == 1
+
+def test_cosh_deriv():
+    assert operations.cosh(num_log_1).deriv[num_log_1] == 0
+
+def test_sinh():
+    assert operations.sinh(num_log_1).val == 0
+
+def test_sinh_deri():
+    assert operations.sinh(num_log_1).deriv[num_log_1] == 1
+
+def test_tanh():
+    assert operations.tanh(num2).val == np.tanh(2)
+
+def test_tanh_deriv():
+    assert operations.tanh(num2).deriv[num2] == pytest.approx(-np.tanh(2) ** 2 + 1)
+
+def test_sqrt():
+    assert operations.sqrt(num4).val == 2
+
+def test_sqrt_deriv():
+    assert operations.sqrt(num4).deriv[num4] == pytest.approx(1 / 4)
+
+
 # if __name__ == '__main__':
 #     # t = Number(10)
 #     # a = Number(4, deriv={t: 2})
