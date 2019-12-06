@@ -527,7 +527,7 @@ def acos_deriv(x):
     """
     d = {}
     for key in x.deriv.keys():
-        d[key] = - 1 / np.sqrt(-x ** 2 + 1) * x.deriv[key]
+        d[key] = -1 / np.sqrt(-x.val ** 2 + 1) * x.deriv[key]
 
     return d
 
