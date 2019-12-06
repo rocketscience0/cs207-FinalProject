@@ -272,8 +272,13 @@ class Number():
             True if two Autodiff.Number objects are equal, False otherwise.
         '''
         try:
-            if ((self.val == other.val) and (self.deriv == other.deriv)):
-                return True
+            if self.val == other.val:
+                deriv_self = self.deriv.copy()
+                deriv_other = other.deriv.copy()
+                deriv_self.pop(self)
+                deriv_other.pop(other)
+                if deriv_self==deriv_other:
+                    return True
             return False
         except Exception:
             #if other is not even a autodiff.Number
