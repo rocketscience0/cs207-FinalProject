@@ -259,6 +259,9 @@ class Number():
             jacobian = _partial(self.deriv, order)
 
         return jacobian
+
+    def __hash__(self):
+        return id(self)
     
     def __eq__(self, other):
         '''
