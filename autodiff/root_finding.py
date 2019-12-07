@@ -3,9 +3,21 @@ from autodiff.structures import Number
 import numpy as np
 from copy import deepcopy
 
-def newtons_method(func, initial_guess):
+def newtons_method(func, initial_guess, iterations=100, show_fxn=False):
     
-    #stores a list of jacobians from each iteration
+    """Use Newton's method to find the root of the function
+    Args:
+        func: the function that the user wants to find root for
+        initial_guess: a number object for the initial guess
+        iterations: number of maximum iterations
+        show_fxn: if true, return function value at the final xstar
+
+    Returns:
+        xn: the x value of the root
+        jacobians: the jacobian at each step of the root_finding
+        fxn: func(xn). If root_finding is successful, this value should be 0
+    """    
+
     jacobians = []
     
     x0 = initial_guess
@@ -18,24 +30,38 @@ def newtons_method(func, initial_guess):
 
     jacobians.append(fpxn)
     
+    for i in range(iterations):
+        if abs(fxn.val) > 1e-7:
+            x0 = x1
+
+            fxn = func(x0)
+
+            fpxn = fxn.jacobian(x0)
+
+            jacobians.append(fpxn)
+            
+            x1 = x0- fxn / fpxn
     
-    while abs(fxn.val) > 1e-7:
-        x0 = x1
+    if show_fxn:
+        return x1, jacobians,fxn
+    else:
+        return x1, jacobians
+def secant_method(func, initial_guess,iterations = 100,show_fxn=False):
+    """Use secant method to find the root of the function
+    Args:
+        func: the function that the user wants to find root for
+        initial_guess: a list of length=2 that containts two initial guesses close to the root
+        iterations: number of maximum iterations
+        show_fxn: if true, return function value at the final xstar
 
-        fxn = func(x0)
+    Returns:
+        xn: the x value of the root
+        fxn: func(xn). If root_finding is successful, this value should be 0
+    """
 
-        fpxn = fxn.jacobian(x0)
-
-        jacobians.append(fpxn)
-        
-        x1 = x0- fxn / fpxn
-        
-    return x1, jacobians
-
-def secant_method(func, initial_guess,iterations = 100):
-    
     #The secant method uses finite difference version of Newton's method
     # Aims to compare the efficiency with Newton's method
+
     if len(initial_guess) != 2 | len(initial_guess)==None:
         raise ValueError("Please enter two initial guesses")
 
@@ -59,4 +85,7 @@ def secant_method(func, initial_guess,iterations = 100):
 
             xn = (xn_2*fxn_1-xn_1*fxn_2)/(fxn_1-fxn_2)
             fxn = func(xn)
-    return xn
+    if show_fxn:
+        return xn,fxn
+    else:
+        return xn
