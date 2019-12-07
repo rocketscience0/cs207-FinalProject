@@ -1,6 +1,7 @@
 """Data structures for autodiff
 """
 from autodiff import operations
+import numpy as np
 
 class Number():
     '''
