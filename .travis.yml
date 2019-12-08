@@ -4,8 +4,8 @@ python:
 install:
   - pip install pytest pytest-cov
   - pip install codecov
-  - pip install numpy==1.17.3
-  - pip install numpy-base==1.17.3
+  - pip install numpy
+  - pip install numpy-base
   - export PYTHONPATH=$PYTHONPATH:$(pwd)
 script:
   - pytest tests --cov=./ --cov-report term-missing
