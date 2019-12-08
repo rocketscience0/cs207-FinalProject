@@ -35,7 +35,7 @@ class Number():
 
         self.val = val
         if deriv is None:
-            self.deriv = {
+            self._deriv = {
                 self: 1
             }
         elif isinstance(deriv, dict):
