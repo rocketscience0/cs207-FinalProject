@@ -39,11 +39,11 @@ class Number():
                 self: 1
             }
         elif isinstance(deriv, dict):
-            self.deriv = deriv
+            self._deriv = deriv
             #keep also a copy of the derivative w.r.t. itself
-            self.deriv[self] = 1
+            self._deriv[self] = 1
         else:
-            self.deriv = {
+            self._deriv = {
                     self: deriv
                     }
 
@@ -242,7 +242,7 @@ class Number():
         Returns:
             a list of partial derivatives specified by the order.
         '''
-
+        
         def _partial(deriv, key):
             try:
                 return deriv[key]
@@ -250,14 +250,18 @@ class Number():
                 raise ValueError(
                     f'No derivative with respect to {repr(order)}'
                 )
-
+        
+        #if order is a single Number object
+        if isinstance(order, Number):
+            return _partial(self._deriv, order)
+        
         jacobian = []
         try:
             for key in order:
-                jacobian.append(_partial(self.deriv, key))
+                jacobian.append(_partial(self._deriv, key))
         except TypeError:
             # The user specified a scalar order
-            jacobian = _partial(self.deriv, order)
+            jacobian = _partial(self._deriv, order)
         jacobian = Array(jacobian)
         return jacobian
 
@@ -719,10 +723,10 @@ class Array:
             jacobian = []
             try:
                 for key in order:
-                    jacobian.append(_partial(element.deriv, key))
+                    jacobian.append(_partial(element._deriv, key))
             except TypeError:
                 # The user specified a scalar order
-                jacobian.append(_partial(element.deriv, order))
+                jacobian.append(_partial(element._deriv, order))
             j.append(jacobian)
         j = Array(j)
         return j
