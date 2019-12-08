@@ -2,7 +2,7 @@
 """
 
 from functools import wraps
-from autodiff.structures import Number
+from autodiff.structures import Number, Array
 import numpy as np
 
 
@@ -37,11 +37,21 @@ def elementary(deriv_func):
 
     def inner(func):
         @wraps(func)
-        def inner_func(*args):
-            
-            value = func(*args)
-            deriv = deriv_func(*args)
-            return Number(value, deriv)
+        def inner_func(*args, **kwargs):
+            # Check if args[0] has len. If so, apply the function elementwise and return an array
+            # rather than a Number
+            try:
+                value = func(*args, **kwargs)
+                deriv = deriv_func(*args, **kwargs)
+                return Number(value, deriv)
+
+            except AttributeError:
+
+                vals = [func(element, *args[1:], **kwargs) for element in args[0]]
+                derivs = [deriv_func(element, *args[1:], **kwargs) for element in args[0]]
+                numbers = [Number(val, deriv) for val, deriv in zip(vals, derivs)]
+                return Array(numbers)
+
 
         return inner_func
     return inner
@@ -672,3 +682,9 @@ def sqrt(x):
         float: the square root of Number x's value
     '''
     return np.sqrt(x.val)
+
+if __name__ == '__main__':
+    q = Array((Number(0), Number(1)))
+    w = Number(1)
+    print(exp(w))
+    print(exp(q))
