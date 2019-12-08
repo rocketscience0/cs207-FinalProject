@@ -58,16 +58,16 @@ def add_deriv(x,y):
     """
     try:
         d={}
-        for key in x.deriv.keys():
-            if key in y.deriv.keys():
-                d[key] = x.deriv[key] + y.deriv[key]
+        for key in x._deriv.keys():
+            if key in y._deriv.keys():
+                d[key] = x._deriv[key] + y._deriv[key]
             else:
-                d[key] = x.deriv[key]
-        for key in y.deriv.keys():
-            if not key in x.deriv.keys():
-                d[key] = y.deriv[key]
+                d[key] = x._deriv[key]
+        for key in y._deriv.keys():
+            if not key in x._deriv.keys():
+                d[key] = y._deriv[key]
     except AttributeError:
-        d = x.deriv
+        d = x._deriv
     return d
 
 @elementary(add_deriv)
@@ -99,16 +99,16 @@ def subtract_deriv(x,y):
     """
     try:
         d={}
-        for key in x.deriv.keys():
-            if key in y.deriv.keys():
-                d[key] = x.deriv[key] - y.deriv[key]
+        for key in x._deriv.keys():
+            if key in y._deriv.keys():
+                d[key] = x._deriv[key] - y._deriv[key]
             else:
-                d[key] = x.deriv[key]
-        for key in y.deriv.keys():
-            if not key in x.deriv.keys():
-                d[key] = -y.deriv[key]
+                d[key] = x._deriv[key]
+        for key in y._deriv.keys():
+            if not key in x._deriv.keys():
+                d[key] = -y._deriv[key]
     except AttributeError:
-        d = x.deriv
+        d = x._deriv
     return d
 
 @elementary(subtract_deriv)
@@ -142,19 +142,19 @@ def mul_deriv(x,y):
         return pow_deriv(x,2)
     try:
         d={}
-        for key in x.deriv.keys():
-            if key in y.deriv.keys():
+        for key in x._deriv.keys():
+            if key in y._deriv.keys():
                 #product rule
-                d[key] = x.deriv[key] * y.val + y.deriv[key] * x.val
+                d[key] = x._deriv[key] * y.val + y._deriv[key] * x.val
             else:
-                d[key] = x.deriv[key] * y.val
-        for key in y.deriv.keys():
-            if not key in x.deriv.keys():
-                d[key] = y.deriv[key] * x.val
+                d[key] = x._deriv[key] * y.val
+        for key in y._deriv.keys():
+            if not key in x._deriv.keys():
+                d[key] = y._deriv[key] * x.val
     except AttributeError:
         d = {}
-        for key in x.deriv.keys():
-            d[key] = x.deriv[key]*y
+        for key in x._deriv.keys():
+            d[key] = x._deriv[key]*y
     return d
 
 @elementary(mul_deriv)
@@ -186,20 +186,19 @@ def div_deriv(x,y):
     """
     try:
         d={}
-        for key in x.deriv.keys():
-            if key in y.deriv.keys():
+        for key in x._deriv.keys():
+            if key in y._deriv.keys():
                 #quotient rule
-                d[key] = (-y.deriv[key] * x.val + x.deriv[key] * y.val)/(y.val**2)
+                d[key] = (-y._deriv[key] * x.val + x._deriv[key] * y.val)/(y.val**2)
             else:
-                d[key] = x.deriv[key] / y.val
-        for key in y.deriv.keys():
-            if not key in x.deriv.keys():
-                # d[key] = x.val / y.deriv[key]
-                d[key] = -x.val / (y.val ** 2) * y.deriv[key]
+                d[key] = x._deriv[key] / y.val
+        for key in y._deriv.keys():
+            if not key in x._deriv.keys():
+                d[key] = -x.val / (y.val ** 2) * y._deriv[key]
     except AttributeError:
         d = {}
-        for key in x.deriv.keys():
-            d[key] = x.deriv[key] / y
+        for key in x._deriv.keys():
+            d[key] = x._deriv[key] / y
     return d
 
 @elementary(div_deriv)
@@ -234,29 +233,29 @@ def pow_deriv(x, a):
 
     # All the derivates w.r.t x
     try:
-        for key in x.deriv.keys():
-            if key in a.deriv.keys():
+        for key in x._deriv.keys():
+            if key in a._deriv.keys():
                 # Using the chain rule for powers
-                d[key] = (((a.val * x.deriv[key]) / x.val) + (a.deriv[key] * np.log(x.val))) * (x.val ** a.val)
+                d[key] = (((a.val * x._deriv[key]) / x.val) + (a._deriv[key] * np.log(x.val))) * (x.val ** a.val)
             else:
-                d[key] = a.val * x.val ** (a.val - 1) * x.deriv[key]
+                d[key] = a.val * x.val ** (a.val - 1) * x._deriv[key]
     except AttributeError:
         try:
-            for key in x.deriv.keys():
-                d[key] = a * x.val ** (a - 1) * x.deriv[key]
+            for key in x._deriv.keys():
+                d[key] = a * x.val ** (a - 1) * x._deriv[key]
         except AttributeError:
             # x isn't a Number(). Just go through
             pass
 
     # All the derivatives w.r.t a
     try:
-        for key in a.deriv.keys():
-            if key not in x.deriv.keys():
-                d[key] = x.val ** a.val * np.log(x.val) * a.deriv[key]
+        for key in a._deriv.keys():
+            if key not in x._deriv.keys():
+                d[key] = x.val ** a.val * np.log(x.val) * a._deriv[key]
     except AttributeError:
         try:
-            for key in a.deriv.keys():
-                d[key] = x ** a.val * np.log(x) * a.deriv[key]
+            for key in a._deriv.keys():
+                d[key] = x ** a.val * np.log(x) * a._deriv[key]
         except AttributeError:
             # a isn't a Number(). Just go through
             pass
@@ -295,9 +294,9 @@ def sin_deriv(x):
         dict: dictionary of partial derivatives
     """
     d={}
-    for key in x.deriv.keys():
-        d[key] = np.cos(x.val) * x.deriv[key]
-    d[x] = np.cos(x.val) * x.deriv[x]
+    for key in x._deriv.keys():
+        d[key] = np.cos(x.val) * x._deriv[key]
+    d[x] = np.cos(x.val) * x._deriv[x]
     return d
 
 @elementary(sin_deriv)
@@ -322,9 +321,9 @@ def cos_deriv(x):
         dict: dictionary of partial derivatives
     """
     d={}
-    for key in x.deriv.keys():
-        d[key] = -np.sin(x.val) * x.deriv[key]
-    d[x] = -np.sin(x.val) * x.deriv[x]
+    for key in x._deriv.keys():
+        d[key] = -np.sin(x.val) * x._deriv[key]
+    d[x] = -np.sin(x.val) * x._deriv[x]
     return d
 
 @elementary(cos_deriv)
@@ -349,9 +348,9 @@ def tan_deriv(x):
         dict: dictionary of partial derivatives
     """
     d={}
-    for key in x.deriv.keys():
-        d[key] = (np.tan(x.val)**2 + 1) * x.deriv[key]
-    d[x] = (np.tan(x.val)**2 + 1) * x.deriv[x]
+    for key in x._deriv.keys():
+        d[key] = (np.tan(x.val)**2 + 1) * x._deriv[key]
+    d[x] = (np.tan(x.val)**2 + 1) * x._deriv[x]
     return d
 
 @elementary(tan_deriv)
@@ -376,9 +375,9 @@ def exp_deriv(x):
         dict: dictionary of partial derivatives
     """
     d={}
-    for key in x.deriv.keys():
-        d[key] = np.exp(x.val) * x.deriv[key]
-    d[x] = np.exp(x.val) * x.deriv[x]
+    for key in x._deriv.keys():
+        d[key] = np.exp(x.val) * x._deriv[key]
+    d[x] = np.exp(x.val) * x._deriv[x]
     return d
 
 @elementary(exp_deriv)
@@ -405,9 +404,8 @@ def log_deriv(x, y=np.exp(1)):
     """
     d = {}
     # Use the chain rule to find partials w.r.t everything x depends on
-    for key in x.deriv.keys():
-        # d[key] = 1 / (x.val * np.log(y.deriv[key]))
-        d[key] = 1 / (x.val) * x.deriv[key]
+    for key in x._deriv.keys():
+        d[key] = 1 / (x.val) * x._deriv[key]
 
     try:
         d[x] = 1 / (x.val * np.log(y.val))
@@ -442,7 +440,7 @@ def negate_deriv(x):
     Returns:
         dictionary: the partial derivatives of the negated Number
     '''
-    return {key: -deriv for key, deriv in x.deriv.items()}
+    return {key: -deriv for key, deriv in x._deriv.items()}
 
 @elementary(negate_deriv)
 def negate(x):
@@ -467,9 +465,9 @@ def logistic_deriv(x):
         dict: dictionary of partial derivatives
     """
     d = {}
-    for key in x.deriv.keys():
-        d[key] = -(1+np.exp(-x.val))**-2*(-np.exp(-x.val)) * x.deriv[key]
-    d[x] = -(1+np.exp(-x.val))**-2*(-np.exp(-x.val)) * x.deriv[x]
+    for key in x._deriv.keys():
+        d[key] = -(1+np.exp(-x.val))**-2*(-np.exp(-x.val)) * x._deriv[key]
+    d[x] = -(1+np.exp(-x.val))**-2*(-np.exp(-x.val)) * x._deriv[x]
 
     return d
 
@@ -498,8 +496,8 @@ def asin_deriv(x):
     """
     d = {}
 
-    for key in x.deriv.keys():
-        d[key] = 1 / np.sqrt(-x.val ** 2 + 1) * x.deriv[key]
+    for key in x._deriv.keys():
+        d[key] = 1 / np.sqrt(-x.val ** 2 + 1) * x._deriv[key]
 
     # return 1 / np.sqrt(-x ** 2 + 1)
     return d
@@ -526,8 +524,8 @@ def acos_deriv(x):
         dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
     """
     d = {}
-    for key in x.deriv.keys():
-        d[key] = -1 / np.sqrt(-x.val ** 2 + 1) * x.deriv[key]
+    for key in x._deriv.keys():
+        d[key] = -1 / np.sqrt(-x.val ** 2 + 1) * x._deriv[key]
 
     return d
 
@@ -553,8 +551,8 @@ def atan_deriv(x):
         dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
     """
     d = {}
-    for key in x.deriv.keys():
-        d[key] = 1 / (x.val ** 2 + 1) * x.deriv[key]
+    for key in x._deriv.keys():
+        d[key] = 1 / (x.val ** 2 + 1) * x._deriv[key]
     return d
 
 @elementary(atan_deriv)
@@ -579,8 +577,8 @@ def cosh_deriv(x):
         dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
     """
     d = {}
-    for key in x.deriv.keys():
-        d[key] = np.sinh(x.val) * x.deriv[key]
+    for key in x._deriv.keys():
+        d[key] = np.sinh(x.val) * x._deriv[key]
     return d
 
 @elementary(cosh_deriv)
@@ -605,8 +603,8 @@ def sinh_deriv(x):
         dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
     """
     d = {}
-    for key in x.deriv.keys():
-        d[key] = np.cosh(x.val) * x.deriv[key]
+    for key in x._deriv.keys():
+        d[key] = np.cosh(x.val) * x._deriv[key]
     return d
 
 @elementary(sinh_deriv)
@@ -631,7 +629,7 @@ def tanh_deriv(x):
         dict: Partial derivatives w.r.t. everything x had a partial w.r.t.
     """
     d = {}
-    for key in x.deriv.keys():
+    for key in x._deriv.keys():
         d[key] = -np.tanh(x.val) ** 2 + 1
     return d
 
@@ -657,9 +655,9 @@ def sqrt_deriv(x):
         dictionary: the partial derivatives of the square root of number
     '''
     d = {}
-    for key in x.deriv.keys():
+    for key in x._deriv.keys():
         # d[key] = (1 / 2) * 1 / np.sqrt(x.deriv[key])
-        d[key] = 1 / (2 * np.sqrt(x.val)) * x.deriv[key]
+        d[key] = 1 / (2 * np.sqrt(x.val)) * x._deriv[key]
 
     return d
 
