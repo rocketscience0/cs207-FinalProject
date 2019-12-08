@@ -615,43 +615,76 @@ class Array:
         return Array(np.array(out).reshape(np.shape(self._lst)))
 
     # Can only separate 2D arrays
-    # TODO: NOT WORKING RN
-    # def __matmul__(self, other):
-    #     out = None
-    #     shape = None
-    #     if isinstance(other, Array):
-    #         if np.shape(self._lst)[1] == np.shape(other._lst)[0]:
-    #             shape = (np.shape(self._lst)[0], np.shape(other._lst)[1])
-    #             out = np.full(shape,Number(0))
-    #             for row_idx in range(shape[0]):
-    #                 for col_idx in range(shape[1]):
-    #                     new = Number(0)
-    #                     for prod_idx in range(np.shape(self._lst)[1]):
-    #                         prod = operations.mul(self._lst[row_idx, prod_idx], other._lst[prod_idx, col_idx])
-    #                         new = operations.add(new, prod)
-    #                     out[row_idx][col_idx] = new
-    #         else:
-    #             raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other._lst)))
-    #     else:
-    #         try:
-    #             is_iterable = iter(other)
-    #         except:
-    #             raise TypeError("{} object is not subscriptable".format(type(other)))
-    #         if np.shape(self._lst)[1] == np.shape(other)[0]:
-    #             shape = (np.shape(self._lst)[0], np.shape(other)[1])
-    #             out = np.array(np.shape(shape))
-    #             for row_idx in range(shape[0]):
-    #                 for col_idx in range(shape[1]):
-    #                     new = Number(0)
-    #                     for prod_idx in range(np.shape(self._lst)[1]):
-    #                         prod = operations.mul(self._lst[row_idx, prod_idx], other[prod_idx, col_idx])
-    #                         new = operations.add(new, prod)
-    #                     out[row_idx, col_idx] = new
-    #         else:
-    #             raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other)))
-    #     return Array(out)  
+    # TODO: I think this is working, but I'm a little bit unsure about the derivative! 
+    def __matmul__(self, other):
+        out = None
+        shape = None
+        if isinstance(other, Array):
+            if np.shape(self._lst)[1] == np.shape(other._lst)[0]:
+                shape = (np.shape(self._lst)[0], np.shape(other._lst)[1])
+                out = np.full(shape,Number(0))
+                for row_idx in range(shape[0]):
+                    for col_idx in range(shape[1]):
+                        new = Number(0)
+                        for prod_idx in range(np.shape(self._lst)[1]):
+                            prod = operations.mul(self._lst[row_idx, prod_idx], other._lst[prod_idx, col_idx])
+                            new = operations.add(new, prod)
+                        out[row_idx][col_idx] = new
+            else:
+                raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other._lst)))
+        else:
+            try:
+                is_iterable = iter(other)
+            except:
+                raise TypeError("{} object is not subscriptable".format(type(other)))
+            if np.shape(self._lst)[1] == np.shape(other)[0]:
+                shape = (np.shape(self._lst)[0], np.shape(other)[1])
+                out = np.array(np.shape(shape))
+                for row_idx in range(shape[0]):
+                    for col_idx in range(shape[1]):
+                        new = Number(0)
+                        for prod_idx in range(np.shape(self._lst)[1]):
+                            prod = operations.mul(self._lst[row_idx, prod_idx], other[prod_idx, col_idx])
+                            new = operations.add(new, prod)
+                        out[row_idx, col_idx] = new
+            else:
+                raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other)))
+        return Array(out)  
 
-    # def __rmatmul__(self, other):     
+    def __rmatmul__(self, other):
+        out = None
+        shape = None
+        if isinstance(other, Array):
+            if np.shape(self._lst)[1] == np.shape(other._lst)[0]:
+                shape = (np.shape(self._lst)[0], np.shape(other._lst)[1])
+                out = np.full(shape,Number(0))
+                for row_idx in range(shape[0]):
+                    for col_idx in range(shape[1]):
+                        new = Number(0)
+                        for prod_idx in range(np.shape(self._lst)[1]):
+                            prod = operations.mul(self._lst[row_idx, prod_idx], other._lst[prod_idx, col_idx])
+                            new = operations.add(new, prod)
+                        out[row_idx][col_idx] = new
+            else:
+                raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other._lst)))
+        else:
+            try:
+                is_iterable = iter(other)
+            except:
+                raise TypeError("{} object is not subscriptable".format(type(other)))
+            if np.shape(self._lst)[1] == np.shape(other)[0]:
+                shape = (np.shape(self._lst)[0], np.shape(other)[1])
+                out = np.array(np.shape(shape))
+                for row_idx in range(shape[0]):
+                    for col_idx in range(shape[1]):
+                        new = Number(0)
+                        for prod_idx in range(np.shape(self._lst)[1]):
+                            prod = operations.mul(self._lst[row_idx, prod_idx], other[prod_idx, col_idx])
+                            new = operations.add(new, prod)
+                        out[row_idx, col_idx] = new
+            else:
+                raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other)))
+        return Array(out)     
 
     # Element-wise division, Numpy-specific
     def divide(self, other):
