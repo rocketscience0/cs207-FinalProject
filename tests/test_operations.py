@@ -409,7 +409,6 @@ def test_equatility():
     c = Number(1, deriv={a: 4})
     assert b == c
 
-
 #if __name__ == '__main__':
 #    t = Number(10)
 #    a = Number(4, deriv={t: 2})

@@ -77,8 +77,8 @@ def test_matmul_dot():
 def test_div_array():
     q = Array((num2, num3))
     w = q / q
-    assert w[0] == pytest.approx(1)
-    assert w[1] == pytest.approx(1)
+    assert w[0].val == pytest.approx(1)
+    assert w[1].val == pytest.approx(1)
 
 
 if __name__ == '__main__':
