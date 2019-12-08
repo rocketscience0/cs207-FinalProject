@@ -262,7 +262,7 @@ class Number():
         except TypeError:
             # The user specified a scalar order
             jacobian = _partial(self._deriv, order)
-        jacobian = Array(jacobian)
+        jacobian = np.array(jacobian)
         return jacobian
 
     def __hash__(self):
