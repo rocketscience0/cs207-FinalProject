@@ -370,11 +370,11 @@ class Array:
         flat_iterable = np.array(iterable).flatten()
         for elt in flat_iterable:
             # Check if element is number type
-            if not isinstance(elt, Number):
-                number_elt = Number(elt)
-            else:
-                number_elt = elt
-            self._lst.append(number_elt)
+            try:
+                val = elt.val
+                self._lst.append(elt)
+            except:
+                self._lst.append(Number(elt))
         self._lst = np.array(self._lst).reshape(np.shape(iterable))
 
     def __len__(self):
@@ -514,6 +514,12 @@ class Array:
     # Scalar multiplication or element-wise multiplication
     def __mul__(self, other):
         out = []
+        
+        if isinstance(other, Number):
+            for ele in self._lst:
+                out.append(ele*other)
+            return Array(np.array(out).reshape(np.shape(self._lst)))
+        
         if isinstance(other, Array):
             if np.shape(self._lst) == np.shape(other._lst):
                 for self_elt,other_elt in zip(self._lst.flatten(), other._lst.flatten()):
@@ -533,10 +539,24 @@ class Array:
                     out.append(operations.mul(self_elt,other_elt))
             else:
                 raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other)))
+        
+        #if we're multiplying by a Number
+        if isinstance(other, Number):
+            print('here1')
+            out = []
+            for a in self._lst:
+                out.append(a*Number)
+        
         return Array(np.array(out).reshape(np.shape(self._lst)))
 
     def __rmul__(self, other):
         out = []
+        
+        if isinstance(other, Number):
+            for ele in self._lst:
+                out.append(ele*other)
+            return Array(np.array(out).reshape(np.shape(self._lst)))
+        
         if isinstance(other, Array):
             if np.shape(self._lst) == np.shape(other._lst):
                 for self_elt,other_elt in zip(self._lst.flatten(), other._lst.flatten()):
@@ -556,11 +576,24 @@ class Array:
                     out.append(operations.mul(self_elt,other_elt))
             else:
                 raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other)))
+        
+        #if we're multiplying by a Number
+        if isinstance(other, Number):
+            print('here2')
+            out = []
+            for a in self._lst:
+                out.append(a*Number)
+        
         return Array(np.array(out).reshape(np.shape(self._lst)))
 
     # Element-wise multiplication, Numpy-specific
     def multiply(self, other):
         out = []
+        if isinstance(other, Number):
+            for ele in self._lst:
+                out.append(ele*other)
+            return Array(np.array(out).reshape(np.shape(self._lst)))
+                
         if isinstance(other, Array):
             if np.shape(self._lst) == np.shape(other._lst):
                 for self_elt,other_elt in zip(self._lst.flatten(), other._lst.flatten()):
@@ -578,6 +611,7 @@ class Array:
                     out.append(operations.mul(self_elt,other_elt))
             else:
                 raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other)))
+        
         return Array(np.array(out).reshape(np.shape(self._lst)))
 
     # Can only separate 2D arrays
@@ -763,3 +797,34 @@ class Array:
         product = self.multiply(other)
         out = product.sum()
         return out
+    
+    def jacobian(self, order):
+        '''
+        Returns the jacobian matrix by the order specified.
+        
+        Args:
+            order: the order to return the jacobian matrix in. Has to be not null
+        
+        Returns:
+            a list of partial derivatives specified by the order.
+        '''
+
+        def _partial(deriv, key):
+            try:
+                return deriv[key]
+            except KeyError:
+                raise ValueError(
+                    f'No derivative with respect to {repr(order)}'
+                )
+        j = []
+        for element in self._lst:
+            jacobian = []
+            try:
+                for key in order:
+                    jacobian.append(_partial(element.deriv, key))
+            except TypeError:
+                # The user specified a scalar order
+                jacobian.append(_partial(element.deriv, order))
+            j.append(jacobian)
+        j = Array(j)
+        return j
