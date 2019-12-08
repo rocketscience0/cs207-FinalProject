@@ -262,7 +262,7 @@ class Number():
         except TypeError:
             # The user specified a scalar order
             jacobian = _partial(self._deriv, order)
-        jacobian = Array(jacobian)
+        jacobian = np.array(jacobian)
         return jacobian
 
     def __hash__(self):
@@ -445,23 +445,28 @@ class Array():
     def __neg__(self):
         return self._data.__neg__()
 
-    def _partial(deriv, key):
-        try:
-            return deriv[key]
-        except KeyError:
-            raise ValueError(
-                f'No derivative with respect to {repr(order)}'
-            )
-        j = []
-        for element in self._lst:
-            jacobian = []
+    def jacobian(self, order):
+        def _partial(deriv, key):
+            try:
+                return deriv[key]
+            except KeyError:
+                # If there's no partial, it's zero
+                return 0
+
+        jacobian = []
+        for element in self._data:
+            # Check if order is iterable
             try:
                 for key in order:
-                    jacobian.append(_partial(element._deriv, key))
+                    jacobian_row = []
+                    jacobian_row.append(_partial(element._deriv, key))
+                jacobian.append(jacobian_row)
             except TypeError:
-                # The user specified a scalar order
                 jacobian.append(_partial(element._deriv, order))
-            j.append(jacobian)
-        j = Array(j)
-        return j
-    
+        
+        return np.array(jacobian)
+
+if __name__ == '__main__':
+    q = Array((Number(1), Number(2)))
+    print(q.jacobian(q._data))  # eye(2)
+    print(q.jacobian(q._data[0]))  # [1, 0].T
