@@ -369,7 +369,10 @@ class Array():
         return self._data[idx]
 
     def __setitem__(self, idx, val):
-        self.__setattr__(idx, val)
+        if isinstance(val, Number):
+            self._data[idx] = val
+        else:
+            raise ValueError('invalid literal for Number(): {}'.format(val))
 
     def __add__(self, other):
         try:
