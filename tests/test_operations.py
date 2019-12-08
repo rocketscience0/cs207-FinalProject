@@ -403,6 +403,12 @@ def test_sqrt():
 def test_sqrt_deriv():
     assert operations.sqrt(num4).jacobian(num4) == pytest.approx(1 / 4)
 
+def test_equatility():
+    a = Number(1)
+    b = Number(1, deriv={a: 4})
+    c = Number(1, deriv={a: 4})
+    assert b == c
+
 
 #if __name__ == '__main__':
 #    t = Number(10)
