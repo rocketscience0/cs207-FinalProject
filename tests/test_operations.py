@@ -112,7 +112,7 @@ def test_mixed_add_deriv_number_only():
     """Test that adding a Number() to an int() only stores a partial derivative for the Number()
     """
     with pytest.raises(KeyError):
-        (num2 + 3).jacobian(3)
+        (num2 + 3)._deriv[3]
 
 def test_sub():
     assert (num3 - num2).val == 1
@@ -146,7 +146,7 @@ def test_sub_same_number():
 
 def test_mixed_subtract_deriv_number_only():
     with pytest.raises(KeyError):
-        (num3 - 2).jacobian(2)
+        (num3 - 2)._deriv[2]
 
 def test_mul():
     assert (num3 * num2).val == 6
@@ -182,7 +182,7 @@ def test_mixed_rmul():
 
 def test_mixed_rmul_deriv_number_only():
     with pytest.raises(KeyError):
-        (3 * num2).jacobian(3)
+        (3 * num2)._deriv[3]
 
 def test_mul_deriv_first():
     assert (num2 * num3).jacobian(num2) == 3
@@ -221,9 +221,9 @@ def test_div_shared_partial():
 def test_mixed_div():
     assert (num4 / 2).val == 2
 
-def test_mixed_div_deriv_num_only():
+def test_mixed_div_deriv_number_only():
     with pytest.raises(KeyError):
-        (num4 / 2).jacobian(2)
+        (num4 / 2)._deriv[2]
 
 def test_mixed_rdiv():
     assert (4 / num2).val == 2
@@ -265,7 +265,7 @@ def test_mixed_rpow():
 
 def test_mixed_rpow_deriv_number_only():
     with pytest.raises(KeyError):
-        (4 ** num2).jacobian(4)
+        (4 ** num2)._deriv[4]
 
 def test_exp():
     assert operations.exp(num_log_1).val == 1
@@ -310,7 +310,7 @@ def test_duplicate_value():
     out = num2 + num3
     new_3 = Number(3)
     with pytest.raises(KeyError):
-        out.jacobian(new_3)
+        out._deriv[new_3]
 
 def test_function_composition():
     step1 = operations.sin(a)
@@ -346,9 +346,9 @@ def test_jacobian_requires_order():
     with pytest.raises(TypeError):
         sina.jacobian()
 
-def test_jacobian_multi_input():
-    result = num3 * num4
-    assert result.jacobian((num3, num4)) == [4, 3]
+# def test_jacobian_multi_input():
+#     result = num3 * num4
+#     assert result.jacobian((num3, num4)) == [4, 3]
 
 def test_logistic():
     assert operations.logistic(num_log_1).val == pytest.approx(1 / 2)
