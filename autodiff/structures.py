@@ -355,6 +355,8 @@ class Array():
 
     def __init__(self, iterable):
         self._data = np.array(iterable, dtype=np.object)
+        if not np.all(isinstance(self._data, Number)):
+            raise TypeError('all elements of iterable must be of Number() type')
 
     def __str__(self):
         return str(self._data)
