@@ -9,7 +9,7 @@ The `autodiff` package proper requires only `numpy`. Running tests requires `pyt
 
 ## Core data structures and classes
 
-Currently, the `autodiff` package has one core data structure, the `Number`. A `Number` is a scalar that stores a value and a derivative. Future versions will include the `array`, which subclasses the `numpy.ndarray` to support functions with vector inputs.
+Currently, the `autodiff` package has two core data structure, `Number` and `Array`. A `Number` is a scalar that stores a value and a derivative. `Array` subclasses the `numpy.ndarray` to support functions with vector inputs. It holds a 1-d array of `Number` objects.
 
 ### Important attributes of the `Number` class
 The `Number` class has only two attributes, a value (`val`) and a `dict` of partial derivatives (`deriv`). The user can can define a new type of number easily:
@@ -22,6 +22,20 @@ class NewInt(Number):
         self.deriv = b
 ```
 
+The `Array` class has one attribute, which is a `lst` that holds internally a list of `Number` objects
+```python
+def __init__(self, iterable):
+        self._lst = []
+        flat_iterable = np.array(iterable).flatten()
+        for elt in flat_iterable:
+            # Check if element is number type
+            try:
+                val = elt.val
+                self._lst.append(elt)
+            except:
+                self._lst.append(Number(elt))
+        self._lst = np.array(self._lst).reshape(np.shape(iterable))
+```
 
 ## Methods and name attributes
 The `Number` class overloads the following common elementary operations:
@@ -148,12 +162,82 @@ class Number():
         return operations.add(self, other)
 
 ```
+The ```Array``` class overloads the following operations:
 
-## To include in future versions
+- `+`
+- `-`
+- `*`
+- `/`
+- `**`
 
-At this time, `autodiff` only supports scalar functions with scalar outputs. Soon, we will also support vector functions with vector outputs. An `autodiff.array` will subclass `numpy.array`, but will hold `Number` objects. Therefore, matrix operations will be available as they are in `numpy`, including:
+These will either support operations between two `Array` objects, or one `Array` object and one `Number` object.
 
-- Matrix multiplication (`@`, `dot`)
-- Element-wise operations (`+`, `-`, `*`, `/`, `**`)
+Note here that `+` will perform a concatenation of two `Array` objects, to use the element-wise addition, user could call `.add(other)` method.
+Similar methods are:
 
-There will be a few differences when defining function with vector outputs. Rather than each value of the `deriv` dict being a scalar, a vector `deriv` value will instead be an `array`---interpreted as a column of the Jacobian. Once again, it will be necessary for the user to specify in which order he or she will like their Jacobian. Internally, we will treat the user's specified order as a set of seed vectors to calculate each column of the Jacobian.
+- `.add(other)`
+- `.subtract(other)`
+- `.multiply(other)`
+- `.divide(other)`
+- `.power(other)`
+- `.dot(other)`
+
+Except `.add(other)`, these all perform the same functionalities as overloaded functions specified above. `.dot(other)` performs a dot product of two arrays, as is used in `numpy`.
+
+Moreover, `Array` will support the following operations, which will perform element-wise operations on each element when called:
+
+- `.sum()`
+- `.sin()`
+- `.cos()`
+- `.tan()`
+- `.exp()`
+
+Different than the `Number` class, these operations doesn't live in the `operations.py` module. They are directly overloaded or implemented inside the `Array` class. For example, `+` is overloaded as:
+```python
+def __add__(self, other):
+        if isinstance(other, Number):
+            out = self._lst+[other]
+            return Array(out)
+        if isinstance(other, Array):
+            out = np.append(self._lst,other._lst)
+        else:
+            try: 
+                is_iterable = iter(other)
+            except:
+                raise TypeError("can only concatenate iterable s(not {})".format(type(other)))
+        return Array(out)
+```
+
+To access the derivatives, `Array` implements a jacobian method, which will return another `Array` object in 2-d, holding each row as an element of the original array, each column as the element of `order` to take partial derivatives with respect to.
+```python
+def jacobian(self, order):
+        '''
+        Returns the jacobian matrix by the order specified.
+        
+        Args:
+            order: the order to return the jacobian matrix in. Has to be not null
+        
+        Returns:
+            a list of partial derivatives specified by the order.
+        '''
+
+        def _partial(deriv, key):
+            try:
+                return deriv[key]
+            except KeyError:
+                raise ValueError(
+                    f'No derivative with respect to {repr(order)}'
+                )
+        j = []
+        for element in self._lst:
+            jacobian = []
+            try:
+                for key in order:
+                    jacobian.append(_partial(element.deriv, key))
+            except TypeError:
+                # The user specified a scalar order
+                jacobian.append(_partial(element.deriv, order))
+            j.append(jacobian)
+        j = Array(j)
+        return j
+```
