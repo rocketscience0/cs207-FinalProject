@@ -281,14 +281,14 @@ class Number():
         '''
         try:
             if self.val == other.val:
-                deriv_self = self.deriv.copy()
-                deriv_other = other.deriv.copy()
+                deriv_self = self._deriv.copy()
+                deriv_other = other._deriv.copy()
                 deriv_self.pop(self)
                 deriv_other.pop(other)
                 if deriv_self==deriv_other:
                     return True
             return False
-        except Exception:
+        except AttributeError:
             #if other is not even a autodiff.Number
             return False
    
