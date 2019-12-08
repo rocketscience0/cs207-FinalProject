@@ -414,9 +414,17 @@ class Array():
     def __matmul__(self, other):
         try:
             # If they're both Array2 objects
-            return Array(self._data.__matmul__(other._data))
+            out = Array(self._data.__matmul__(other._data))
         except AttributeError:
-            return Array(self._data.__matmul__(other))
+            out = Array(self._data.__matmul__(other))
+
+        # Check that out isn't unsized
+        try:
+            len(out)
+            return out
+        except TypeError:
+            return out[()]
+
 
     def __rmatmul__(self, other):
         return self._data.__rmatmul__(other)
