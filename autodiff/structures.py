@@ -258,93 +258,93 @@ class Number():
         except TypeError:
             # The user specified a scalar order
             jacobian = _partial(self.deriv, order)
-
+        jacobian = Array(jacobian)
         return jacobian
 
     def __hash__(self):
         return id(self)
-    
-    def __eq__(self, other):
-        '''
-        Overloads the Comparison Operator to check whether two autodiff.Number 
-        objects are equal to each other
-        
-        Args:
-            other: the other autodiff.Number object to be compared with
-        
-        Returns:
-            True if two Autodiff.Number objects are equal, False otherwise.
-        '''
-        try:
-            if self.val == other.val:
-                deriv_self = self.deriv.copy()
-                deriv_other = other.deriv.copy()
-                deriv_self.pop(self)
-                deriv_other.pop(other)
-                if deriv_self==deriv_other:
-                    return True
-            return False
-        except Exception:
-            #if other is not even a autodiff.Number
-            return False
-    
-    def __ne__(self, other):
-        '''
-        Overloads the Comparison Operator to check whether two autodiff.Number 
-        objects are not equal to each other
-        
-        Args:
-            other: the other autodiff.Number object to be compared with
-        
-        Returns:
-            True if two Autodiff.Number objects are not equal, False otherwise.
-        '''
-        if self==other:
-            return False
-        return True
-    
-    def __gt__(self, other):
-        '''
-        Overloads the Comparison Operator to check whether this autodiff.Number 
-        object is greater than the other one
-        
-        Args:
-            other: the other autodiff.Number object to be compared with
-        
-        Returns:
-            True if this autodiff.Number has a greater value, False otherwise.
-            
-        Raises:
-            exception when the other is not an autodiff.Number object
-        '''
-        try:
-            if (self.val > other.val):
-                return True
-            return False
-        except Exception:
-            raise Exception('cannot compare autodiff.Number object with a non-Number object')
-        
-    def __lt__(self, other):
-        '''
-        Overloads the Comparison Operator to check whether this autodiff.Number 
-        object is less than the other one
-        
-        Args:
-            other: the other autodiff.Number object to be compared with
-        
-        Returns:
-            True if this autodiff.Number has a smaller value, False otherwise.
-            
-        Raises:
-            exception when the other is not an autodiff.Number object
-        '''
-        try:
-            if (self.val < other.val):
-                return True
-            return False
-        except Exception:
-            raise Exception('cannot compare autodiff.Number object with a non-Number object')
-
+  
+#    def __eq__(self, other):
+#        '''
+#        Overloads the Comparison Operator to check whether two autodiff.Number 
+#        objects are equal to each other
+#        
+#        Args:
+#            other: the other autodiff.Number object to be compared with
+#        
+#        Returns:
+#            True if two Autodiff.Number objects are equal, False otherwise.
+#        '''
+#        #try:
+#        #    if self.val == other.val:
+#        #        deriv_self = self.deriv.copy()
+#        #        deriv_other = other.deriv.copy()
+#        #        deriv_self.pop(self)
+#        #        deriv_other.pop(other)
+#        #        if deriv_self==deriv_other:
+#        #            return True
+#        #    return False
+#        #except Exception:
+#        #    #if other is not even a autodiff.Number
+#        #    return False
+#        return self==other
+#    
+#    def __ne__(self, other):
+#        '''
+#        Overloads the Comparison Operator to check whether two autodiff.Number 
+#        objects are not equal to each other
+#        
+#        Args:
+#            other: the other autodiff.Number object to be compared with
+#        
+#        Returns:
+#            True if two Autodiff.Number objects are not equal, False otherwise.
+#        '''
+#        if self==other:
+#            return False
+#        return True
+#    
+#    def __gt__(self, other):
+#        '''
+#        Overloads the Comparison Operator to check whether this autodiff.Number 
+#        object is greater than the other one
+#        
+#        Args:
+#            other: the other autodiff.Number object to be compared with
+#        
+#        Returns:
+#            True if this autodiff.Number has a greater value, False otherwise.
+#            
+#        Raises:
+#            exception when the other is not an autodiff.Number object
+#        '''
+#        try:
+#            if (self.val > other.val):
+#                return True
+#            return False
+#        except Exception:
+#            raise Exception('cannot compare autodiff.Number object with a non-Number object')
+#    
+#    def __lt__(self, other):
+#        '''
+#        Overloads the Comparison Operator to check whether this autodiff.Number 
+#        object is less than the other one
+#        
+#        Args:
+#            other: the other autodiff.Number object to be compared with
+#        
+#        Returns:
+#            True if this autodiff.Number has a smaller value, False otherwise.
+#            
+#        Raises:
+#            exception when the other is not an autodiff.Number object
+#        '''
+#        try:
+#            if (self.val < other.val):
+#                return True
+#            return False
+#        except Exception:
+#            raise Exception('cannot compare autodiff.Number object with a non-Number object')
 
 class ArrayIterator:
     def __init__(self, numbers):
@@ -395,9 +395,12 @@ class Array:
     def __iter__(self):
         return ArrayIterator(self._lst)
 
-    # Element-wise addition of 2 vectors or 1 vector, 1 scalar
     def add(self, other):
         out = []
+        if isinstance(other, Number):
+            for elem in self:
+                out.append(elem + other)
+            return Array(np.array(out).reshape(np.shape(self._lst)))
         if isinstance(other, Array):
             if np.shape(self._lst) == np.shape(other._lst):
                 for self_elt,other_elt in zip(self._lst.flatten(), other._lst.flatten()):
@@ -421,6 +424,9 @@ class Array:
 
     # Concatenate
     def __add__(self, other):
+        if isinstance(other, Number):
+            out = self._lst+[other]
+            return Array(out)
         if isinstance(other, Array):
             out = np.append(self._lst,other._lst)
         else:
@@ -431,18 +437,15 @@ class Array:
         return Array(out)
     
     def __radd__(self, other):
-        if isinstance(other, Array):
-            out = np.append(self._lst,other._lst)
-        else:
-            try: 
-                is_iterable = iter(other)
-            except:
-                raise TypeError("can only concatenate iterable s(not {})".format(type(other)))
-        return Array(out)
+        return self.__add__(other)
 
     # Element-wise subtraction of 2 vectors or 1 vector, 1 scalar
     def subtract(self, other):
         out = []
+        if isinstance(other, Number):
+            for elem in self:
+                out.append(elem - other)
+            return Array(np.array(out).reshape(np.shape(self._lst)))
         if isinstance(other, Array):
             if np.shape(self._lst) == np.shape(other._lst):
                 for self_elt,other_elt in zip(self._lst.flatten(), other._lst.flatten()):
@@ -466,125 +469,17 @@ class Array:
 
     # Element-wise subtraction of 2 vectors or 1 vector, 1 scalar
     def __sub__(self, other):
-        out = []
-        if isinstance(other, Array):
-            if np.shape(self._lst) == np.shape(other._lst):
-                for self_elt,other_elt in zip(self._lst.flatten(), other._lst.flatten()):
-                    out.append(operations.subtract(self_elt,other_elt))
-            else:
-                raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other._lst)))
-        else:
-            try:
-                is_iterable = iter(other)
-            except:
-                for elt in self._lst:
-                    out.append(operations.subtract(elt,other))
-                return Array(out)
-            if np.shape(self._lst) == np.shape(other):
-                other_flattened = np.array(other).flatten()
-                for self_elt,other_elt in zip(self._lst.flatten(), other_flattened):
-                    out.append(operations.subtract(self_elt,other_elt))
-            else:
-                raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other)))
-        return Array(np.array(out).reshape(np.shape(self._lst)))
+        return self.subtract(other)
     
     def __rsub__(self, other):
-        out = []
-        if isinstance(other, Array):
-            if np.shape(self._lst) == np.shape(other._lst):
-                for self_elt,other_elt in zip(self._lst.flatten(), other._lst.flatten()):
-                    out.append(operations.subtract(self_elt,other_elt))
-            else:
-                raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other._lst)))
-        else:
-            try:
-                is_iterable = iter(other)
-            except:
-                for elt in self._lst:
-                    out.append(operations.subtract(elt,other))
-                return Array(out)
-            if np.shape(self._lst) == np.shape(other):
-                other_flattened = np.array(other).flatten()
-                for self_elt,other_elt in zip(self._lst.flatten(), other_flattened):
-                    out.append(operations.subtract(self_elt,other_elt))
-            else:
-                raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other)))
-        return Array(np.array(out).reshape(np.shape(self._lst)))
+        return self.subtract(other)
 
     # Scalar multiplication or element-wise multiplication
     def __mul__(self, other):
-        out = []
-        
-        if isinstance(other, Number):
-            for ele in self._lst:
-                out.append(ele*other)
-            return Array(np.array(out).reshape(np.shape(self._lst)))
-        
-        if isinstance(other, Array):
-            if np.shape(self._lst) == np.shape(other._lst):
-                for self_elt,other_elt in zip(self._lst.flatten(), other._lst.flatten()):
-                    out.append(operations.mul(self_elt,other_elt))
-            else:
-                raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other._lst)))
-        else:
-            try:
-                is_iterable = iter(other)
-            except:
-                for elt in self._lst:
-                    out.append(operations.mul(elt,other))
-                return Array(out)
-            if np.shape(self._lst) == np.shape(other):
-                other_flattened = np.array(other).flatten()
-                for self_elt,other_elt in zip(self._lst.flatten(), other_flattened):
-                    out.append(operations.mul(self_elt,other_elt))
-            else:
-                raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other)))
-        
-        #if we're multiplying by a Number
-        if isinstance(other, Number):
-            print('here1')
-            out = []
-            for a in self._lst:
-                out.append(a*Number)
-        
-        return Array(np.array(out).reshape(np.shape(self._lst)))
+        return self.multiply(other)
 
     def __rmul__(self, other):
-        out = []
-        
-        if isinstance(other, Number):
-            for ele in self._lst:
-                out.append(ele*other)
-            return Array(np.array(out).reshape(np.shape(self._lst)))
-        
-        if isinstance(other, Array):
-            if np.shape(self._lst) == np.shape(other._lst):
-                for self_elt,other_elt in zip(self._lst.flatten(), other._lst.flatten()):
-                    out.append(operations.mul(self_elt,other_elt))
-            else:
-                raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other._lst)))
-        else:
-            try:
-                is_iterable = iter(other)
-            except:
-                for elt in self._lst:
-                    out.append(operations.mul(elt,other))
-                return Array(out)
-            if np.shape(self._lst) == np.shape(other):
-                other_flattened = np.array(other).flatten()
-                for self_elt,other_elt in zip(self._lst.flatten(), other_flattened):
-                    out.append(operations.mul(self_elt,other_elt))
-            else:
-                raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other)))
-        
-        #if we're multiplying by a Number
-        if isinstance(other, Number):
-            print('here2')
-            out = []
-            for a in self._lst:
-                out.append(a*Number)
-        
-        return Array(np.array(out).reshape(np.shape(self._lst)))
+        return self.multiply(other)
 
     # Element-wise multiplication, Numpy-specific
     def multiply(self, other):
@@ -689,6 +584,11 @@ class Array:
     # Element-wise division, Numpy-specific
     def divide(self, other):
         out = []
+        if isinstance(other, Number):
+            for ele in self._lst:
+                out.append(ele/other)
+            return Array(np.array(out).reshape(np.shape(self._lst)))
+        
         if isinstance(other, Array):
             if np.shape(self._lst) == np.shape(other._lst):
                 for self_elt,other_elt in zip(self._lst.flatten(), other._lst.flatten()):
@@ -710,54 +610,19 @@ class Array:
 
     # Scalar or element-wise division
     def __truediv__(self, other):
-        out = []
-        if isinstance(other, Array):
-            if np.shape(self._lst) == np.shape(other._lst):
-                for self_elt,other_elt in zip(self._lst.flatten(), other._lst.flatten()):
-                    out.append(operations.div(self_elt,other_elt))
-            else:
-                raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other._lst)))
-        else:
-            try:
-                is_iterable = iter(other)
-            except:
-                for elt in self._lst:
-                    out.append(operations.div(elt,other))
-                return Array(out)
-            if np.shape(self._lst) == np.shape(other):
-                other_flattened = np.array(other).flatten()
-                for self_elt,other_elt in zip(self._lst.flatten(), other_flattened):
-                    out.append(operations.div(self_elt,other_elt))
-            else:
-                raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other)))
-        return Array(np.array(out).reshape(np.shape(self._lst)))
+        return self.divide(other)
 
     def __rtruediv__(self, other):
-        out = []
-        if isinstance(other, Array):
-            if np.shape(self._lst) == np.shape(other._lst):
-                for self_elt,other_elt in zip(self._lst.flatten(), other._lst.flatten()):
-                    out.append(operations.div(self_elt,other_elt))
-            else:
-                raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other._lst)))
-        else:
-            try:
-                is_iterable = iter(other)
-            except:
-                for elt in self._lst:
-                    out.append(operations.div(elt,other))
-                return Array(out)
-            if np.shape(self._lst) == np.shape(other):
-                other_flattened = np.array(other).flatten()
-                for self_elt,other_elt in zip(self._lst.flatten(), other_flattened):
-                    out.append(operations.div(self_elt,other_elt))
-            else:
-                raise ValueError("operands could not be broadcast together with shapes {} and {}".format(np.shape(self._lst),np.shape(other)))
-        return Array(np.array(out).reshape(np.shape(self._lst)))
+        return self.divide(other)
 
     # Scalar or element-wise power, like Numpy
     def power(self, other):
         out = []
+        
+        if isinstance(other, Number):
+            for ele in self._lst:
+                out.append(ele**other)
+            return Array(np.array(out).reshape(np.shape(self._lst)))
         if isinstance(other, Array):
             if np.shape(self._lst) == np.shape(other._lst):
                 for self_elt,other_elt in zip(self._lst.flatten(), other._lst.flatten()):
@@ -780,11 +645,11 @@ class Array:
         return Array(np.array(out).reshape(np.shape(self._lst)))
 
     def __pow__(self, other):
-        raise TypeError("unsupported operand type(s) for ** or pow(): {} and {}".format(type(self), type(other)))
+        return self.power(other)
 
     def __rpow__(self, other):
-        raise TypeError("unsupported operand type(s) for ** or pow(): {} and {}".format(type(self), type(other)))
-
+        return self.power(other)
+    
     def __neg__(self):
         out = []
         flat_iterable = self._lst.flatten()
