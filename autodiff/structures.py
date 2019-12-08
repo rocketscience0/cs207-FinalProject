@@ -434,13 +434,14 @@ class Array():
     def __neg__(self):
         return self._data.__neg__()
 
-    def _partial(deriv, key):
-        try:
-            return deriv[key]
-        except KeyError:
-            raise ValueError(
-                f'No derivative with respect to {repr(order)}'
-            )
+    def jacobian(self, order):
+        def _partial(deriv, key):
+            try:
+                return deriv[key]
+            except KeyError:
+                raise ValueError(
+                    f'No derivative with respect to {repr(order)}'
+                )
         j = []
         for element in self._lst:
             jacobian = []
