@@ -349,7 +349,7 @@ class Array():
     def __init__(self, iterable):
         self._data = np.array(iterable, dtype=np.object)
         if not all(map(lambda i: isinstance(i, Number), self._data)):
-            raise TypeError('all elements of iterable must be of Number() type')
+            raise ValueError('all elements of iterable must be of Number() type')
 
     def __str__(self):
         return str(self._data)
@@ -412,16 +412,10 @@ class Array():
     def __matmul__(self, other):
         try:
             # If they're both Array objects
-            out = Array(self._data.__matmul__(other._data))
+            out = self._data.__matmul__(other._data)
         except AttributeError:
-            out = Array(self._data.__matmul__(other))
-
-        # Check that out isn't unsized
-        try:
-            len(out)
-            return out
-        except TypeError:
-            return out[()]
+            out = self._data.__matmul__(other)
+        return(out)
 
     def __rmatmul__(self, other):
         return self._data.__rmatmul__(other)
