@@ -469,7 +469,3 @@ class Array():
         
         return np.array(jacobian)
 
-if __name__ == '__main__':
-    q = Array((Number(1), Number(2)))
-    print(q.jacobian(q._data))  # eye(2)
-    print(q.jacobian(q._data[0]))  # [1, 0].T

@@ -172,7 +172,7 @@ def test_neg():
 
 def test_jacobian_self():
     q = Array((num2, num3))
-    jac = q.jacobian(q._data)
+    jac = q.jacobian(q)
     assert jac[0, 0] == 1
     assert jac[0, 1] == 0
     assert jac[1, 0] == 0
@@ -180,15 +180,51 @@ def test_jacobian_self():
 
 def test_jacobian_scalar():
     q = Array((num2, num3))
+    jac = q.jacobian(q[0])
+    assert jac[0] == 1
+    assert jac[1] == 0
 
 def test_array_all_numbers():
     with pytest.raises(ValueError):
         Array((num3, num2, 1))
 
-if __name__ == '__main__':
-    # print(repr(Array((num2, num3))))
-    # q = Array((num2, num3))
-    # q @ q
-    # print((q @ q)[()].val)
-    # test_matmul_dot()
-    test_jacobian_self()
+def test_array_sin():
+    q = Array((
+        Number(np.pi / 2),
+        Number(np.pi / 2)
+    ))
+    assert q.sin()[0].val == pytest.approx(1)
+    assert q.sin()[1].val == pytest.approx(1)
+
+def test_array_cos():
+    q = Array((
+        Number(np.pi / 2),
+        Number(np.pi / 2)
+    ))
+    assert q.cos()[0].val == pytest.approx(0)
+    assert q.cos()[1].val == pytest.approx(0)
+
+def test_array_tan():
+    q = Array((
+        Number(np.pi / 4),
+        Number(np.pi / 4)
+    ))
+    assert q.tan()[0].val == pytest.approx(1)
+    assert q.tan()[1].val == pytest.approx(1)
+
+def test_array_exp():
+    q = Array((
+        Number(0),
+        Number(1)
+    ))
+    assert q.exp()[0].val == pytest.approx(1)
+    assert q.exp()[1].val == pytest.approx(np.exp(1))
+
+def test_array_logisitic():
+    q = Array((
+        Number(0),
+        Number(0)
+    ))
+    assert q.logistic()[0].val == pytest.approx(1 / 2)
+    assert q.logistic()[1].val == pytest.approx(1 / 2)
+
