@@ -3,6 +3,7 @@ sys.path.append('..')
 
 import autodiff.operations as operations
 from autodiff.structures import Number
+from autodiff.structures import Array
 import numpy as np
 
 
@@ -18,8 +19,6 @@ def bfgs(func, initial_guess,iterations =100):
         func(x0): the value of the local extremum
         jacobians: the jacobians of each optimization step
         """   
-    print('checkpoint1',type(initial_guess))
-    print('checkpoint2',isinstance(initial_guess,Array))
     if isinstance(initial_guess,Number): 
     #bfgs for scalar functions
     
@@ -67,65 +66,51 @@ def bfgs(func, initial_guess,iterations =100):
 
         return x0,func(x0),jacobians
 
-        print('checkpoint1',type(initial_guess))
-
     if isinstance(initial_guess,Array):
         
-        print('checkpoint2','asdasdasdasdasd')
-
-        x0 = initial_guess
-
-        #initial guess of hessian
-        h0 = np.identity(len(x0))
-
-        fxn0 = func(x0)
-
-        fpxn0 = fxn0.jacobian(x0)
-
         jacobians = []
 
-        jacobians.append(fpxn0)
-
-        s0 = -np.dot(h0,fpxn0) #np.array multiply with scalar would be fine
-
-        x1 = x0 + s0
-
-        fxn1 = func(x1)
-
-        fpxn1 = fxn1.jacobian(x1)
-
-        y0 = np.array(fpxn1 - fpxn0)
-
-        rho0 = 1/(y0.T*s0)
-        intermediate_1 = np.identity(len(x0))-np.dot(np.dot(s0,rho0),y0.T)
-        intermediate_2 = np.dot(np.dot(intermediate_1,h0),intermediate_1)
-        intermediate_3 = np.dot(np.dot(rho0,s0),s0.T)
-
-        delta_H = intermediate_2 + intermediate_3
-
-
         for i in range(iterations):
-            #need a stopping criterion
-            jacobians.append(fpxn1)
 
-            h0 = h0 + delta_H
-            x0 = x1 
+            if i == 0:
+                
+                x0 = initial_guess
+                #initial guess of hessian
+                H = np.identity(len(x0))
+            else:
+                x0 = x1
+                H = deltaH
+                
             fxn0 = func(x0)
-            fpxn0 = fxn0.jacobian(x0)
-
-            s0 = -np.dot(h0,fpxn0) #np.array multiply with scalar would be fine
-            x1 = x0 + s0
+            fpxn0 = fxn0.jacobian(x0)     
+            jacobians.append(fpxn0)
+            if np.abs(fpxn0.all())<10**-7:
+                #optimization condition is met
+                break
+                
+            s = -np.dot(H,fpxn0) #np.array multiply with scalar would be fine
+            x1 = x0 + s
             fxn1 = func(x1)
             fpxn1 = fxn1.jacobian(x1)
-            y0 = np.array(fpxn1 - fpxn0)
+            y = np.array(fpxn1 - fpxn0)
+            rho0 = 1/(np.dot(y.T,s))
+            rhokykT = rho0*y.T
+            skrhokykT = np.dot(s.reshape([len(x0),1]),rhokykT.reshape([1,len(x0)]))
 
-            rho = 1/(y0.T*s0)
-            intermediate_1 = np.identity(len(x0))-np.dot(np.dot(s0,rho0),y0.T)
-            intermediate_2 = np.dot(np.dot(intermediate_1,h0),intermediate_1)
-            intermediate_3 = np.dot(np.dot(rho0,s0),s0.T)
-            delta_H = intermediate_2 + intermediate_3
+            ykskT = np.dot(np.reshape(y,[len(x0),1]),s.reshape([len(x0),1]).T)
+
+            rhokykskT = rho0*ykskT
+
+            skskT = np.dot(s.reshape([len(x0),1]),s.reshape([len(x0),1]).T)
+
+            rhokskskT = rho0*skskT
+
+            #define delta H
+            deltaH = np.dot((np.identity(2)-skrhokykT),np.dot(H,(np.identity(2)-rhokykskT)))+rhokskskT
+
 
         return x0,func(x0),jacobians
+
   
 
 def gradient_descent(func,initial_guess,iterations = 100,step_size=0.01):
