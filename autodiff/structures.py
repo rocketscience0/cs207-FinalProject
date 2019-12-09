@@ -247,9 +247,8 @@ class Number():
             try:
                 return deriv[key]
             except KeyError:
-                raise ValueError(
-                    f'No derivative with respect to {repr(order)}'
-                )
+                # If there's no partial, it's zero
+                return 0
         
         #if order is a single Number object
         if isinstance(order, Number):
