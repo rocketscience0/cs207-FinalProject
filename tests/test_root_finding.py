@@ -77,10 +77,3 @@ def test_newtons_method_scalar_verbose():
     xstar, _ = root_finding.newtons_method(func_scalar, initial_guess, verbose=True)
     assert xstar.val == pytest.approx(1, abs=1e-3)
 
-def test_newtons_method_scalar_show_fxn():
-    initial_guess = Number(2)
-    xstar, _, _ = root_finding.newtons_method(func_scalar, initial_guess, verbose=True, show_fxn=True)
-    assert xstar.val == pytest.approx(1, abs=1e-3)
-
-if __name__ == '__main__':
-    test_newtons_method_rn_to_rn()
