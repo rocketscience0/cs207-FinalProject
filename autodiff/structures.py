@@ -438,6 +438,21 @@ class Array():
 
     def __neg__(self):
         return Array(self._data.__neg__())
+    
+    def sin(self):
+        return operations.sin(self)
+    
+    def cos(self):
+        return operations.cos(self)
+    
+    def tan(self):
+        return operations.tan(self)
+    
+    def exp(self):
+        return operations.exp(self)
+    
+    def logistic(self):
+        return operations.logistic(self)
 
     def jacobian(self, order):
         def _partial(deriv, key):
