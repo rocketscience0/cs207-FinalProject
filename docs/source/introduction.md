@@ -22,6 +22,10 @@ Also, AD computes partial derivatives, or the Jacobian matrices, which are one o
 One advantage of AD is high accuracy, which is an essential requirement to computation because small errors could accumulate in higher dimensions and over iterations and result in a catastrophe. 
 Another advantage of AD is efficiently. Efficiency is very important because the time and energy are usually limited for a particular project.
 
+### Optimization
+
+Building on the automatic differentiationable objects wrote in this package,`autodiff.optimizations` also performs optimizations on different functions, as a use case of AD. Currently, it has three optimization methods: `bfgs_symbolic`, `bfgs`, `steepest_descent`. It computes local minima and maxima more efficiently and to a reasonable precision.
+
 ## Background
 
 ### The Chain Rule
