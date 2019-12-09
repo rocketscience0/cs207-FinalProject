@@ -184,46 +184,6 @@ def test_jacobian_scalar():
     assert jac[0] == 1
     assert jac[1] == 0
 
-def test_array_sin():
-    q = Array((
-        Number(np.pi / 2),
-        Number(np.pi / 2)
-    ))
-    assert q.sin()[0].val == pytest.approx(1)
-    assert q.sin()[1].val == pytest.approx(1)
-
-def test_array_cos():
-    q = Array((
-        Number(np.pi / 2),
-        Number(np.pi / 2)
-    ))
-    assert q.cos()[0].val == pytest.approx(0)
-    assert q.cos()[1].val == pytest.approx(0)
-
-def test_array_tan():
-    q = Array((
-        Number(np.pi / 4),
-        Number(np.pi / 4)
-    ))
-    assert q.tan()[0].val == pytest.approx(1)
-    assert q.tan()[1].val == pytest.approx(1)
-
-def test_array_exp():
-    q = Array((
-        Number(0),
-        Number(1)
-    ))
-    assert q.exp()[0].val == pytest.approx(1)
-    assert q.exp()[1].val == pytest.approx(np.exp(1))
-
-def test_array_logisitic():
-    q = Array((
-        Number(0),
-        Number(0)
-    ))
-    assert q.logistic()[0].val == pytest.approx(1 / 2)
-    assert q.logistic()[1].val == pytest.approx(1 / 2)
-
 def test_array_converts_to_number():
     q = Array((
         Number(0),
@@ -231,3 +191,32 @@ def test_array_converts_to_number():
     ))
     assert q[0].val == 0
     assert q[1].val == 0
+
+def test_eq():
+    q = Array((
+        Number(0),
+        0
+    ))
+    assert q == q
+
+def test_neq_mixed():
+    q = Array((
+        Number(0),
+        0
+    ))
+    assert q != 'a'
+    assert q != 1
+
+def test_neq():
+    q = Array((
+        Number(0),
+        0
+    ))
+
+    w = Array((
+        Number(0),
+        1
+    ))
+
+    assert q != w
+

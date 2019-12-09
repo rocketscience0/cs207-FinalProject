@@ -2,11 +2,19 @@
 
 To use our software, do the following:
 
+1. install it directly from PyPI.
+    https://pypi.org/project/cs207-autodiff/
+```
+pip install cs207-autodiff
+```
+
+
+Alternatively, clone the Github repository:
 1. Clone our project repository from Github.
 ```
 git clone https://github.com/rocketscience0/cs207-FinalProject.git
 ```
-
+ 
 2. Navigate to the local repository.
 ```
 cd /path/to/cs207-FinalProject

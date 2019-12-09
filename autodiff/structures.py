@@ -185,129 +185,129 @@ class Number():
         '''
         return operations.negate(self)
     
-    def sin(self):
-        '''
-        Calculates the sin of the Number object.
+    # def sin(self):
+    #     '''
+    #     Calculates the sin of the Number object.
         
-        Returns:
-            another Number object, which is sin of the original one.
-        '''
-        return operations.sin(self)
+    #     Returns:
+    #         another Number object, which is sin of the original one.
+    #     '''
+    #     return operations.sin(self)
     
-    def asin(self):
-        '''
-        Calculates the arcsin of the Number object.
+    # def asin(self):
+    #     '''
+    #     Calculates the arcsin of the Number object.
         
-        Returns:
-            another Number object, which is arcsin of the original one.
-        '''
-        return operations.asin(self)
+    #     Returns:
+    #         another Number object, which is arcsin of the original one.
+    #     '''
+    #     return operations.asin(self)
     
-    def sinh(self):
-        '''
-        Calculates the sinh of the Number object.
+    # def sinh(self):
+    #     '''
+    #     Calculates the sinh of the Number object.
         
-        Returns:
-            another Number object, which is sinh of the original one.
-        '''
-        return operations.sinh(self)
+    #     Returns:
+    #         another Number object, which is sinh of the original one.
+    #     '''
+    #     return operations.sinh(self)
     
-    def cos(self):
-        '''
-        Calculates the cosine of the Number object.
+    # def cos(self):
+    #     '''
+    #     Calculates the cosine of the Number object.
         
-        Returns:
-            another Number object, which is cosine of the original one.
-        '''
-        return operations.cos(self)
+    #     Returns:
+    #         another Number object, which is cosine of the original one.
+    #     '''
+    #     return operations.cos(self)
     
-    def acos(self):
-        '''
-        Calculates the arccosine of the Number object.
+    # def acos(self):
+    #     '''
+    #     Calculates the arccosine of the Number object.
         
-        Returns:
-            another Number object, which is arccosine of the original one.
-        '''
-        return operations.acos(self)
+    #     Returns:
+    #         another Number object, which is arccosine of the original one.
+    #     '''
+    #     return operations.acos(self)
     
-    def cosh(self):
-        '''
-        Calculates the cosine-h of the Number object.
+    # def cosh(self):
+    #     '''
+    #     Calculates the cosine-h of the Number object.
         
-        Returns:
-            another Number object, which is cosine-h of the original one.
-        '''
-        return operations.cosh(self)
+    #     Returns:
+    #         another Number object, which is cosine-h of the original one.
+    #     '''
+    #     return operations.cosh(self)
     
-    def tan(self):
-        '''
-        Calculates the tangent of the Number object.
+    # def tan(self):
+    #     '''
+    #     Calculates the tangent of the Number object.
         
-        Returns:
-            another Number object, which is tangent of the original one.
-        '''
-        return operations.tan(self)
+    #     Returns:
+    #         another Number object, which is tangent of the original one.
+    #     '''
+    #     return operations.tan(self)
     
-    def atan(self):
-        '''
-        Calculates the arc-tangent of the Number object.
+    # def atan(self):
+    #     '''
+    #     Calculates the arc-tangent of the Number object.
         
-        Returns:
-            another Number object, which is arc-tangent of the original one.
-        '''
-        return operations.atan(self)
+    #     Returns:
+    #         another Number object, which is arc-tangent of the original one.
+    #     '''
+    #     return operations.atan(self)
     
-    def tanh(self):
-        '''
-        Calculates the tangent-h of the Number object.
+    # def tanh(self):
+    #     '''
+    #     Calculates the tangent-h of the Number object.
         
-        Returns:
-            another Number object, which is tangent-h of the original one.
-        '''
-        return operations.tanh(self)
+    #     Returns:
+    #         another Number object, which is tangent-h of the original one.
+    #     '''
+    #     return operations.tanh(self)
     
-    def sqrt(self):
-        '''
-        calculates the square root of the Number object.
+    # def sqrt(self):
+    #     '''
+    #     calculates the square root of the Number object.
         
-        Returns:
-            another number object, which is the square root of the original one.
-        '''
-        return operations.sqrt(self)
+    #     Returns:
+    #         another number object, which is the square root of the original one.
+    #     '''
+    #     return operations.sqrt(self)
     
 
-    def exp(self):
-        '''
-        Calculates the exponential of Number object.
+    # def exp(self):
+    #     '''
+    #     Calculates the exponential of Number object.
         
-        Returns:
-            another Number object, which is the exponential of the original one.
-        '''
-        return operations.exp(self)
+    #     Returns:
+    #         another Number object, which is the exponential of the original one.
+    #     '''
+    #     return operations.exp(self)
 
-    def logistic(self):
+    # def logistic(self):
         
-        '''
-        Calculates the logistic of Number object.
+    #     '''
+    #     Calculates the logistic of Number object.
         
-        Returns:
-            another Number object, which is the logistic of the original one.
-        '''
+    #     Returns:
+    #         another Number object, which is the logistic of the original one.
+    #     '''
 
-        return operations.logistic(self)
+    #     return operations.logistic(self)
     
-    def log(self, base = np.exp(1)):
-        '''
-        Calculates the log of Number object.
+    # def log(self, base = np.exp(1)):
+    #     '''
+    #     Calculates the log of Number object.
         
-        Args:
-            base: the base to take log with
+    #     Args:
+    #         base: the base to take log with
         
-        Returns:
-            another Number object, which is the log of the original one.
-        '''
+    #     Returns:
+    #         another Number object, which is the log of the original one.
+    #     '''
 
-        return operations.log(self, base)
+    #     return operations.log(self, base)
 
     def jacobian(self, order):
         '''
@@ -376,50 +376,6 @@ class Number():
             True if two Number objects are not equal, False otherwise.
         '''
         return not self.__eq__(other)
-   
-#    def __gt__(self, other):
-#        '''
-#        Overloads the Comparison Operator to check whether this autodiff.Number 
-#        object is greater than the other one
-       
-#        Args:
-#            other: the other autodiff.Number object to be compared with
-       
-#        Returns:
-#            True if this autodiff.Number has a greater value, False otherwise.
-           
-#        Raises:
-#            exception when the other is not an autodiff.Number object
-#        '''
-#        try:
-#            if (self.val > other.val):
-#                return True
-#            return False
-#        except Exception:
-#            raise Exception('cannot compare autodiff.Number object with a non-Number object')
-   
-#    def __lt__(self, other):
-#        '''
-#        Overloads the Comparison Operator to check whether this autodiff.Number 
-#        object is less than the other one
-       
-#        Args:
-#            other: the other autodiff.Number object to be compared with
-       
-#        Returns:
-#            True if this autodiff.Number has a smaller value, False otherwise.
-           
-#        Raises:
-#            exception when the other is not an autodiff.Number object
-#        '''
-#        try:
-#            if (self.val < other.val):
-#                return True
-#            return False
-#        except Exception:
-#            raise Exception('cannot compare autodiff.Number object with a non-Number object')
-
-
 
 class Array():
     '''
@@ -696,142 +652,6 @@ class Array():
             another Array object, which is the negated original Array.
         '''
         return Array(self._data.__neg__())
-    
-    def sin(self):
-        '''
-        Calculates the sin of the Array object.
-        
-        Returns:
-            another Array object, which is element-wise sin of the original one.
-        '''
-        return operations.sin(self)
-    
-    def asin(self):
-        '''
-        Calculates the arcsin of the Array object.
-        
-        Returns:
-            another Array object, which is element-wise arcsin of the original one.
-        '''
-        return operations.asin(self)
-    
-    def sinh(self):
-        '''
-        Calculates the sinh of the Array object.
-        
-        Returns:
-            another Array object, which is element-wise sinh of the original one.
-        '''
-        return operations.sinh(self)
-    
-    def cos(self):
-        '''
-        Calculates the cosine of the Array object.
-        
-        Returns:
-            another Array object, which is element-wise cosine of the original one.
-        '''
-        return operations.cos(self)
-    
-    def acos(self):
-        '''
-        Calculates the arccosine of the Array object.
-        
-        Returns:
-            another Array object, which is element-wise arccosine of the original one.
-        '''
-        return operations.acos(self)
-    
-    def cosh(self):
-        '''
-        Calculates the cosine-h of the Array object.
-        
-        Returns:
-            another Array object, which is element-wise cosine-h of the original one.
-        '''
-        return operations.cosh(self)
-    
-    def tan(self):
-        '''
-        Calculates the tangent of the Array object.
-        
-        Returns:
-            another Array object, which is element-wise tangent of the original one.
-        '''
-        return operations.tan(self)
-    
-    def atan(self):
-        '''
-        Calculates the arc-tangent of the Array object.
-        
-        Returns:
-            another Array object, which is element-wise arc-tangent of the original one.
-        '''
-        return operations.atan(self)
-    
-    def tanh(self):
-        '''
-        Calculates the tangent-h of the Array object.
-        
-        Returns:
-            another Array object, which is element-wise tangent-h of the original one.
-        '''
-        return operations.tanh(self)
-    
-    def sqrt(self):
-        '''
-        calculates the square root of the Array object.
-        
-        Returns:
-            another Array object, which is the element-wise square root of the original one.
-        '''
-        return operations.sqrt(self)
-    
-
-    def exp(self):
-        '''
-        Calculates the exponential of Array object.
-        
-        Returns:
-            another Array object, which is the element-wise exponential of the original one.
-        '''
-        return operations.exp(self)
-
-    def logistic(self):
-        
-        '''
-        Calculates the logistic of Array object.
-        
-        Returns:
-            another Array object, which is the element-wise logistic of the original one.
-        '''
-
-        return operations.logistic(self)
-    
-    def log(self, base = np.exp(1)):
-        '''
-        Calculates the log of Array object.
-        
-        Args:
-            base: the base to take log with
-        
-        Returns:
-            another Array object, which is the element-wise log of the original one.
-        '''
-
-        return operations.log(self, base)
-    
-    def dot(self, other):
-        '''
-        Calculates the dot product of two Array objects.
-        
-        Args:
-            other, another Array object of same length to take the dot product of
-        
-        Returns:
-            a Number object, which is dot product of the two Arrays.
-        '''
-        return np.dot(self, other)
 
     def jacobian(self, order):
         '''
@@ -882,8 +702,11 @@ class Array():
                 for i in range(len(self)):
                     if not (self[i]==other[i]):
                         initial = False
-            return initial
-        except AttributeError:
+                return initial
+            else:
+                return False
+
+        except TypeError:
             #if other is not even a autodiff.Number
             return False
    
