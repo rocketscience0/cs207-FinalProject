@@ -346,9 +346,12 @@ def test_jacobian_requires_order():
     with pytest.raises(TypeError):
         sina.jacobian()
 
-# def test_jacobian_multi_input():
-#     result = num3 * num4
-#     assert result.jacobian((num3, num4)) == [4, 3]
+def test_jacobian_multi_input():
+    result = num3 * num4
+    # assert result.jacobian((num3, num4)) == [4, 3]
+    jacobian = result.jacobian((num3, num4))
+    assert jacobian[0] == 4
+    assert jacobian[1] == 3
 
 def test_logistic():
     assert operations.logistic(num_log_1).val == pytest.approx(1 / 2)
