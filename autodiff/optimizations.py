@@ -5,14 +5,125 @@ import autodiff.operations as operations
 from autodiff.structures import Number
 from autodiff.structures import Array
 import numpy as np
-
-
-def bfgs(func, initial_guess,iterations =100):
-    """Use BFGS method to find the local minimum/maxinum of the function
+def bfgs_symbolic(func,gradient, initial_guess,iterations =100,tolerance=10**-8,verbose=False):
+    """Use symbolic BFGS method to find the local minimum/maxinum of the function
     Args:
         func: the function that the user wants to optimize
-        initial_guess: a Number object for the initial guess
+        gradient: the expression of the gradient of the function
+        initial_guess: an array or single value for the initial guess
         iterations: number of maximum iterations
+        tolerance: tolerance
+        verbose: if True, print the guess at every step
+
+    Returns:
+        x0: the x value of the local extremum
+        func(x0): the value of the local extremum
+        jacobians: the jacobians of each optimization step
+        """   
+    if len(initial_guess)==None: 
+    #bfgs for scalar functions
+    
+        x0 = initial_guess
+        
+        #initial guess of hessian
+        b0 = 1
+        
+        fxn0 = func(x0)
+
+        fpxn0 = gradient(x0)
+        
+        jacobians = []
+        
+        jacobians.append(fpxn0)
+        
+
+        for i in range(iterations):
+            
+            if np.abs(fpxn0)<tolerance:
+                break
+                
+            fxn0 = func(x0)
+
+            fpxn0 = gradient(x0)
+
+            s0 = -fpxn0/b0
+
+            x1=x0+s0 
+                
+            fxn1 = func(x1)
+            fpxn1 = gradient(x1)
+                
+                
+            y0 = fpxn1-fpxn0
+                
+            if y0 == 0:
+                break
+                    
+            delta_b = y0/s0-b0
+            b1 = b0 + delta_b
+                
+            x0 = x1
+                
+            b0 = b1
+                
+            jacobians.append(fpxn1)
+
+        return x0,func(x0),jacobians
+
+    else:
+        
+        jacobians = []
+
+        for i in range(iterations):
+
+            if i == 0:
+                
+                x0 = initial_guess
+                #initial guess of hessian
+                H = np.identity(len(x0))
+            else:
+                x0 = x1
+                H = deltaH
+            if verbose:
+                print(i,x0,func(x0))
+            fxn0 = np.array(func(x0))
+            fpxn0 = np.array(gradient(x0))    
+            jacobians.append(fpxn0)
+            if np.linalg.norm(fpxn0)<tolerance:
+                #optimization condition is met
+                break
+                
+            s = -np.dot(H,fpxn0) #np.array multiply with scalar would be fine
+            x1 = x0 + s
+            fxn1 = func(x1)
+            fpxn1 = gradient(x1)
+            y = np.array(fpxn1 - fpxn0)
+            rho0 = 1/(np.dot(y.T,s))
+            rhokykT = rho0*y.T
+            skrhokykT = np.dot(s.reshape([len(x0),1]),rhokykT.reshape([1,len(x0)]))
+
+            ykskT = np.dot(np.reshape(y,[len(x0),1]),s.reshape([len(x0),1]).T)
+
+            rhokykskT = rho0*ykskT
+
+            skskT = np.dot(s.reshape([len(x0),1]),s.reshape([len(x0),1]).T)
+
+            rhokskskT = rho0*skskT
+
+            #define delta H
+            deltaH = np.dot((np.identity(2)-skrhokykT),np.dot(H,(np.identity(2)-rhokykskT)))+rhokskskT
+
+
+        return x0,func(x0),jacobians
+
+def bfgs(func, initial_guess,iterations =100,tolerance = 10**-8,verbose = False):
+    """Use AD BFGS method to find the local minimum/maxinum of the function
+    Args:
+        func: the function that the user wants to optimize
+        initial_guess: an array or single value for the initial guess
+        iterations: number of maximum iterations
+        tolerance: tolerance
+        verbose: if True, print the guess at every step
 
     Returns:
         x0: the x value of the local extremum
@@ -37,7 +148,10 @@ def bfgs(func, initial_guess,iterations =100):
         
 
         for i in range(iterations):
-            # need a stopping criterion
+            #stopping criterion
+            if np.abs(fpxn0)<tolerance:
+                break
+                
             fxn0 = func(x0)
 
             fpxn0 = fxn0.jacobian(x0)
@@ -80,11 +194,13 @@ def bfgs(func, initial_guess,iterations =100):
             else:
                 x0 = x1
                 H = deltaH
+            if verbose:
+                print(i,x0,func(x0))
                 
             fxn0 = func(x0)
-            fpxn0 = fxn0.jacobian(x0)     
+            fpxn0 = np.array(fxn0.jacobian(x0))   
             jacobians.append(fpxn0)
-            if np.abs(fpxn0.all())<10**-7:
+            if np.linalg.norm(fpxn0)<tolerance:
                 #optimization condition is met
                 break
                 
@@ -113,9 +229,10 @@ def bfgs(func, initial_guess,iterations =100):
 
   
 
-def steepest_descent(func,initial_guess,iterations = 100,step_size=0.01):
+def steepest_descent(func,initial_guess,iterations = 100,step_size=0.01,tolerance = 10**-8,verbose=False):
 
-    """Use steepest_descent method to find the local minimum/maxinum of the function
+    """
+        Use steepest_descent method to find the local minimum/maxinum of the function
     Args:
         func: the function that the user wants to optimize 
         initial_guess: A number object for the initial guess
@@ -126,7 +243,7 @@ def steepest_descent(func,initial_guess,iterations = 100,step_size=0.01):
         x0: the x value of the local extremum
         func(x0): the value of the local extremum
         jacobians: the jacobians of each optimization step
-        """    
+    """    
     #gradient descent for scalar functions
     if isinstance(initial_guess,Number):
         x0=initial_guess
@@ -160,11 +277,11 @@ def steepest_descent(func,initial_guess,iterations = 100,step_size=0.01):
                 
                 x0 = x0+alpha*s
             
-            
+            if verbose:
+                print(i,x0,func(x0))
             for j in range(len(s)):
                 s[j] = func(x0).jacobian(x0[j])*-1
             
-            print(i,x0,func(x0))
             if np.abs(s).all()<10**-7:
                 break
             jacobians.append(s)
