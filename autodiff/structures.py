@@ -348,8 +348,9 @@ class Array():
 
     def __init__(self, iterable):
         self._data = np.array(iterable, dtype=np.object)
-        if not all(map(lambda i: isinstance(i, Number), self._data)):
-            raise ValueError('all elements of iterable must be of Number() type')
+        for i, d in enumerate(self._data):
+            if not isinstance(d, Number):
+                self._data[i] = Number(d)
 
     def __str__(self):
         return str(self._data)

@@ -184,10 +184,6 @@ def test_jacobian_scalar():
     assert jac[0] == 1
     assert jac[1] == 0
 
-def test_array_all_numbers():
-    with pytest.raises(ValueError):
-        Array((num3, num2, 1))
-
 def test_array_sin():
     q = Array((
         Number(np.pi / 2),
@@ -228,3 +224,10 @@ def test_array_logisitic():
     assert q.logistic()[0].val == pytest.approx(1 / 2)
     assert q.logistic()[1].val == pytest.approx(1 / 2)
 
+def test_array_converts_to_number():
+    q = Array((
+        Number(0),
+        0
+    ))
+    assert q[0].val == 0
+    assert q[1].val == 0
