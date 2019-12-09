@@ -62,18 +62,23 @@ def newtons_method(func, initial_guess, iterations=100,tolerance = 10**-7,verbos
             fpxn = []
             if verbose:
                 print(i,x0,fxn)
-            if abs(fxn.val) < tolerance:
+                
+            vector = []
+            for n in range(len(fxn)):
+                vector.append(fxn[n].val)
+                
+            
+            if np.linalg.norm(vector)< tolerance:
                 break
-                
-            for i in range(len(x0)):
-                fpxn.append(fxn.jacobian(x0[i]))
-
+            
+            for k in range(len(fxn)):
+                fpxn_row = []
+                for j in range(len(x0)):
+                    fpxn_row.append(fxn[k].jacobian(x0[j]))
+                fpxn.append(fpxn_row)
             jacobians.append(fpxn)
-            #print(fpxn)
-            x1 = []
-            for j in range(len(x0)):
-                x1.append(x0[j]-fxn/fpxn[j])
-                
+            x1 = x0 - np.dot(np.linalg.inv(fpxn),fxn)
+            
         if show_fxn:
             return x1, jacobians,fxn
         else:
