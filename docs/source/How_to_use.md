@@ -47,21 +47,22 @@ Right now, 'Number' overloads basic operations, including addition, subtraction,
 To call other basic operations such as sin, cos, tan, sinh, cosh, tanh, asin, acos, atan, exponential, log, sqrt, and negation, simply call the following on Number:
 
 ```python
+>>> import autodiff.opeartions as op
 >>> x = Number(np.pi/6)
->>> y = x.sin()
+>>> y = op.sin(x)
 >>> y.val
 1/2
 ```
 
 `exp` method assumes that the base is `e`. When it is not `e`, user could directly use the power method, such as `2**x`.
 
-Similarly, log method assumes that the base is `e` when no parameter `base` is passed. When user wants to specify a base, he/she could do the following:
+Similarly, log method assumes that the base is `e` when no parameter `y` is passed. When user wants to specify a base, he/she could do the following:
 
 ```python
 >>> a = Number(3)
->>> a.log()
+>>> op.log(a)
 Number(val=1.0986122886681098)
->>> a.log(10)
+>>> op.log(a,10)
 Number(val=0.47712125471966244)
 ```
 
@@ -95,14 +96,15 @@ When the user passes a list of `Number` objects, it will be stored as it is. Whe
 ```python
 >>> from autodiff.structures import Number
 >>> from autodiff.structures import Array
+>>> import autodiff.operations as op
 >>> import numpy as np
 >>> x = Number(np.pi / 2)
 >>> y = Number(3 * np.pi / 2)
 
 >>> def f(x, y):
 >>>     return Array((
->>>         y * x.sin(),
->>>         x * y.sin()
+>>>         y * op.sin(x),
+>>>         x * op.sin(y)
 >>>     ))
 >>> q = f(x,y)
 >>> q
@@ -150,7 +152,7 @@ Array([Number(val=2) Number(val=4)])
 `Array` also supports operations such as sin, cos, tan, asin, acos, atan, sinh, cosh, tanh, logistic, log and exp. When these operations are called, it is performed on each element of the Array object. `exp` assumes that the base is `e`. When the base is not `e`, user could directly use the `pow` method (**).
 ```python
 >>> x = Array((1, 2))
->>> q = x.sin()
+>>> q = op.sin(x)
 >>> q
 Array([Number(val=0.8414709848078965) Number(val=0.9092974268256817)])
 ```
