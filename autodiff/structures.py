@@ -348,8 +348,9 @@ class Array():
 
     def __init__(self, iterable):
         self._data = np.array(iterable, dtype=np.object)
-        if not all(map(lambda i: isinstance(i, Number), self._data)):
-            raise TypeError('all elements of iterable must be of Number() type')
+        for i, d in enumerate(self._data):
+            if not isinstance(d, Number):
+                self._data[i] = Number(d)
 
     def __str__(self):
         return str(self._data)
@@ -412,16 +413,10 @@ class Array():
     def __matmul__(self, other):
         try:
             # If they're both Array objects
-            out = Array(self._data.__matmul__(other._data))
+            out = self._data.__matmul__(other._data)
         except AttributeError:
-            out = Array(self._data.__matmul__(other))
-
-        # Check that out isn't unsized
-        try:
-            len(out)
-            return out
-        except TypeError:
-            return out[()]
+            out = self._data.__matmul__(other)
+        return(out)
 
     def __rmatmul__(self, other):
         return self._data.__rmatmul__(other)
@@ -438,6 +433,21 @@ class Array():
 
     def __neg__(self):
         return Array(self._data.__neg__())
+    
+    def sin(self):
+        return operations.sin(self)
+    
+    def cos(self):
+        return operations.cos(self)
+    
+    def tan(self):
+        return operations.tan(self)
+    
+    def exp(self):
+        return operations.exp(self)
+    
+    def logistic(self):
+        return operations.logistic(self)
 
     def jacobian(self, order):
         def _partial(deriv, key):
@@ -451,8 +461,8 @@ class Array():
         for element in self._data:
             # Check if order is iterable
             try:
+                jacobian_row = []
                 for key in order:
-                    jacobian_row = []
                     jacobian_row.append(_partial(element._deriv, key))
                 jacobian.append(jacobian_row)
             except TypeError:
@@ -460,7 +470,3 @@ class Array():
         
         return np.array(jacobian)
 
-if __name__ == '__main__':
-    q = Array((Number(1), Number(2)))
-    print(q.jacobian(q._data))  # eye(2)
-    print(q.jacobian(q._data[0]))  # [1, 0].T
