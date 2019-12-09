@@ -256,13 +256,8 @@ class Number():
             return _partial(self._deriv, order)
         
         jacobian = []
-        try:
-            for key in order:
-                jacobian.append(_partial(self._deriv, key))
-        except TypeError:
-            # The user specified a scalar order
-            jacobian = _partial(self._deriv, order)
-        jacobian = np.array(jacobian)
+        for key in order:
+            jacobian.append(_partial(self._deriv, key))
         return jacobian
 
     def __hash__(self):
@@ -416,7 +411,7 @@ class Array():
 
     def __matmul__(self, other):
         try:
-            # If they're both Array2 objects
+            # If they're both Array objects
             out = Array(self._data.__matmul__(other._data))
         except AttributeError:
             out = Array(self._data.__matmul__(other))
