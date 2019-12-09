@@ -460,8 +460,8 @@ class Array():
         for element in self._data:
             # Check if order is iterable
             try:
+                jacobian_row = []
                 for key in order:
-                    jacobian_row = []
                     jacobian_row.append(_partial(element._deriv, key))
                 jacobian.append(jacobian_row)
             except TypeError:
