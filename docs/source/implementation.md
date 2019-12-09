@@ -220,20 +220,17 @@ These will either support operations between two `Array` objects, or one `Array`
 
 Moreover, `Array` will support the following operations, which will perform element-wise operations on each element when called:
 
-- `.sin()`
-- `.sinh()`
-- `.asin()`
-- `.cos()`
-- `.cosh()`
-- `.acos()`
-- `.tan()`
-- `.tanh()`
-- `.atan()`
-- `.exp()`
-- `.sqrt()`
-- `.log()`
+- `autodiff.operations.sin()`
+- `autodiff.operations.cos()`
+- `autodiff.operations.tan()`
+- `autodiff.operations.asin()`
+- `autodiff.operations.acos()`
+- `autodiff.operations.atan()`
+- `autodiff.operations.log()`
+- `autodiff.operations.exp()`
+- `autodiff.operations.sqrt()`
 
-They are also overloaded with operations from operations.py, as in the case of `Number`.
+You can call these directly on an Array object, as the same case with Number.
 
 To access the derivatives, `Array` implements a jacobian method, which will return another `Array` object in 2-d, holding each row as an element of the original array, each column as the element of `order` to take partial derivatives with respect to.
 ```python

@@ -652,6 +652,15 @@ class Array():
             another Array object, which is the negated original Array.
         '''
         return Array(self._data.__neg__())
+    
+    def dot(self, other):
+        '''
+        Defines the dot product on two Array objects.
+        
+        Returns:
+            a Number object, which is the dot product.
+        '''
+        return self.__matmul__(other)
 
     def jacobian(self, order):
         '''
