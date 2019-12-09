@@ -113,7 +113,7 @@ def bfgs(func, initial_guess,iterations =100):
 
   
 
-def gradient_descent(func,initial_guess,iterations = 100,step_size=0.01):
+def steepest_descent(func,initial_guess,iterations = 100,step_size=0.01):
 
     """Use steepest_descent method to find the local minimum/maxinum of the function
     Args:
@@ -145,24 +145,27 @@ def gradient_descent(func,initial_guess,iterations = 100,step_size=0.01):
     elif isinstance(initial_guess,Array):
 
         # e.g. R2 --> R1
-        x0=initial_guess
         jacobians = []
-        s = -np.array(func(initial_guess).jacobian(x0))#negative sign cannot be used on a list, so turn into a np array
-        jacobians.append(s)
+        
+        s = np.zeros(len(initial_guess))
 
         for i in range(iterations):
-
-            #if np.abs(s.sum())>10**-7:
+            if i == 0:
+                x0 = initial_guess
+            else:
+                alpha = step_size
+                #perform line search using Armijo condition
+                while func(x0+alpha*s).val>func(x0).val+alpha*0.0001*np.dot(np.transpose(-1*s),s):
+                    alpha = alpha/2
+                
+                x0 = x0+alpha*s
+            
+            
             for j in range(len(s)):
-                x0 = np.array(x0).reshape(-1,1) + np.array(step_size*s[j]).reshape(-1,1)
-
-                x0 = Array(x0.reshape(len(x0)))
-            print(i,x0)
-            s = -np.array(func(x0).jacobian(x0))
-
+                s[j] = func(x0).jacobian(x0[j])*-1
+            
+            print(i,x0,func(x0))
+            if np.abs(s).all()<10**-7:
+                break
             jacobians.append(s)
-        return x0,func(x0),jacobians
-
-        
-        
-    
+        return i,x0,func(x0),jacobians
