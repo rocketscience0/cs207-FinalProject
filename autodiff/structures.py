@@ -298,9 +298,7 @@ class Number():
         Returns:
             True if two Autodiff.Number objects are not equal, False otherwise.
         '''
-        if self==other:
-            return False
-        return True
+        return not self.__eq__(other)
    
 #    def __gt__(self, other):
 #        '''
