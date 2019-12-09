@@ -5,6 +5,7 @@ import autodiff.operations as operations
 from autodiff.structures import Number
 from autodiff.structures import Array
 import numpy as np
+
 def bfgs_symbolic(func,gradient, initial_guess,iterations =100,tolerance=10**-8,verbose=False):
     """Use symbolic BFGS method to find the local minimum/maxinum of the function
     Args:
@@ -20,8 +21,55 @@ def bfgs_symbolic(func,gradient, initial_guess,iterations =100,tolerance=10**-8,
         func(x0): the value of the local extremum
         jacobians: the jacobians of each optimization step
         """   
-    if len(initial_guess)==None: 
-    #bfgs for scalar functions
+    # if len(initial_guess)==None:
+    # if isinstance(initial_guess, Sized):
+    try:
+        jacobians = []
+
+        for i in range(iterations):
+
+            if i == 0:
+                
+                x0 = initial_guess
+                #initial guess of hessian
+                # This will give an error if initial_guess is a scalar
+                H = np.identity(len(x0))
+            else:
+                x0 = x1
+                H = deltaH
+            if verbose:
+                print(i,x0,func(x0))
+            fxn0 = np.array(func(x0))
+            fpxn0 = np.array(gradient(x0))    
+            jacobians.append(fpxn0)
+            if np.linalg.norm(fpxn0)<tolerance:
+                #optimization condition is met
+                break
+                
+            s = -np.dot(H,fpxn0) #np.array multiply with scalar would be fine
+            x1 = x0 + s
+            fxn1 = func(x1)
+            fpxn1 = gradient(x1)
+            y = np.array(fpxn1 - fpxn0)
+            rho0 = 1/(np.dot(y.T,s))
+            rhokykT = rho0*y.T
+            skrhokykT = np.dot(s.reshape([len(x0),1]),rhokykT.reshape([1,len(x0)]))
+
+            ykskT = np.dot(np.reshape(y,[len(x0),1]),s.reshape([len(x0),1]).T)
+
+            rhokykskT = rho0*ykskT
+
+            skskT = np.dot(s.reshape([len(x0),1]),s.reshape([len(x0),1]).T)
+
+            rhokskskT = rho0*skskT
+
+            #define delta H
+            deltaH = np.dot((np.identity(2)-skrhokykT),np.dot(H,(np.identity(2)-rhokykskT)))+rhokskskT
+
+
+        return x0, func(x0), jacobians
+    except TypeError:
+        # We have a scalar function
     
         x0 = initial_guess
         
@@ -67,52 +115,6 @@ def bfgs_symbolic(func,gradient, initial_guess,iterations =100,tolerance=10**-8,
             b0 = b1
                 
             jacobians.append(fpxn1)
-
-        return x0,func(x0),jacobians
-
-    else:
-        
-        jacobians = []
-
-        for i in range(iterations):
-
-            if i == 0:
-                
-                x0 = initial_guess
-                #initial guess of hessian
-                H = np.identity(len(x0))
-            else:
-                x0 = x1
-                H = deltaH
-            if verbose:
-                print(i,x0,func(x0))
-            fxn0 = np.array(func(x0))
-            fpxn0 = np.array(gradient(x0))    
-            jacobians.append(fpxn0)
-            if np.linalg.norm(fpxn0)<tolerance:
-                #optimization condition is met
-                break
-                
-            s = -np.dot(H,fpxn0) #np.array multiply with scalar would be fine
-            x1 = x0 + s
-            fxn1 = func(x1)
-            fpxn1 = gradient(x1)
-            y = np.array(fpxn1 - fpxn0)
-            rho0 = 1/(np.dot(y.T,s))
-            rhokykT = rho0*y.T
-            skrhokykT = np.dot(s.reshape([len(x0),1]),rhokykT.reshape([1,len(x0)]))
-
-            ykskT = np.dot(np.reshape(y,[len(x0),1]),s.reshape([len(x0),1]).T)
-
-            rhokykskT = rho0*ykskT
-
-            skskT = np.dot(s.reshape([len(x0),1]),s.reshape([len(x0),1]).T)
-
-            rhokskskT = rho0*skskT
-
-            #define delta H
-            deltaH = np.dot((np.identity(2)-skrhokykT),np.dot(H,(np.identity(2)-rhokykskT)))+rhokskskT
-
 
         return x0,func(x0),jacobians
 
