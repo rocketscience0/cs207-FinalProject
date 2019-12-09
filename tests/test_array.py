@@ -80,6 +80,15 @@ def test_div_array():
     assert w[0].val == pytest.approx(1)
     assert w[1].val == pytest.approx(1)
 
+def test_array_func():
+    q = Array((
+        Number(0),
+        Number(1)
+    ))
+
+    w = operations.exp(q)
+    assert w[0].val == pytest.approx(1)
+    assert w[1].val == pytest.approx(np.exp(1))
 
 if __name__ == '__main__':
     # print(repr(Array((num2, num3))))

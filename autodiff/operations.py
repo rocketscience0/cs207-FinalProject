@@ -683,8 +683,3 @@ def sqrt(x):
     '''
     return np.sqrt(x.val)
 
-if __name__ == '__main__':
-    q = Array((Number(0), Number(1)))
-    w = Number(1)
-    print(exp(w))
-    print(exp(q))
