@@ -2,7 +2,7 @@ from distutils.core import setup
 setup(
   name = 'cs207-autodiff',         # How you named your package folder (MyLib)
   packages = ['autodiff'],   # Chose the same as "name"
-  version = '1.0.1',      # Start with a small number and increase it with every change you make
+  version = '1.0.2',      # Start with a small number and increase it with every change you make
   license='MIT',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
   description = 'Automatic differentiatoin package for CS207',   # Give a short description about your library
   author = 'CS207 group 30',                   # Type in your name
