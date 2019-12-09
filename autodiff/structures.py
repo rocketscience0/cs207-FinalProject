@@ -702,8 +702,11 @@ class Array():
                 for i in range(len(self)):
                     if not (self[i]==other[i]):
                         initial = False
-            return initial
-        except AttributeError:
+                return initial
+            else:
+                return False
+
+        except TypeError:
             #if other is not even a autodiff.Number
             return False
    

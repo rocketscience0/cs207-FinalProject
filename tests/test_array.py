@@ -199,7 +199,15 @@ def test_eq():
     ))
     assert q == q
 
-def test_eq():
+def test_neq_mixed():
+    q = Array((
+        Number(0),
+        0
+    ))
+    assert q != 'a'
+    assert q != 1
+
+def test_neq():
     q = Array((
         Number(0),
         0
@@ -211,3 +219,4 @@ def test_eq():
     ))
 
     assert q != w
+
