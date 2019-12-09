@@ -40,8 +40,8 @@ def test_provided_deriv():
 def test_sin():
     assert sina.val == pytest.approx(1)
 
-def test_sin_method():
-    assert a.sin().val == pytest.approx(1)
+# def test_sin_method():
+#     assert a.sin().val == pytest.approx(1)
 
 def test_sin_deriv():
     assert sina.jacobian(a) == pytest.approx(0)
@@ -49,8 +49,8 @@ def test_sin_deriv():
 def test_cos():    
     assert cosa.val == pytest.approx(0)
 
-def test_cos_method():
-    assert a.cos().val == pytest.approx(0)
+# def test_cos_method():
+#     assert a.cos().val == pytest.approx(0)
 
 def test_cos_deriv():
     assert cosa.jacobian(a) == pytest.approx(-1)
@@ -59,10 +59,6 @@ def test_tan():
     a = Number(np.pi / 4)
     tana = operations.tan(a)
     assert tana.val == pytest.approx(1)
-
-def test_tan_method():
-    a = Number(np.pi / 4)
-    assert a.tan().val == pytest.approx(1)
 
 def test_tan_deriv():
     a = Number(np.pi / 4)
@@ -270,9 +266,6 @@ def test_mixed_rpow_deriv_number_only():
 def test_exp():
     assert operations.exp(num_log_1).val == 1
 
-def test_exp_method():
-    assert num_log_1.exp().val == 1
-
 def test_exp_deriv():
     assert operations.exp(num_log_1).jacobian(num_log_1) == 1
 
@@ -339,8 +332,7 @@ def test_jacobian():
 def test_jacobian_no_partial():
     """Test for if the user tries to create a jacobian for a partial derivative they haven't used
     """
-    with pytest.raises(ValueError):
-        sina.jacobian(Number(100))
+    sina.jacobian(Number(100)) == 0
 
 def test_jacobian_requires_order():
     with pytest.raises(TypeError):
@@ -355,7 +347,6 @@ def test_jacobian_multi_input():
 
 def test_logistic():
     assert operations.logistic(num_log_1).val == pytest.approx(1 / 2)
-    assert num_log_1.logistic().val == pytest.approx(1 / 2)
 
 def test_logistic_deriv():
     operations.logistic(num_log_1).jacobian(num_log_1) == pytest.approx(1 / 4)
@@ -417,22 +408,3 @@ def test_neq():
     b = Number(2)
     assert a != b
     assert (a != b) == True
-
-#if __name__ == '__main__':
-#    t = Number(10)
-#    a = Number(4, deriv={t: 2})
-#    b = Number(2, deriv={t: 4})
-#    
-#    atotheb = a ** b
-#    a = Number(np.pi / 2)
-#    b = Number(3 * np.pi / 2)
-#    
-#    
-#    step1 = operations.sin(a)
-#    step2 = operations.sin(b)
-#    step3 = operations.sin(a + b)
-#
-#
-#    print(step3.jacobian(a))
-#if __name__ == '__main__':
-#    print((num2 * num2).val)
