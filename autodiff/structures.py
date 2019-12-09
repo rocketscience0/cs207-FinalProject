@@ -421,7 +421,6 @@ class Array():
         except TypeError:
             return out[()]
 
-
     def __rmatmul__(self, other):
         return self._data.__rmatmul__(other)
 
@@ -436,7 +435,7 @@ class Array():
         return self._data.__rpow__(other)
 
     def __neg__(self):
-        return self._data.__neg__()
+        return Array(self._data.__neg__())
 
     def jacobian(self, order):
         def _partial(deriv, key):
