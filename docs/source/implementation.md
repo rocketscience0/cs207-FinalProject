@@ -9,19 +9,52 @@ The `autodiff` package proper requires only `numpy`. Running tests requires `pyt
 
 ## Core data structures and classes
 
-Currently, the `autodiff` package has one core data structure, the `Number`. A `Number` is a scalar that stores a value and a derivative. Future versions will include the `array`, which subclasses the `numpy.ndarray` to support functions with vector inputs.
+Currently, the `autodiff` package has two core data structure, `Number` and `Array`. A `Number` is a scalar that stores a value and a derivative. `Array` subclasses the `numpy.ndarray` to support functions with vector inputs. It holds a 1-d array of `Number` objects.
 
 ### Important attributes of the `Number` class
-The `Number` class has only two attributes, a value (`val`) and a `dict` of partial derivatives (`deriv`). The user can can define a new type of number easily:
+The `Number` class has only two attributes, a value (`val`) and a `dict` of partial derivatives (`_deriv`). It is intialized as follows:
 
 ```python
-class NewInt(Number):
-    def __init__(self, a, b):
-        super(self).__init__(a, b)
-        self.val = int(a)
-        self.deriv = b
+def __init__(self, val, deriv=None):
+
+        self.val = val
+        if deriv is None:
+            self._deriv = {
+                self: 1
+            }
+        elif isinstance(deriv, dict):
+            self._deriv = deriv
+            #keep also a copy of the derivative w.r.t. itself
+            self._deriv[self] = 1
+        else:
+            self._deriv = {
+                    self: deriv
+                    }
 ```
 
+The `_deriv` dict is meant to not be accessable to the user directly. It is only stored for internal reference. To access partial derivatives, the user can call `.jacobian()` method, with a list of elements (or a single element) that the user wants to take partial derivatives with respect to. `.jacobian()` method takes elements out of the `_deiv` dict to display for the user
+
+```python
+>>> from autodiff.structures import Number
+>>> x = Number(2)
+>>> y = Number(3)
+>>> def f(x, y, a=3):
+>>>     return a * x * y
+>>> q = f(x, y, a=3)
+>>> q.jacobian(x)
+9
+>>> q.jacobian(y)
+6
+>>> q._deriv
+{Number(value=2): 9, Number(value=3): 6}
+```
+
+The `Array` class inherits from the np.array. It stores a `_data` attribute internally to hold a list of Number objects.
+
+```python
+def __init__(self, iterable):
+        self._data = np.array(iterable, dtype=np.object)
+```
 
 ## Methods and name attributes
 The `Number` class overloads the following common elementary operations:
@@ -31,7 +64,6 @@ The `Number` class overloads the following common elementary operations:
 - `*`
 - `/`
 - `**`
-- `@`
 
 ```eval_rst
 We have also included the following elementary operations, all of which use their `numpy` counterparts and live in the :mod:`autodiff.operations` module.
@@ -48,6 +80,34 @@ We have also included the following elementary operations, all of which use thei
 - `autodiff.operations.sqrt()`
 
 Defining custom elementary functions is straightforward, using the `elementary` decorator (this is the same method we use internally). The decorator takes one input, a function with the same arguments as the elementary operation, but calculates the derivative of the operation rather than the value. We call this derivative function internally.
+
+To perform the derivatives, we wrote an `elementary` decorator that will also support using all these operations on `Array` objects by looping through each element:
+
+```python
+def elementary(deriv_func):
+    def inner(func):
+            @wraps(func)
+            def inner_func(*args, **kwargs):
+                # Check if args[0] has len. If so, apply the function elementwise and return an array
+                # rather than a Number
+                try:
+                    value = func(*args, **kwargs)
+                    deriv = deriv_func(*args, **kwargs)
+                    return Number(value, deriv)
+
+                except AttributeError:
+
+                    vals = [func(element, *args[1:], **kwargs) for element in args[0]]
+                    derivs = [deriv_func(element, *args[1:], **kwargs) for element in args[0]]
+                    numbers = [Number(val, deriv) for val, deriv in zip(vals, derivs)]
+                    return Array(numbers)
+
+
+            return inner_func
+        return inner
+```
+
+Then, each elementary operation can be defined as follows:
 
 ```python
 def my_pow_deriv(a, b):
@@ -148,12 +208,63 @@ class Number():
         return operations.add(self, other)
 
 ```
+The ```Array``` class overloads the following operations:
 
-## To include in future versions
+- `+`
+- `-`
+- `*`
+- `/`
+- `**`
 
-At this time, `autodiff` only supports scalar functions with scalar outputs. Soon, we will also support vector functions with vector outputs. An `autodiff.array` will subclass `numpy.array`, but will hold `Number` objects. Therefore, matrix operations will be available as they are in `numpy`, including:
+These will either support operations between two `Array` objects, or one `Array` object and one `Number`/`integer`/`float` object.
 
-- Matrix multiplication (`@`, `dot`)
-- Element-wise operations (`+`, `-`, `*`, `/`, `**`)
+Moreover, `Array` will support the following operations, which will perform element-wise operations on each element when called:
 
-There will be a few differences when defining function with vector outputs. Rather than each value of the `deriv` dict being a scalar, a vector `deriv` value will instead be an `array`---interpreted as a column of the Jacobian. Once again, it will be necessary for the user to specify in which order he or she will like their Jacobian. Internally, we will treat the user's specified order as a set of seed vectors to calculate each column of the Jacobian.
+- `.sin()`
+- `.sinh()`
+- `.asin()`
+- `.cos()`
+- `.cosh()`
+- `.acos()`
+- `.tan()`
+- `.tanh()`
+- `.atan()`
+- `.exp()`
+- `.sqrt()`
+- `.log()`
+
+They are also overloaded with operations from operations.py, as in the case of `Number`.
+
+To access the derivatives, `Array` implements a jacobian method, which will return another `Array` object in 2-d, holding each row as an element of the original array, each column as the element of `order` to take partial derivatives with respect to.
+```python
+def jacobian(self, order):
+        '''
+        Returns the jacobian matrix by the order specified.
+        
+        Args:
+            order: the order to return the jacobian matrix in. Has to be not null
+        
+        Returns:
+            a list of partial derivatives specified by the order.
+        '''
+
+        def _partial(deriv, key):
+            try:
+                return deriv[key]
+            except KeyError:
+                raise ValueError(
+                    f'No derivative with respect to {repr(order)}'
+                )
+        j = []
+        for element in self._lst:
+            jacobian = []
+            try:
+                for key in order:
+                    jacobian.append(_partial(element.deriv, key))
+            except TypeError:
+                # The user specified a scalar order
+                jacobian.append(_partial(element.deriv, order))
+            j.append(jacobian)
+        j = Array(j)
+        return j
+```
