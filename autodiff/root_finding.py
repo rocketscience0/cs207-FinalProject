@@ -50,39 +50,66 @@ def newtons_method(func, initial_guess, iterations=100,tolerance = 10**-7,verbos
             return x1, jacobians
     elif isinstance(initial_guess,Array):
         jacobians = []
-        
-        for i in range(iterations):
-            
-            if i == 0:
-                x0= initial_guess
-            else:
-                x0 = x1
+        if isinstance(func(initial_guess),tuple):
+            for i in range(iterations):
 
-            fxn = func(x0)
-            fpxn = []
-            if verbose:
-                print(i,x0,fxn)
-                
-            vector = []
-            for n in range(len(fxn)):
-                vector.append(fxn[n].val)
-                
+                if i == 0:
+                    x0= initial_guess
+                else:
+                    x0 = x1
+
+                fxn = func(x0)
+                fpxn = []
+                if verbose:
+                    print(i,x0,fxn)
+
+                vector = []
+                for n in range(len(fxn)):
+                    vector.append(fxn[n].val)
+
+
+                if np.linalg.norm(vector)< tolerance:
+                    break
+
+                for k in range(len(fxn)):
+                    fpxn_row = []
+                    for j in range(len(x0)):
+                        fpxn_row.append(fxn[k].jacobian(x0[j]))
+                    fpxn.append(fpxn_row)
+                jacobians.append(fpxn)
+                x1 = x0 - np.dot(np.linalg.inv(fpxn),fxn)
+
+            if show_fxn:
+                return x1, jacobians,fxn
+            else:
+                return x1, jacobians
             
-            if np.linalg.norm(vector)< tolerance:
-                break
-            
-            for k in range(len(fxn)):
-                fpxn_row = []
-                for j in range(len(x0)):
-                    fpxn_row.append(fxn[k].jacobian(x0[j]))
-                fpxn.append(fpxn_row)
-            jacobians.append(fpxn)
-            x1 = x0 - np.dot(np.linalg.inv(fpxn),fxn)
-            
-        if show_fxn:
-            return x1, jacobians,fxn
         else:
-            return x1, jacobians
+            for i in range(iterations):
+
+                if i == 0:
+                    x0= initial_guess
+                else:
+                    x0 = x1
+
+                fxn = func(x0)
+                fpxn = []
+                if verbose:
+                    print(i,x0,fxn)
+
+                if abs(fxn.val)< tolerance:
+                    break
+
+                for j in range(len(x0)):
+                    fpxn.append(fxn.jacobian(x0[j]))
+                jacobians.append(fpxn)
+                print(fpxn)
+                x1 = x0 - np.dot(np.reciprocal(fpxn),fxn)
+
+            if show_fxn:
+                return x1, jacobians,fxn
+            else:
+                return x1, jacobians
         
 def secant_method(func, initial_guess,iterations = 100,show_fxn=False):
     """Use secant method to find the root of the function
