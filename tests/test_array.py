@@ -220,3 +220,9 @@ def test_neq():
 
     assert q != w
 
+def test_dot():
+    q = Array((
+        Number(0),
+        0
+    ))
+    assert q.dot(q).val == 0
