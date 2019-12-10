@@ -65,7 +65,7 @@
 
 #### Modules
 
-There are two modules. The `autodiff` module implements the forward mode of automatic differentiation. It contains `structures.py`, the definition of the `Number` and `Array` class, and `operations.py`, the implementations of the various elementary operations and the derivatives of elementary operations. The `root_finding.py` and `optimizations.py` that performs various root-finding and optimization methods as a proposed extension. The `tests` module runs tests for `autodiff`. See below for details about testing. 
+There are four modules. The `autodiff` package implements the forward mode of automatic differentiation. It contains `structures.py` module, which includes the definition of the `Number` and `Array` class, and `operations.py` module, which includes the implementations of the various elementary operations and the derivatives of elementary operations. The `root_finding.py` module and `optimizations.py` module performs various root-finding and optimization methods as a proposed extension. The `tests` package runs tests for `autodiff`. See below for details about testing. 
 
 #### Testing
 All tests live in `tests/test_autodiff.py`. We will use both `TravisCI` and `CodeCov` to distribute reports.
